@@ -470,7 +470,7 @@ watch(isDark, (newValue) => {
 
 /* Content */
 .main-content {
-  padding: 24px;
+  padding: 1px;
 }
 
 .content-wrapper {
@@ -499,9 +499,6 @@ watch(isDark, (newValue) => {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .main-content {
-    padding: 16px;
-  }
   
   .content-wrapper {
     padding: 16px;
