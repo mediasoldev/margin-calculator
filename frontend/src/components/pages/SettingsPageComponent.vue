@@ -2,7 +2,6 @@
 
 <template>
   <div>
-   
     <a-card>
       <a-form
         :model="formState"
@@ -35,7 +34,9 @@
                 width: '38px', 
                 height: '38px',
                 padding: 0,
-                border: formState.primaryColor === color ? '2px solid #1890ff' : '1px solid #d9d9d9'
+                border: formState.primaryColor === color ? '2px solid #333' : '1px solid #d9d9d9',
+                boxShadow: formState.primaryColor === color ? '0 0 0 3px rgba(0, 0, 0, 0.1)' : 'none',
+                transform: formState.primaryColor === color ? 'scale(1.1)' : 'scale(1)'
               }"
               @click="setColor(color)"
             />
@@ -59,7 +60,9 @@
                 width: '38px', 
                 height: '38px',
                 padding: 0,
-                border: formState.textColor === color ? '2px solid #1890ff' : '1px solid #d9d9d9'
+                border: formState.textColor === color ? '2px solid #333' : '1px solid #d9d9d9',
+                boxShadow: formState.textColor === color ? '0 0 0 3px rgba(0, 0, 0, 0.1)' : 'none',
+                transform: formState.textColor === color ? 'scale(1.1)' : 'scale(1)'
               }"
               @click="selectTextColor(color)"
             />
@@ -123,12 +126,12 @@
       
       <a-divider />
       
-      <a-row :gutter="16">
+      <a-row :gutter="[16, 16]">
         <a-col :xs="24" :sm="12" :lg="8">
           <a-space direction="vertical" style="width: 100%">
-            <a-switch checked />
-            <a-checkbox checked>Checkbox</a-checkbox>
-            <a-radio checked>Radio</a-radio>
+            <a-switch v-model:checked="previewSwitch" />
+            <a-checkbox v-model:checked="previewCheckbox">Checkbox</a-checkbox>
+            <a-radio v-model:checked="previewRadio">Radio</a-radio>
           </a-space>
         </a-col>
         
@@ -145,9 +148,9 @@
         
         <a-col :xs="24" :sm="24" :lg="8">
           <a-space direction="vertical" style="width: 100%">
-            <a-progress :percent="75" />
-            <a-slider :default-value="30" />
-            <a-rate :value="4" />
+            <a-progress :percent="75"  :stroke-color="formState.primaryColor"/>
+            <a-slider v-model:value="previewSlider" />
+            <a-rate v-model:value="previewRate" />
           </a-space>
         </a-col>
       </a-row>
@@ -168,7 +171,7 @@
       <div 
         :style="{
           padding: '20px',
-          backgroundColor: formState.primaryColor + '10',
+          backgroundColor: adjustColorOpacity(formState.primaryColor, 0.05),
           borderRadius: '8px',
           border: `2px solid ${formState.primaryColor}`
         }"
@@ -180,7 +183,7 @@
           >
             {{ $t('settings.sampleTitle') }}
           </a-typography-title>
-          <a-typography-paragraph :style="{ color: formState.textColor + 'CC' }">
+          <a-typography-paragraph :style="{ color: adjustColorOpacity(formState.textColor, 0.8) }">
             {{ $t('settings.sampleText') }}
           </a-typography-paragraph>
         </a-typography>
@@ -210,17 +213,24 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, onMounted } from 'vue'
+import { reactive, ref, onMounted, watch, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useTheme } from '@/composables/useTheme'
 import { message } from 'ant-design-vue'
 import { SaveOutlined, UndoOutlined } from '@ant-design/icons-vue'
 
 const { t } = useI18n()
-const { themeMode, setTheme, setPrimaryColor, setTextColor: updateTextColor, setCompactMode, setAnimationsEnabled } = useTheme()
+const { themeMode, setTheme, setPrimaryColor, setTextColor: updateTextColor, setCompactMode, setAnimationsEnabled, primaryColor: currentPrimaryColor, textColor: currentTextColor } = useTheme()
 
 // State
 const saving = ref(false)
+
+// Preview states
+const previewSwitch = ref(true)
+const previewCheckbox = ref(true)
+const previewRadio = ref(true)
+const previewSlider = ref(30)
+const previewRate = ref(4)
 
 // Preset colors
 const presetColors = [
@@ -245,14 +255,33 @@ const textPresetColors = [
   '#722ed1'  // Purple
 ]
 
-// Form state
+// Form state - initialize with current values
 const formState = reactive({
   theme: themeMode.value,
-  primaryColor: localStorage.getItem('primaryColor') || '#1677ff',
-  textColor: localStorage.getItem('textColor') || '#000000',
-  compactMode: localStorage.getItem('compactMode') === 'true',
-  enableAnimations: localStorage.getItem('enableAnimations') !== 'false'
+  primaryColor: currentPrimaryColor.value,
+  textColor: currentTextColor.value,
+  compactMode: localStorage.getItem('compact-mode') === 'true',
+  enableAnimations: localStorage.getItem('enable-animations') !== 'false'
 })
+
+// Helper function to adjust color opacity
+const adjustColorOpacity = (color: string, opacity: number): string => {
+  // Handle both hex and rgb formats
+  if (color.startsWith('rgb')) {
+    const matches = color.match(/\d+/g)
+    if (matches && matches.length >= 3) {
+      return `rgba(${matches[0]}, ${matches[1]}, ${matches[2]}, ${opacity})`
+    }
+  }
+  
+  // Convert hex to RGB
+  const hex = color.replace('#', '')
+  const r = parseInt(hex.substr(0, 2), 16) || 0
+  const g = parseInt(hex.substr(2, 2), 16) || 0
+  const b = parseInt(hex.substr(4, 2), 16) || 0
+  
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`
+}
 
 // Methods
 const onThemeChange = () => {
@@ -290,10 +319,10 @@ const saveSettings = async () => {
   try {
     // Симуляція збереження на сервер
     await new Promise(resolve => setTimeout(resolve, 1000))
-   
-    message.success(t('settings.saveSuccess'))
+    
+    message.success(t('settings.saveSuccess') || 'Settings saved successfully')
   } catch (error) {
-    message.error(t('settings.saveError'))
+    message.error(t('settings.saveError') || 'Failed to save settings')
   } finally {
     saving.value = false
   }
@@ -314,17 +343,28 @@ const resetSettings = () => {
   onCompactModeChange()
   onAnimationsChange()
   
-  message.info(t('settings.resetSuccess'))
+  message.info(t('settings.resetSuccess') || 'Settings reset to defaults')
 }
+
+// Watchers для миттєвого оновлення preview
+watch(() => formState.primaryColor, async (newColor) => {
+  await nextTick()
+  setPrimaryColor(newColor)
+})
+
+watch(() => formState.textColor, async (newColor) => {
+  await nextTick()
+  updateTextColor(newColor)
+})
 
 // Lifecycle
 onMounted(() => {
   // Застосування збережених налаштувань
   if (formState.compactMode) {
-    document.documentElement.classList.add('compact-mode')
+    setCompactMode(true)
   }
   if (!formState.enableAnimations) {
-    document.documentElement.classList.add('no-animations')
+    setAnimationsEnabled(false)
   }
 })
 </script>
@@ -339,9 +379,33 @@ onMounted(() => {
   padding: 12px;
 }
 
+:global(.compact-mode) .ant-card-body {
+  padding: 12px;
+}
+
 /* No animations mode */
 :global(.no-animations) * {
   transition: none !important;
   animation: none !important;
+}
+
+/* Color button transitions */
+.ant-btn {
+  transition: all 0.2s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .ant-form-item-label {
+    text-align: left;
+  }
+  
+  .ant-space {
+    width: 100%;
+  }
+  
+  .ant-space-item {
+    width: 100%;
+  }
 }
 </style>

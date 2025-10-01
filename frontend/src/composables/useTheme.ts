@@ -198,13 +198,19 @@ export function useTheme() {
       },
       Slider: {
         colorPrimary: primaryColor.value,
+        colorPrimaryBorder: primaryColor.value,
+        colorPrimaryBorderHover: adjustColor(primaryColor.value, 20),
+        colorFillSecondary: adjustColorOpacity(primaryColor.value, 0.5),
+        colorFillTertiary: adjustColorOpacity(primaryColor.value, 0.3),
         handleColor: primaryColor.value,
         handleActiveColor: adjustColor(primaryColor.value, 20),
-        dotBorderColor: adjustColorOpacity(primaryColor.value, 0.5),
+        dotBorderColor: primaryColor.value,
+        dotActiveBorderColor: adjustColor(primaryColor.value, 20),
         railBg: isDark.value ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
         railHoverBg: isDark.value ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)',
         trackBg: primaryColor.value,
-        trackHoverBg: adjustColor(primaryColor.value, 20)
+        trackHoverBg: adjustColor(primaryColor.value, 20),
+        handleActiveOutlineColor: adjustColorOpacity(primaryColor.value, 0.2)
       },
       Typography: {
         colorText: isDark.value ? 'rgba(255, 255, 255, 0.85)' : textColor.value,
@@ -234,10 +240,16 @@ export function useTheme() {
         colorPrimary: primaryColor.value
       },
       Progress: {
-        colorText: isDark.value ? 'rgba(255, 255, 255, 0.85)' : textColor.value,
-        remainingColor: isDark.value ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)',
-        defaultColor: primaryColor.value
-      },
+      colorText: isDark.value ? 'rgba(255, 255, 255, 0.85)' : textColor.value,
+      remainingColor: isDark.value ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)',
+      defaultColor: primaryColor.value,
+      colorSuccess: primaryColor.value,
+      colorFillSuccess: primaryColor.value,
+      colorBgSuccess: primaryColor.value,
+      colorPrimary: primaryColor.value,
+      colorFill: primaryColor.value,
+      colorBg: primaryColor.value
+    },
       Rate: {
         colorText: adjustColorOpacity(textColor.value, 0.25),
         colorFillContent: primaryColor.value,

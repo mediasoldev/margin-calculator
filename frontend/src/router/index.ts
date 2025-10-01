@@ -1,43 +1,54 @@
 // frontend/src/router/index.ts
 
-import { createRouter, createWebHistory } from 'vue-router'
-import type { RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory } from "vue-router";
+import type { RouteRecordRaw } from "vue-router";
 
 const routes: RouteRecordRaw[] = [
   {
-    path: '/',
-    name: 'home',
-    component: () => import('@/views/HomeView.vue')
+    path: "/",
+    name: "home",
+    component: () => import("@/views/HomeView.vue"),
+    meta: { layout: 'main' }
   },
   {
-    path: '/settings',
-    name: 'settings',
-    component: () => import('@/views/SettingsView.vue')
+    path: "/settings",
+    name: "settings",
+    component: () => import("@/views/SettingsView.vue"),
+    meta: { layout: 'main' }
   },
   {
-    path: '/license',
-    name: 'license',
-    component: () => import('@/views/LicenseView.vue')
+    path: "/license",
+    name: "license",
+    component: () => import("@/views/LicenseView.vue"),
+    meta: { layout: 'main' }
   },
   {
-    path: '/about',
-    name: 'about',
-    component: () => import('@/views/AboutView.vue')
-  }
-]
+    path: "/about",
+    name: "about",
+    component: () => import("@/views/AboutView.vue"),
+    meta: { layout: 'main' }
+  },
+   // Віджет без хедера
+  {
+    path: "/pricing-calculator",
+    name: "pricingCalculator",
+    component: () => import("@/views/PricingCalculatorView.vue"),
+    meta: { layout: 'widget' }
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes
-})
+  routes,
+});
 
 // Auto-resize Bitrix24 frame при зміні роуту
 router.afterEach(() => {
   setTimeout(() => {
     if (window.BX24?.fitWindow) {
-      window.BX24.fitWindow()
+      window.BX24.fitWindow();
     }
-  }, 100)
-})
+  }, 100);
+});
 
-export default router
+export default router;

@@ -17,6 +17,7 @@
             :theme="isDarkMode ? 'dark' : 'light'"
             mode="horizontal"
             class="desktop-menu"
+            :style="menuStyle"
           >
             <a-menu-item key="home" @click="navigateTo('/')">
               <template #icon><HomeOutlined /></template>
@@ -104,7 +105,7 @@
           <span class="logo-icon">B24</span>
         </div>
         <div class="drawer-user">
-          <a-avatar size="large" style="background-color: #1890ff">
+          <a-avatar size="large" :style="{ backgroundColor: primaryColor }">
             {{ userInitial }}
           </a-avatar>
           <div class="user-info">
@@ -119,6 +120,7 @@
         mode="inline"
         class="drawer-menu"
         @click="handleMobileMenuClick"
+        :style="mobileMenuStyle"
       >
         <a-menu-item key="home">
           <template #icon><HomeOutlined /></template>
@@ -184,7 +186,7 @@ import {
 const router = useRouter()
 const route = useRoute()
 const { locale } = useI18n()
-const { isDark, toggleTheme } = useTheme()
+const { isDark, toggleTheme, primaryColor } = useTheme()
 const appStore = useAppStore()
 
 // State
@@ -218,6 +220,17 @@ const currentLanguageName = computed(() => {
 const userName = computed(() => appStore.userName || 'Guest')
 const userDomain = computed(() => appStore.domain || 'localhost')
 const userInitial = computed(() => userName.value.charAt(0).toUpperCase())
+
+// Menu styles with dynamic primary color
+const menuStyle = computed(() => ({
+  '--menu-item-selected-color': !isDarkMode.value ? primaryColor.value : undefined,
+  '--menu-item-active-color': !isDarkMode.value ? primaryColor.value : undefined
+}))
+
+const mobileMenuStyle = computed(() => ({
+  '--menu-item-selected-color': primaryColor.value,
+  '--menu-item-selected-bg': `${primaryColor.value}10`
+}))
 
 // Methods
 const checkMobile = () => {
@@ -314,6 +327,7 @@ watch(isDark, (newValue) => {
   display: flex;
   align-items: center;
   margin-right: 40px;
+  cursor: pointer;
 }
 
 .logo-icon {
@@ -414,6 +428,7 @@ watch(isDark, (newValue) => {
 .menu-trigger {
   color: white;
   font-size: 20px;
+  cursor: pointer;
 }
 
 .light-header .menu-trigger {
@@ -442,6 +457,7 @@ watch(isDark, (newValue) => {
 .mobile-icon {
   color: rgba(255, 255, 255, 0.85);
   font-size: 18px;
+  cursor: pointer;
 }
 
 .light-header .mobile-icon {
@@ -519,7 +535,7 @@ watch(isDark, (newValue) => {
 
 /* Content */
 .main-content {
-  padding: 1px;
+  padding: 24px;
 }
 
 .content-wrapper {
@@ -546,14 +562,28 @@ watch(isDark, (newValue) => {
   color: rgba(255, 255, 255, 0.65);
 }
 
-/* Menu hover effects for light theme */
+/* Menu hover effects with dynamic colors for light theme */
 :deep(.ant-menu-light.ant-menu-horizontal > .ant-menu-item:hover) {
-  color: #1890ff;
+  color: var(--menu-item-active-color, #1890ff);
 }
 
 :deep(.ant-menu-light.ant-menu-horizontal > .ant-menu-item-selected) {
-  color: #1890ff;
-  border-bottom-color: #1890ff;
+  color: var(--menu-item-selected-color, #1890ff) !important;
+  border-bottom-color: var(--menu-item-selected-color, #1890ff) !important;
+}
+
+:deep(.ant-menu-light.ant-menu-horizontal > .ant-menu-item-selected::after) {
+  border-bottom-color: var(--menu-item-selected-color, #1890ff) !important;
+}
+
+/* Mobile menu selected item */
+:deep(.ant-menu-inline .ant-menu-item-selected) {
+  background-color: var(--menu-item-selected-bg, rgba(24, 144, 255, 0.1)) !important;
+  color: var(--menu-item-selected-color, #1890ff) !important;
+}
+
+:deep(.ant-menu-inline .ant-menu-item-selected::after) {
+  border-right-color: var(--menu-item-selected-color, #1890ff) !important;
 }
 
 /* Menu hover effects for dark theme */
@@ -563,7 +593,11 @@ watch(isDark, (newValue) => {
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) { 
+@media (max-width: 768px) {
+  .main-content {
+    padding: 16px;
+  }
+  
   .content-wrapper {
     padding: 16px;
     min-height: calc(100vh - 88px);
@@ -592,5 +626,14 @@ watch(isDark, (newValue) => {
 
 .menu-trigger:active {
   transform: scale(0.9);
+}
+
+/* Logo hover effect */
+.logo {
+  transition: opacity 0.2s;
+}
+
+.logo:hover {
+  opacity: 0.8;
 }
 </style>

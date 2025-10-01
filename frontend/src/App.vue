@@ -6,24 +6,26 @@
     :locale="antLocale"
   >
     <a-app>
-      <MainLayout>
+      <component :is="layoutComponent">
         <router-view v-slot="{ Component }">
           <transition name="fade" mode="out-in">
             <component :is="Component" />
           </transition>
         </router-view>
-      </MainLayout>
+      </component>
     </a-app>
   </a-config-provider>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useTheme } from '@/composables/useTheme'
 import { useBX24 } from '@/composables/useBX24'
 import { useAppStore } from '@/stores/app'
 import MainLayout from '@/layouts/MainLayout.vue'
+import WidgetLayout from '@/layouts/WidgetLayout.vue'
 
 // Ant Design locales
 import enUS from 'ant-design-vue/es/locale/en_US'
@@ -36,10 +38,25 @@ import plPL from 'ant-design-vue/es/locale/pl_PL'
 import ptBR from 'ant-design-vue/es/locale/pt_BR'
 import esES from 'ant-design-vue/es/locale/es_ES'
 
+const route = useRoute()
 const { locale } = useI18n()
 const { themeConfig, isDark } = useTheme()
 const bx24 = useBX24()
 const appStore = useAppStore()
+
+// Визначаємо який layout використовувати
+const layoutComponent = computed(() => {
+  // Перевіряємо meta.layout в роуті
+  const layoutType = route.meta?.layout as string || 'main'
+  
+  // Якщо layout = 'widget' або 'embedded', використовуємо WidgetLayout
+  if (layoutType === 'widget' || layoutType === 'embedded') {
+    return WidgetLayout
+  }
+  
+  // За замовчуванням використовуємо MainLayout
+  return MainLayout
+})
 
 // Мапінг локалей для Ant Design
 const antLocale = computed(() => {
@@ -78,6 +95,15 @@ onMounted(async () => {
   }
   
   // Auto-fit window після завантаження
+  if (window.BX24?.fitWindow) {
+    setTimeout(() => {
+      window.BX24.fitWindow()
+    }, 100)
+  }
+})
+
+// Слідкуємо за зміною роуту для auto-resize
+watch(() => route.path, () => {
   if (window.BX24?.fitWindow) {
     setTimeout(() => {
       window.BX24.fitWindow()
