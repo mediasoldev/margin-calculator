@@ -1,0 +1,48 @@
+# .gitignore
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+/storage/logs/*.log
+/storage/logs/**/*.log
+
+# Dependencies
+/vendor/
+/node_modules/
+
+# Build files
+/dist/
+/build/
+/public/assets/
+/public/js/
+/public/css/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Test coverage
+/coverage/
+*.coverage
+.phpunit.result.cache
+
+# Temporary files
+*.tmp
+*.temp
+*.cache
+*.bak
+
+# Bitrix specific
+/public/upload/
+/public/bitrix/
+settings.json

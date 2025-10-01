@@ -1,0 +1,56 @@
+bitrix24-app-template/
+├── .env.example
+├── .gitignore
+├── README.md
+├── API_REFERENCE.md
+├── DEVELOPMENT_GUIDE.md
+│
+├── backend/
+│   ├── bootstrap.php
+│   │
+│   ├── config/
+│   │   ├── app.php
+│   │   ├── database.php
+│   │   └── routes.php
+│   │
+│   ├── lib/
+│   │   ├── Core/
+│   │   │   ├── Database.php
+│   │   │   ├── Logger.php
+│   │   │   └── Response.php
+│   │   │
+│   │   └── Bitrix/
+│   │       ├── CRest.php
+│   │       ├── TokenManager.php
+│   │       └── ApiCallTracker.php
+│   │
+│   └── handlers/
+│       ├── BaseHandler.php
+│       │
+│       └── events/
+│           ├── InstallHandler.php
+│           ├── UninstallHandler.php
+│           ├── UpdateHandler.php
+│           ├── DefaultHandler.php
+│           ├── LicenseHandler.php
+│           └── DiagnosticsHandler.php
+│
+├── public/
+│   ├── index.php
+│   ├── index.html
+│   ├── stats.html
+│   │
+│   ├── install/
+│   │   ├── index.php
+│   │   ├── install.html
+│   │   └── install.js
+│   │
+│   └── api/
+│       ├── webhook.php
+│       ├── rest.php
+│       ├── health.php
+│       └── stats.php
+│
+└── storage/
+    └── logs/
+        └── .gitkeep

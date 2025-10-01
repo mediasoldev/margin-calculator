@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Endpoint Tester - Bitrix24 App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
+        
+        .test-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .test-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .test-card h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .input-group textarea {
+            min-height: 100px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+        
+        .btn-warning {
+            background: #ed8936;
+            color: white;
+        }
+        
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 5px;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            display: none;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .result.show {
+            display: block;
+        }
+        
+        .result.success {
+            background: #c6f6d5;
+            border-color: #48bb78;
+        }
+        
+        .result.error {
+            background: #fed7d7;
+            border-color: #f56565;
+        }
+        
+        .result pre {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .status-indicator.online {
+            background: #48bb78;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-indicator.offline {
+            background: #f56565;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(72, 187, 120, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(72, 187, 120, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(72, 187, 120, 0);
+            }
+        }
+        
+        .quick-actions {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .quick-actions h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #718096;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0,0,0,.1);
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 API Endpoint Tester</h1>
+        
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <h2>⚡ Quick Actions</h2>
+            <div class="action-buttons">
+                <button class="btn btn-success" onclick="runAllHealthChecks()">Run All Health Checks</button>
+                <button class="btn btn-primary" onclick="testAllEndpoints()">Test All Endpoints</button>
+                <button class="btn btn-warning" onclick="clearAllResults()">Clear Results</button>
+                <button class="btn btn-danger" onclick="resetTestData()">Reset Test Data</button>
+            </div>
+            <div class="stats" id="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="total-tests">0</div>
+                    <div class="stat-label">Total Tests</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="passed-tests">0</div>
+                    <div class="stat-label">Passed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="failed-tests">0</div>
+                    <div class="stat-label">Failed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="response-time">0ms</div>
+                    <div class="stat-label">Avg Response</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-grid">
+            <!-- Health Check -->
+            <div class="test-card">
+                <h2><span class="status-indicator" id="health-status"></span>Health Check</h2>
+                <button class="btn btn-primary" onclick="testHealth()">Test Health</button>
+                <button class="btn btn-success" onclick="testDeepHealth()">Deep Health Check</button>
+                <div class="result" id="health-result"></div>
+            </div>
+            
+            <!-- Portal Info -->
+            <div class="test-card">
+                <h2>Portal Information</h2>
+                <div class="input-group">
+                    <label>Domain</label>
+                    <input type="text" id="portal-domain" value="test.bitrix24.com" placeholder="domain.bitrix24.com">
+                </div>
+                <button class="btn btn-primary" onclick="testPortalInfo()">Get Info</button>
+                <button class="btn btn-primary" onclick="testPortalValidate()">Validate Portal</button>
+                <div class="result" id="portal-result"></div>
+            </div>
+            
+            <!-- License Management -->
+            <div class="test-card">
+                <h2>License Management</h2>
+                <div class="input-group">
+                    <label>Domain</label>
+                    <input type="text" id="license-domain" value="test.bitrix24.com">
+                </div>
+                <div class="input-group">
+                    <label>License Key</label>
+                    <input type="text" id="license-key" placeholder="XXXX-XXXX-XXXX-XXXX">
+                </div>
+                <button class="btn btn-primary" onclick="testLicenseCheck()">Check License</button>
+                <button class="btn btn-success" onclick="testLicenseActivate()">Activate License</button>
+                <button class="btn btn-warning" onclick="testLicenseValidate()">Validate Key</button>
+                <div class="result" id="license-result"></div>
+            </div>
+            
+            <!-- Settings Management -->
+            <div class="test-card">
+                <h2>Settings Management</h2>
+                <div class="input-group">
+                    <label>Domain</label>
+                    <input type="text" id="settings-domain" value="test.bitrix24.com">
+                </div>
+                <div class="input-group">
+                    <label>Setting Key</label>
+                    <input type="text" id="settings-key" placeholder="feature_enabled">
+                </div>
+                <div class="input-group">
+                    <label>Setting Value</label>
+                    <input type="text" id="settings-value" placeholder="true">
+                </div>
+                <button class="btn btn-primary" onclick="testGetSettings()">Get Settings</button>
+                <button class="btn btn-success" onclick="testSaveSettings()">Save Setting</button>
+                <button class="btn btn-danger" onclick="testDeleteSettings()">Delete Setting</button>
+                <div class="result" id="settings-result"></div>
+            </div>
+            
+            <!-- Bitrix24 API Proxy -->
+            <div class="test-card">
+                <h2>Bitrix24 API Proxy</h2>
+                <div class="input-group">
+                    <label>Domain</label>
+                    <input type="text" id="bx-domain" value="test.bitrix24.com">
+                </div>
+                <div class="input-group">
+                    <label>Method</label>
+                    <select id="bx-method">
+                        <option value="user.current">user.current</option>
+                        <option value="crm.deal.list">crm.deal.list</option>
+                        <option value="crm.contact.list">crm.contact.list</option>
+                        <option value="crm.company.list">crm.company.list</option>
+                        <option value="crm.lead.list">crm.lead.list</option>
+                        <option value="tasks.task.list">tasks.task.list</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Parameters (JSON)</label>
+                    <textarea id="bx-params">{"select": ["ID", "TITLE"], "limit": 5}</textarea>
+                </div>
+                <button class="btn btn-primary" onclick="testBitrixCall()">Call Method</button>
+                <button class="btn btn-success" onclick="testBitrixBatch()">Batch Call</button>
+                <div class="result" id="bx-result"></div>
+            </div>
+            
+            <!-- Token Management -->
+            <div class="test-card">
+                <h2>Token Management</h2>
+                <div class="input-group">
+                    <label>Domain</label>
+                    <input type="text" id="token-domain" value="test.bitrix24.com">
+                </div>
+                <button class="btn btn-primary" onclick="testTokenRefresh()">Refresh Tokens</button>
+                <button class="btn btn-warning" onclick="testTokenValidate()">Validate Token</button>
+                <button class="btn btn-danger" onclick="testTokenExpire()">Test Expired Token</button>
+                <div class="result" id="token-result"></div>
+            </div>
+            
+            <!-- Diagnostics -->
+            <div class="test-card">
+                <h2>System Diagnostics</h2>
+                <div class="input-group">
+                    <label>Domain</label>
+                    <input type="text" id="diag-domain" value="test.bitrix24.com">
+                </div>
+                <button class="btn btn-primary" onclick="testDiagnosticsFull()">Full Diagnostics</button>
+                <button class="btn btn-primary" onclick="testDiagnosticsHandlers()">Event Handlers</button>
+                <button class="btn btn-primary" onclick="testDiagnosticsStorage()">Storage Stats</button>
+                <button class="btn btn-primary" onclick="testDiagnosticsDatabase()">Database Stats</button>
+                <div class="result" id="diag-result"></div>
+            </div>
+            
+            <!-- Logs Viewer -->
+            <div class="test-card">
+                <h2>Logs Viewer</h2>
+                <div class="input-group">
+                    <label>Domain</label>
+                    <input type="text" id="logs-domain" value="test.bitrix24.com">
+                </div>
+                <div class="input-group">
+                    <label>Log Level</label>
+                    <select id="logs-level">
+                        <option value="all">All</option>
+                        <option value="error">Errors</option>
+                        <option value="warning">Warnings</option>
+                        <option value="info">Info</option>
+                        <option value="debug">Debug</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="testGetLogs()">Get Recent Logs</button>
+                <button class="btn btn-danger" onclick="testClearLogs()">Clear Logs</button>
+                <div class="result" id="logs-result"></div>
+            </div>
+            
+            <!-- Statistics -->
+            <div class="test-card">
+                <h2>API Statistics</h2>
+                <button class="btn btn-primary" onclick="testGetStats()">Get Statistics</button>
+                <button class="btn btn-primary" onclick="testGetRateLimits()">Check Rate Limits</button>
+                <button class="btn btn-warning" onclick="testResetStats()">Reset Statistics</button>
+                <div class="result" id="stats-result"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Configuration
+        const API_BASE = '/v1-bitrix24-app-template/public/api';
+        let testStats = {
+            total: 0,
+            passed: 0,
+            failed: 0,
+            responseTimes: []
+        };
+        
+        // Helper function to make API calls
+        async function apiCall(endpoint, options = {}) {
+            const startTime = performance.now();
+            testStats.total++;
+            updateStats();
+            
+            try {
+                const response = await fetch(API_BASE + endpoint, {
+                    ...options,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    }
+                });
+                
+                const endTime = performance.now();
+                const responseTime = endTime - startTime;
+                testStats.responseTimes.push(responseTime);
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    testStats.passed++;
+                } else {
+                    testStats.failed++;
+                }
+                
+                updateStats();
+                
+                return {
+                    success: response.ok,
+                    status: response.status,
+                    data: data,
+                    responseTime: responseTime.toFixed(2)
+                };
+            } catch (error) {
+                testStats.failed++;
+                updateStats();
+                
+                return {
+                    success: false,
+                    error: error.message,
+                    responseTime: (performance.now() - startTime).toFixed(2)
+                };
+            }
+        }
+        
+        // Update statistics display
+        function updateStats() {
+            document.getElementById('total-tests').textContent = testStats.total;
+            document.getElementById('passed-tests').textContent = testStats.passed;
+            document.getElementById('failed-tests').textContent = testStats.failed;
+            
+            if (testStats.responseTimes.length > 0) {
+                const avgTime = testStats.responseTimes.reduce((a, b) => a + b, 0) / testStats.responseTimes.length;
+                document.getElementById('response-time').textContent = avgTime.toFixed(0) + 'ms';
+            }
+        }
+        
+        // Display result
+        function showResult(elementId, data, success = true) {
+            const resultDiv = document.getElementById(elementId);
+            resultDiv.className = 'result show ' + (success ? 'success' : 'error');
+            
+            const output = {
+                timestamp: new Date().toISOString(),
+                responseTime: data.responseTime + 'ms',
+                status: data.status || (success ? 'success' : 'error'),
+                result: data.data || data
+            };
+            
+            resultDiv.innerHTML = `<pre>${JSON.stringify(output, null, 2)}</pre>`;
+        }
+        
+        // Health Check Tests
+        async function testHealth() {
+            const result = await apiCall('/health.php');
+            showResult('health-result', result, result.success);
+            
+            const indicator = document.getElementById('health-status');
+            indicator.className = 'status-indicator ' + (result.success ? 'online' : 'offline');
+        }
+        
+        async function testDeepHealth() {
+            const checks = [
+                apiCall('/health.php'),
+                apiCall('/rest.php/info?domain=test.bitrix24.com'),
+                apiCall('/stats.php?action=summary')
+            ];
+            
+            const results = await Promise.all(checks);
+            const allHealthy = results.every(r => r.success);
+            
+            showResult('health-result', {
+                allHealthy,
+                checks: results
+            }, allHealthy);
+        }
+        
+        // Portal Tests
+        async function testPortalInfo() {
+            const domain = document.getElementById('portal-domain').value;
+            const result = await apiCall(`/rest.php/info?domain=${domain}`);
+            showResult('portal-result', result, result.success);
+        }
+        
+        async function testPortalValidate() {
+            const domain = document.getElementById('portal-domain').value;
+            const result = await apiCall(`/rest.php/portal/validate?domain=${domain}`);
+            showResult('portal-result', result, result.success);
+        }
+        
+        // License Tests
+        async function testLicenseCheck() {
+            const domain = document.getElementById('license-domain').value;
+            const result = await apiCall(`/rest.php/license/check?domain=${domain}`);
+            showResult('license-result', result, result.success);
+        }
+        
+        async function testLicenseActivate() {
+            const domain = document.getElementById('license-domain').value;
+            const key = document.getElementById('license-key').value;
+            
+            const result = await apiCall('/rest.php/license/activate', {
+                method: 'POST',
+                body: JSON.stringify({ domain, license_key: key })
+            });
+            
+            showResult('license-result', result, result.success);
+        }
+        
+        async function testLicenseValidate() {
+            const key = document.getElementById('license-key').value;
+            
+            const result = await apiCall('/rest.php/license/validate', {
+                method: 'POST',
+                body: JSON.stringify({ license_key: key })
+            });
+            
+            showResult('license-result', result, result.success);
+        }
+        
+        // Settings Tests
+        async function testGetSettings() {
+            const domain = document.getElementById('settings-domain').value;
+            const key = document.getElementById('settings-key').value;
+            const endpoint = key ? 
+                `/rest.php/portal/settings?domain=${domain}&key=${key}` :
+                `/rest.php/portal/settings?domain=${domain}`;
+            
+            const result = await apiCall(endpoint);
+            showResult('settings-result', result, result.success);
+        }
+        
+        async function testSaveSettings() {
+            const domain = document.getElementById('settings-domain').value;
+            const key = document.getElementById('settings-key').value;
+            const value = document.getElementById('settings-value').value;
+            
+            const result = await apiCall('/rest.php/portal/settings', {
+                method: 'POST',
+                body: JSON.stringify({ domain, key, value })
+            });
+            
+            showResult('settings-result', result, result.success);
+        }
+        
+        async function testDeleteSettings() {
+            const domain = document.getElementById('settings-domain').value;
+            const key = document.getElementById('settings-key').value;
+            
+            const result = await apiCall('/rest.php/portal/settings', {
+                method: 'DELETE',
+                body: JSON.stringify({ domain, key })
+            });
+            
+            showResult('settings-result', result, result.success);
+        }
+        
+        // Bitrix24 API Tests
+        async function testBitrixCall() {
+            const domain = document.getElementById('bx-domain').value;
+            const method = document.getElementById('bx-method').value;
+            const params = JSON.parse(document.getElementById('bx-params').value || '{}');
+            
+            const result = await apiCall('/rest.php/bitrix/call', {
+                method: 'POST',
+                body: JSON.stringify({ domain, method, params })
+            });
+            
+            showResult('bx-result', result, result.success);
+        }
+        
+        async function testBitrixBatch() {
+            const domain = document.getElementById('bx-domain').value;
+            
+            const commands = {
+                user: { method: 'user.current', params: {} },
+                deals: { method: 'crm.deal.list', params: { select: ['ID', 'TITLE'], limit: 3 } },
+                contacts: { method: 'crm.contact.list', params: { select: ['ID', 'NAME'], limit: 3 } }
+            };
+            
+            const result = await apiCall('/rest.php/bitrix/batch', {
+                method: 'POST',
+                body: JSON.stringify({ domain, commands, halt: false })
+            });
+            
+            showResult('bx-result', result, result.success);
+        }
+        
+        // Token Tests
+        async function testTokenRefresh() {
+            const domain = document.getElementById('token-domain').value;
+            
+            const result = await apiCall('/rest.php/token/refresh', {
+                method: 'POST',
+                body: JSON.stringify({ domain })
+            });
+            
+            showResult('token-result', result, result.success);
+        }
+        
+        async function testTokenValidate() {
+            const domain = document.getElementById('token-domain').value;
+            
+            const result = await apiCall(`/rest.php/token/validate?domain=${domain}`);
+            showResult('token-result', result, result.success);
+        }
+        
+        async function testTokenExpire() {
+            // Simulate expired token
+            const result = await apiCall('/rest.php/bitrix/call', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer expired_token_test'
+                },
+                body: JSON.stringify({ 
+                    domain: 'test.bitrix24.com',
+                    method: 'user.current',
+                    params: {}
+                })
+            });
+            
+            showResult('token-result', result, result.success);
+        }
+        
+        // Diagnostics Tests
+        async function testDiagnosticsFull() {
+            const domain = document.getElementById('diag-domain').value;
+            const result = await apiCall(`/rest.php/diagnostics/full?domain=${domain}`);
+            showResult('diag-result', result, result.success);
+        }
+        
+        async function testDiagnosticsHandlers() {
+            const domain = document.getElementById('diag-domain').value;
+            const result = await apiCall(`/rest.php/diagnostics/handlers?domain=${domain}`);
+            showResult('diag-result', result, result.success);
+        }
+        
+        async function testDiagnosticsStorage() {
+            const domain = document.getElementById('diag-domain').value;
+            const result = await apiCall(`/rest.php/diagnostics/storage?domain=${domain}`);
+            showResult('diag-result', result, result.success);
+        }
+        
+        async function testDiagnosticsDatabase() {
+            const domain = document.getElementById('diag-domain').value;
+            const result = await apiCall(`/rest.php/diagnostics/database?domain=${domain}`);
+            showResult('diag-result', result, result.success);
+        }
+        
+        // Logs Tests
+        async function testGetLogs() {
+            const domain = document.getElementById('logs-domain').value;
+            const level = document.getElementById('logs-level').value;
+            const endpoint = level === 'all' ? 
+                `/rest.php/logs/recent?domain=${domain}` :
+                `/rest.php/logs/recent?domain=${domain}&level=${level}`;
+            
+            const result = await apiCall(endpoint);
+            showResult('logs-result', result, result.success);
+        }
+        
+        async function testClearLogs() {
+            if (!confirm('Are you sure you want to clear logs?')) return;
+            
+            const domain = document.getElementById('logs-domain').value;
+            const result = await apiCall('/rest.php/logs/clear', {
+                method: 'POST',
+                body: JSON.stringify({ domain })
+            });
+            
+            showResult('logs-result', result, result.success);
+        }
+        
+        // Statistics Tests
+        async function testGetStats() {
+            const result = await apiCall('/stats.php?action=summary');
+            showResult('stats-result', result, result.success);
+        }
+        
+        async function testGetRateLimits() {
+            const result = await apiCall('/stats.php?action=rate-limits');
+            showResult('stats-result', result, result.success);
+        }
+        
+        async function testResetStats() {
+            if (!confirm('Are you sure you want to reset statistics?')) return;
+            
+            const result = await apiCall('/stats.php', {
+                method: 'POST',
+                body: JSON.stringify({ action: 'reset' })
+            });
+            
+            showResult('stats-result', result, result.success);
+        }
+        
+        // Quick Actions
+        async function runAllHealthChecks() {
+            await testHealth();
+            await testGetStats();
+            await testDiagnosticsFull();
+        }
+        
+        async function testAllEndpoints() {
+            const tests = [
+                testHealth(),
+                testPortalInfo(),
+                testLicenseCheck(),
+                testGetSettings(),
+                testGetStats()
+            ];
+            
+            await Promise.all(tests);
+            alert(`Tests completed! Passed: ${testStats.passed}, Failed: ${testStats.failed}`);
+        }
+        
+        function clearAllResults() {
+            document.querySelectorAll('.result').forEach(el => {
+                el.classList.remove('show');
+                el.innerHTML = '';
+            });
+        }
+        
+        function resetTestData() {
+            if (!confirm('Reset all test data and statistics?')) return;
+            
+            testStats = {
+                total: 0,
+                passed: 0,
+                failed: 0,
+                responseTimes: []
+            };
+            updateStats();
+            clearAllResults();
+        }
+        
+        // Initialize on load
+        window.onload = function() {
+            testHealth();
+        };
+    </script>
+</body>
+</html>

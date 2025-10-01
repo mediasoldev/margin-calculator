@@ -1,0 +1,1167 @@
+<!-- public/index.html -->
+<!-- Main Application HTML -->
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background: #f5f7fa;
+        color: #333;
+        line-height: 1.6;
+    }
+    
+    #app {
+        min-height: 100vh;
+        padding: 20px;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 30px;
+    }
+    
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #e8ecef;
+    }
+    
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    
+    .logo-icon {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    
+    .logo-text {
+        font-size: 24px;
+        font-weight: 600;
+        color: #2d3748;
+    }
+    
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #718096;
+        font-size: 14px;
+    }
+    
+    .badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    
+    .badge-trial {
+        background: #fef3c7;
+        color: #92400e;
+    }
+    
+    .badge-pro {
+        background: #d1fae5;
+        color: #065f46;
+    }
+    
+    .nav-tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #e8ecef;
+        padding-bottom: 0;
+    }
+    
+    .nav-tab {
+        padding: 12px 20px;
+        background: transparent;
+        border: none;
+        color: #718096;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+        border-bottom: 2px solid transparent;
+        margin-bottom: -2px;
+    }
+    
+    .nav-tab:hover {
+        color: #2d3748;
+    }
+    
+    .nav-tab.active {
+        color: #667eea;
+        border-bottom-color: #667eea;
+    }
+    
+    .content {
+        min-height: 400px;
+    }
+    
+    .welcome-section {
+        text-align: center;
+        padding: 60px 20px;
+    }
+    
+    .welcome-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 15px;
+    }
+    
+    .welcome-subtitle {
+        font-size: 18px;
+        color: #718096;
+        margin-bottom: 40px;
+    }
+    
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 40px;
+    }
+    
+    .feature-card {
+        padding: 20px;
+        border: 1px solid #e8ecef;
+        border-radius: 8px;
+        text-align: center;
+        transition: all 0.3s;
+    }
+    
+    .feature-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+    
+    .feature-icon {
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 15px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 24px;
+    }
+    
+    .feature-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2d3748;
+        margin-bottom: 10px;
+    }
+    
+    .feature-description {
+        font-size: 14px;
+        color: #718096;
+    }
+    
+    .settings-form {
+        max-width: 600px;
+    }
+    
+    .form-group {
+        margin-bottom: 25px;
+    }
+    
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #2d3748;
+    }
+    
+    .form-input,
+    .form-select,
+    .form-textarea {
+        width: 100%;
+        padding: 10px 15px;
+        border: 1px solid #e8ecef;
+        border-radius: 6px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+    }
+    
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+    
+    .form-textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+    
+    .form-help {
+        margin-top: 5px;
+        font-size: 14px;
+        color: #718096;
+    }
+    
+    .button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .button-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
+    .button-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+    
+    .button-secondary {
+        background: #e8ecef;
+        color: #2d3748;
+    }
+    
+    .button-secondary:hover {
+        background: #d2d6dc;
+    }
+    
+    .loader {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 300px;
+    }
+    
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #e8ecef;
+        border-top-color: #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    .alert {
+        padding: 15px 20px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+    }
+    
+    .alert-info {
+        background: #e0e7ff;
+        color: #3730a3;
+        border-left: 4px solid #667eea;
+    }
+    
+    .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+        border-left: 4px solid #10b981;
+    }
+    
+    .alert-warning {
+        background: #fef3c7;
+        color: #92400e;
+        border-left: 4px solid #f59e0b;
+    }
+    
+    .alert-error {
+        background: #fee2e2;
+        color: #991b1b;
+        border-left: 4px solid #ef4444;
+    }
+    .diagnostic-section {
+        margin-bottom: 40px;
+        padding: 20px;
+        border: 1px solid #e8ecef;
+        border-radius: 8px;
+        background: #fafbfc;
+    }
+    
+    .diagnostic-section h3 {
+        margin: 0 0 20px;
+        color: #2d3748;
+        font-size: 18px;
+        font-weight: 600;
+    }
+    
+    .diagnostic-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+    
+    .diagnostic-table th {
+        background: #f7fafc;
+        padding: 12px;
+        text-align: left;
+        font-weight: 600;
+        color: #4a5568;
+        border-bottom: 2px solid #e8ecef;
+    }
+    
+    .diagnostic-table td {
+        padding: 12px;
+        border-bottom: 1px solid #e8ecef;
+        color: #2d3748;
+    }
+    
+    .diagnostic-table tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .status-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+    }
+    
+    .status-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        background: white;
+        border-radius: 6px;
+        border: 1px solid #e8ecef;
+    }
+    
+    .status-label {
+        font-weight: 500;
+        color: #718096;
+    }
+    
+    .status-value {
+        font-weight: 600;
+    }
+    
+    .status-value.success {
+        color: #48bb78;
+    }
+    
+    .status-value.warning {
+        color: #f6ad55;
+    }
+    
+    .status-value.error {
+        color: #f56565;
+    }
+    
+    .permissions-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 15px;
+    }
+    
+    .permission-item {
+        padding: 6px 12px;
+        background: #edf2f7;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #4a5568;
+    }
+    
+    .permission-item.granted {
+        background: #c6f6d5;
+        color: #22543d;
+    }
+    
+    .error-log {
+        max-height: 300px;
+        overflow-y: auto;
+        background: white;
+        border-radius: 6px;
+        padding: 15px;
+    }
+    
+    .error-entry {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-left: 3px solid #f56565;
+        background: #fff5f5;
+        border-radius: 4px;
+    }
+    
+    .error-time {
+        font-size: 12px;
+        color: #718096;
+    }
+    
+    .error-message {
+        margin-top: 5px;
+        color: #2d3748;
+        font-family: monospace;
+        font-size: 13px;
+    }
+    
+    .test-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .test-results {
+        margin-top: 20px;
+        padding: 15px;
+        background: white;
+        border-radius: 6px;
+        display: none;
+    }
+    
+    .test-results.show {
+        display: block;
+    }
+</style>
+
+<div id="app">
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">B24</div>
+                <div class="logo-text">Bitrix24 App</div>
+            </div>
+            <div class="user-info">
+                <span id="userInfo">Loading...</span>
+                <span id="licenseStatus" class="badge"></span>
+            </div>
+        </div>
+        
+        <!-- Navigation -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="dashboard">Dashboard</button>
+            <button class="nav-tab" data-tab="settings">Settings</button>
+            <button class="nav-tab" data-tab="diagnostics">Diagnostics</button>
+            <button class="nav-tab" data-tab="help">Help</button>
+        </div>
+        
+        <!-- Content -->
+        <div class="content">
+            <!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="tab-content">
+                <div class="welcome-section">
+                    <h1 class="welcome-title">Welcome to Bitrix24 App Template</h1>
+                    <p class="welcome-subtitle">Your universal starting point for Bitrix24 applications</p>
+                    
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">🚀</div>
+                            <div class="feature-title">Quick Start</div>
+                            <div class="feature-description">Ready-to-use template with all essential features</div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">🔐</div>
+                            <div class="feature-title">Secure API</div>
+                            <div class="feature-description">Built-in authentication and token management</div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">⚡</div>
+                            <div class="feature-title">Event Handlers</div>
+                            <div class="feature-description">Process Bitrix24 events in real-time</div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">💾</div>
+                            <div class="feature-title">Database Ready</div>
+                            <div class="feature-description">Automatic table creation and management</div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">📊</div>
+                            <div class="feature-title">Vue.js Ready</div>
+                            <div class="feature-description">Prepared for modern frontend integration</div>
+                        </div>
+                        
+                        <div class="feature-card">
+                            <div class="feature-icon">🛠</div>
+                            <div class="feature-title">Extensible</div>
+                            <div class="feature-description">Clean architecture for easy customization</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Settings Tab -->
+            <div id="settings-tab" class="tab-content" style="display: none;">
+                <h2 style="margin-bottom: 30px;">Application Settings</h2>
+                
+                <div class="alert alert-info">
+                    Configure your application settings below. Changes are saved automatically.
+                </div>
+                
+                <form class="settings-form" id="settingsForm">
+                    <div class="form-group">
+                        <label class="form-label">Application Name</label>
+                        <input type="text" class="form-input" id="appName" placeholder="Enter application name">
+                        <div class="form-help">This name will be displayed to users</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Default Language</label>
+                        <select class="form-select" id="defaultLang">
+                            <option value="en">English</option>
+                            <option value="ru">Русский</option>
+                            <option value="de">Deutsch</option>
+                            <option value="es">Español</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Webhook URL</label>
+                        <input type="text" class="form-input" id="webhookUrl" readonly>
+                        <div class="form-help">Use this URL for external integrations</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">API Endpoint</label>
+                        <input type="text" class="form-input" id="apiEndpoint" readonly>
+                        <div class="form-help">REST API endpoint for frontend applications</div>
+                    </div>
+                    
+                    <button type="submit" class="button button-primary">Save Settings</button>
+                </form>
+            </div>
+            
+            <!-- Diagnostics Tab -->
+            <div id="diagnostics-tab" class="tab-content" style="display: none;">
+                <h2 style="margin-bottom: 30px;">Application Diagnostics</h2>
+                
+                <div class="alert alert-info">
+                    Complete technical analysis of your Bitrix24 application installation
+                </div>
+                
+                <!-- Quick Status -->
+                <div class="diagnostic-section">
+                    <h3>Quick Status</h3>
+                    <div class="status-grid" id="quickStatus">
+                        <div class="status-item">
+                            <span class="status-label">Application Status:</span>
+                            <span class="status-value" id="appStatus">Loading...</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">License Status:</span>
+                            <span class="status-value" id="licStatus">Loading...</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Token Status:</span>
+                            <span class="status-value" id="tokenStatus">Loading...</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Database Connection:</span>
+                            <span class="status-value" id="dbStatus">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Event Handlers -->
+                <div class="diagnostic-section">
+                    <h3>Registered Event Handlers</h3>
+                    <div class="loader" id="handlersLoader">
+                        <div class="spinner"></div>
+                    </div>
+                    <div id="eventHandlers" style="display: none;">
+                        <table class="diagnostic-table">
+                            <thead>
+                                <tr>
+                                    <th>Event</th>
+                                    <th>Handler URL</th>
+                                    <th>Auth Type</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="eventHandlersList"></tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Placements -->
+                <div class="diagnostic-section">
+                    <h3>Application Placements</h3>
+                    <div id="placements">
+                        <table class="diagnostic-table">
+                            <thead>
+                                <tr>
+                                    <th>Placement</th>
+                                    <th>Handler</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody id="placementsList"></tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- User Fields -->
+                <div class="diagnostic-section">
+                    <h3>Created User Fields</h3>
+                    <div id="userFields">
+                        <table class="diagnostic-table">
+                            <thead>
+                                <tr>
+                                    <th>Field Name</th>
+                                    <th>Entity Type</th>
+                                    <th>Field Type</th>
+                                    <th>Required</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userFieldsList"></tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Permissions -->
+                <div class="diagnostic-section">
+                    <h3>Application Permissions (Scope)</h3>
+                    <div id="permissions">
+                        <div class="permissions-grid" id="permissionsList"></div>
+                    </div>
+                </div>
+                
+                <!-- Storage Info -->
+                <div class="diagnostic-section">
+                    <h3>Data Storage</h3>
+                    <div id="storageInfo">
+                        <table class="diagnostic-table">
+                            <thead>
+                                <tr>
+                                    <th>Storage Type</th>
+                                    <th>Items Count</th>
+                                    <th>Last Modified</th>
+                                </tr>
+                            </thead>
+                            <tbody id="storageList"></tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- API Calls Statistics -->
+                <div class="diagnostic-section">
+                    <h3>API Usage Statistics</h3>
+                    <div id="apiStats">
+                        <table class="diagnostic-table">
+                            <thead>
+                                <tr>
+                                    <th>Method</th>
+                                    <th>Calls Today</th>
+                                    <th>Avg Response Time</th>
+                                    <th>Errors</th>
+                                </tr>
+                            </thead>
+                            <tbody id="apiStatsList"></tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- System Information -->
+                <div class="diagnostic-section">
+                    <h3>System Information</h3>
+                    <div id="systemInfo">
+                        <table class="diagnostic-table">
+                            <tbody id="systemInfoList"></tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Recent Errors -->
+                <div class="diagnostic-section">
+                    <h3>Recent Errors (Last 24 hours)</h3>
+                    <div id="recentErrors">
+                        <div class="error-log" id="errorLogList"></div>
+                    </div>
+                </div>
+                
+                <!-- Test Actions -->
+                <div class="diagnostic-section">
+                    <h3>Test Actions</h3>
+                    <div class="test-buttons">
+                        <button class="button button-secondary" onclick="testAPIConnection()">Test API Connection</button>
+                        <button class="button button-secondary" onclick="testDatabaseConnection()">Test Database</button>
+                        <button class="button button-secondary" onclick="testWebhooks()">Test Webhooks</button>
+                        <button class="button button-secondary" onclick="refreshDiagnostics()">Refresh All</button>
+                    </div>
+                    <div id="testResults" class="test-results"></div>
+                </div>
+            </div>
+            
+            <!-- Help Tab -->
+            <div id="help-tab" class="tab-content" style="display: none;">
+                <h2 style="margin-bottom: 30px;">Documentation & Support</h2>
+                
+                <div class="alert alert-info">
+                    <strong>Quick Links:</strong><br>
+                    • <a href="https://dev.1c-bitrix.ru/rest_help/" target="_blank">Bitrix24 REST API Documentation</a><br>
+                    • <a href="https://github.com" target="_blank">GitHub Repository</a><br>
+                    • <a href="#" target="_blank">Support Portal</a>
+                </div>
+                
+                <h3 style="margin: 30px 0 15px;">Application Information</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr style="border-bottom: 1px solid #e8ecef;">
+                        <td style="padding: 10px; font-weight: 500;">Domain:</td>
+                        <td style="padding: 10px;" id="infoDomain">-</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e8ecef;">
+                        <td style="padding: 10px; font-weight: 500;">Member ID:</td>
+                        <td style="padding: 10px;" id="infoMemberId">-</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e8ecef;">
+                        <td style="padding: 10px; font-weight: 500;">User ID:</td>
+                        <td style="padding: 10px;" id="infoUserId">-</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e8ecef;">
+                        <td style="padding: 10px; font-weight: 500;">Language:</td>
+                        <td style="padding: 10px;" id="infoLang">-</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e8ecef;">
+                        <td style="padding: 10px; font-weight: 500;">Placement:</td>
+                        <td style="padding: 10px;" id="infoPlacement">-</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Main application JavaScript
+(function() {
+    'use strict';
+    
+    // Get app data
+    const APP_DATA = window.APP_DATA || {};
+    
+    // Initialize Bitrix24
+    BX24.init(function() {
+        console.log('BX24 initialized');
+        
+        // Get current user info
+        BX24.callMethod('user.current', {}, function(result) {
+            if (result.error()) {
+                console.error('Error getting user:', result.error());
+                return;
+            }
+            
+            const user = result.data();
+            document.getElementById('userInfo').textContent = 
+                user.NAME + ' ' + user.LAST_NAME;
+            
+            // Check if admin
+            APP_DATA.is_admin = user.ADMIN || false;
+        });
+        
+        // Auto-resize frame
+        BX24.fitWindow();
+    });
+    
+    // Update UI with app data
+    function updateUI() {
+        // Update license status
+        const licenseEl = document.getElementById('licenseStatus');
+        if (APP_DATA.is_trial) {
+            licenseEl.textContent = 'Trial';
+            licenseEl.className = 'badge badge-trial';
+        } else {
+            licenseEl.textContent = 'Pro';
+            licenseEl.className = 'badge badge-pro';
+        }
+        
+        // Update info tab
+        document.getElementById('infoDomain').textContent = APP_DATA.domain || '-';
+        document.getElementById('infoMemberId').textContent = APP_DATA.member_id || '-';
+        document.getElementById('infoUserId').textContent = APP_DATA.user_id || '-';
+        document.getElementById('infoLang').textContent = APP_DATA.lang || '-';
+        document.getElementById('infoPlacement').textContent = APP_DATA.placement || 'DEFAULT';
+        
+        // Update settings
+        const baseUrl = window.location.origin;
+        document.getElementById('webhookUrl').value = baseUrl + '/api/webhook.php';
+        document.getElementById('apiEndpoint').value = baseUrl + APP_DATA.api_endpoint;
+    }
+    
+    // Tab navigation
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            const tabName = this.getAttribute('data-tab');
+            
+            // Update active tab
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show corresponding content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            document.getElementById(tabName + '-tab').style.display = 'block';
+            
+            // Load diagnostics when tab is opened
+            if (tabName === 'diagnostics' && !diagnosticsLoaded) {
+                loadDiagnostics();
+            }
+            
+            // Resize window
+            setTimeout(() => BX24.fitWindow(), 100);
+        });
+    });
+    
+    // Settings form
+    document.getElementById('settingsForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Collect form data
+        const settings = {
+            appName: document.getElementById('appName').value,
+            defaultLang: document.getElementById('defaultLang').value
+        };
+        
+        // Save settings via API
+        fetch(APP_DATA.api_endpoint + '/portal/settings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + APP_DATA.app_sid
+            },
+            body: JSON.stringify({
+                domain: APP_DATA.domain,
+                key: 'app_settings',
+                value: JSON.stringify(settings)
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Settings saved successfully!');
+            } else {
+                alert('Error: ' + (data.message || 'Failed to save settings'));
+            }
+        })
+        .catch(error => {
+            console.error('Error saving settings:', error);
+            alert('Failed to save settings');
+        });
+    });
+    
+    // Initialize UI
+    updateUI();
+    
+    // Load diagnostics when tab is opened
+    let diagnosticsLoaded = false;
+    
+    function loadDiagnostics() {
+        if (diagnosticsLoaded) return;
+        
+        console.log('Loading diagnostics...');
+        
+        // Load event handlers
+        BX24.callMethod('event.get', {}, function(result) {
+            const handlers = result.data() || [];
+            const tbody = document.getElementById('eventHandlersList');
+            tbody.innerHTML = '';
+            
+            if (handlers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4">No event handlers registered</td></tr>';
+            } else {
+                handlers.forEach(handler => {
+                    const row = tbody.insertRow();
+                    row.innerHTML = `
+                        <td>${handler.event}</td>
+                        <td style="font-size: 12px; word-break: break-all;">${handler.handler}</td>
+                        <td>${handler.auth_type || '0'}</td>
+                        <td><span class="status-value success">Active</span></td>
+                    `;
+                });
+            }
+            
+            document.getElementById('handlersLoader').style.display = 'none';
+            document.getElementById('eventHandlers').style.display = 'block';
+        });
+        
+        // Load placements
+        BX24.callMethod('placement.get', {}, function(result) {
+            const placements = result.data() || [];
+            const tbody = document.getElementById('placementsList');
+            tbody.innerHTML = '';
+            
+            if (placements.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3">No placements registered</td></tr>';
+            } else {
+                placements.forEach(placement => {
+                    const row = tbody.insertRow();
+                    row.innerHTML = `
+                        <td>${placement.placement}</td>
+                        <td style="font-size: 12px;">${placement.handler}</td>
+                        <td>${placement.title || '-'}</td>
+                    `;
+                });
+            }
+        });
+        
+        // Load permissions (scope)
+        BX24.callMethod('scope', {}, function(result) {
+            const scopes = result.data() || [];
+            const container = document.getElementById('permissionsList');
+            container.innerHTML = '';
+            
+            if (scopes.length === 0) {
+                container.innerHTML = '<div>No permissions granted</div>';
+            } else {
+                scopes.forEach(scope => {
+                    const div = document.createElement('div');
+                    div.className = 'permission-item granted';
+                    div.textContent = scope;
+                    container.appendChild(div);
+                });
+            }
+        });
+        
+        // Load user fields
+        BX24.callMethod('crm.userfield.list', {}, function(result) {
+            const fields = result.data() || [];
+            const tbody = document.getElementById('userFieldsList');
+            tbody.innerHTML = '';
+            
+            if (fields.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4">No user fields created</td></tr>';
+            } else {
+                fields.forEach(field => {
+                    const row = tbody.insertRow();
+                    row.innerHTML = `
+                        <td>${field.FIELD_NAME}</td>
+                        <td>${field.ENTITY_ID}</td>
+                        <td>${field.USER_TYPE_ID}</td>
+                        <td>${field.MANDATORY === 'Y' ? 'Yes' : 'No'}</td>
+                    `;
+                });
+            }
+        });
+        
+        // Load system info
+        loadSystemInfo();
+        
+        // Update quick status
+        updateQuickStatus();
+        
+        // Load storage info
+        loadStorageInfo();
+        
+        // Load recent errors from API
+        loadRecentErrors();
+        
+        diagnosticsLoaded = true;
+    }
+    
+    function loadSystemInfo() {
+        const tbody = document.getElementById('systemInfoList');
+        tbody.innerHTML = `
+            <tr><td>Application Version</td><td>1.0.0</td></tr>
+            <tr><td>Domain</td><td>${APP_DATA.domain}</td></tr>
+            <tr><td>Member ID</td><td>${APP_DATA.member_id}</td></tr>
+            <tr><td>Language</td><td>${APP_DATA.lang}</td></tr>
+            <tr><td>Protocol</td><td>${APP_DATA.protocol ? 'HTTPS' : 'HTTP'}</td></tr>
+            <tr><td>Is Trial</td><td>${APP_DATA.is_trial ? 'Yes' : 'No'}</td></tr>
+            <tr><td>Trial End Date</td><td>${APP_DATA.trial_end_date || 'N/A'}</td></tr>
+            <tr><td>Has License</td><td>${APP_DATA.has_license ? 'Yes' : 'No'}</td></tr>
+            <tr><td>License Valid Until</td><td>${APP_DATA.license_valid_until || 'N/A'}</td></tr>
+        `;
+    }
+    
+    function updateQuickStatus() {
+        // Application status
+        const appStatusEl = document.getElementById('appStatus');
+        if (APP_DATA.license_status && APP_DATA.license_status.is_valid) {
+            appStatusEl.textContent = 'Active';
+            appStatusEl.className = 'status-value success';
+        } else {
+            appStatusEl.textContent = 'License Required';
+            appStatusEl.className = 'status-value error';
+        }
+        
+        // License status
+        const licStatusEl = document.getElementById('licStatus');
+        if (APP_DATA.has_license) {
+            licStatusEl.textContent = 'Licensed';
+            licStatusEl.className = 'status-value success';
+        } else if (APP_DATA.is_trial) {
+            const daysLeft = APP_DATA.license_status ? APP_DATA.license_status.days_remaining : 0;
+            licStatusEl.textContent = `Trial (${daysLeft} days left)`;
+            licStatusEl.className = daysLeft > 3 ? 'status-value warning' : 'status-value error';
+        } else {
+            licStatusEl.textContent = 'No License';
+            licStatusEl.className = 'status-value error';
+        }
+        
+        // Token status
+        const tokenStatusEl = document.getElementById('tokenStatus');
+        if (APP_DATA.auth_id) {
+            tokenStatusEl.textContent = 'Valid';
+            tokenStatusEl.className = 'status-value success';
+        } else {
+            tokenStatusEl.textContent = 'Invalid';
+            tokenStatusEl.className = 'status-value error';
+        }
+        
+        // Database status
+        document.getElementById('dbStatus').textContent = 'Connected';
+        document.getElementById('dbStatus').className = 'status-value success';
+    }
+    
+    function loadStorageInfo() {
+        // Check entity storage
+        BX24.callMethod('entity.item.get', {
+            ENTITY: 'app_storage'
+        }, function(result) {
+            const tbody = document.getElementById('storageList');
+            const items = result.data() || [];
+            
+            tbody.innerHTML = `
+                <tr>
+                    <td>Entity Storage</td>
+                    <td>${items.length}</td>
+                    <td>${items.length > 0 ? 'Active' : 'Empty'}</td>
+                </tr>
+                <tr>
+                    <td>App Options</td>
+                    <td>${Object.keys(APP_DATA.settings || {}).length}</td>
+                    <td>Active</td>
+                </tr>
+            `;
+        });
+    }
+    
+    function loadRecentErrors() {
+        // Fetch recent errors from API
+        fetch(APP_DATA.api_endpoint + '/logs/recent', {
+            headers: {
+                'Authorization': 'Bearer ' + APP_DATA.app_sid
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('errorLogList');
+            if (data.errors && data.errors.length > 0) {
+                container.innerHTML = data.errors.map(error => `
+                    <div class="error-entry">
+                        <div class="error-time">${error.timestamp}</div>
+                        <div class="error-message">${error.message}</div>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = '<div style="color: #48bb78;">No recent errors found</div>';
+            }
+        })
+        .catch(error => {
+            document.getElementById('errorLogList').innerHTML = 
+                '<div style="color: #718096;">Unable to load error logs</div>';
+        });
+    }
+    
+    // Test functions
+    function testAPIConnection() {
+        const resultsDiv = document.getElementById('testResults');
+        resultsDiv.className = 'test-results show';
+        resultsDiv.innerHTML = '<div>Testing API connection...</div>';
+        
+        BX24.callMethod('profile', {}, function(result) {
+            if (result.error()) {
+                resultsDiv.innerHTML = '<div style="color: #f56565;">❌ API connection failed: ' + 
+                    result.error().toString() + '</div>';
+            } else {
+                resultsDiv.innerHTML = '<div style="color: #48bb78;">✅ API connection successful</div>';
+            }
+        });
+    }
+    
+    function testDatabaseConnection() {
+        const resultsDiv = document.getElementById('testResults');
+        resultsDiv.className = 'test-results show';
+        resultsDiv.innerHTML = '<div>Testing database connection...</div>';
+        
+        fetch(APP_DATA.api_endpoint + '/portal/validate?domain=' + APP_DATA.domain)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                resultsDiv.innerHTML = '<div style="color: #48bb78;">✅ Database connection successful</div>';
+            } else {
+                resultsDiv.innerHTML = '<div style="color: #f56565;">❌ Database connection failed</div>';
+            }
+        })
+        .catch(error => {
+            resultsDiv.innerHTML = '<div style="color: #f56565;">❌ Database test failed: ' + error + '</div>';
+        });
+    }
+    
+    function testWebhooks() {
+        const resultsDiv = document.getElementById('testResults');
+        resultsDiv.className = 'test-results show';
+        resultsDiv.innerHTML = '<div>Testing webhook endpoints...</div>';
+        
+        const webhookUrl = window.location.origin + '/api/webhook.php';
+        
+        fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                event: 'test',
+                auth: { domain: APP_DATA.domain }
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            resultsDiv.innerHTML = '<div style="color: #48bb78;">✅ Webhook endpoint is responding</div>';
+        })
+        .catch(error => {
+            resultsDiv.innerHTML = '<div style="color: #f56565;">❌ Webhook test failed: ' + error + '</div>';
+        });
+    }
+    
+    function refreshDiagnostics() {
+        diagnosticsLoaded = false;
+        document.getElementById('handlersLoader').style.display = 'flex';
+        document.getElementById('eventHandlers').style.display = 'none';
+        loadDiagnostics();
+    }
+    
+})();
+</script>

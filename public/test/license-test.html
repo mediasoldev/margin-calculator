@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>License System Tester - Bitrix24 App</title>
+    <script src="//api.bitrix24.com/api/v1/"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .license-status-banner {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .license-status-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .license-status-banner.trial::before {
+            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .license-status-banner.expired::before,
+        .license-status-banner.trial_expired::before {
+            background: linear-gradient(90deg, #fc466b 0%, #3f5efb 100%);
+        }
+        
+        .license-status-banner.licensed::before {
+            background: linear-gradient(90deg, #00d2ff 0%, #3a47d5 100%);
+        }
+        
+        .license-status-banner.blocked::before {
+            background: linear-gradient(90deg, #8b0000 0%, #ff0000 100%);
+        }
+        
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .status-title {
+            font-size: 2em;
+            color: #333;
+        }
+        
+        .status-badge {
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+        }
+        
+        .status-badge.trial {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .status-badge.licensed {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+        
+        .status-badge.expired,
+        .status-badge.trial_expired {
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+            color: white;
+        }
+        
+        .status-badge.blocked {
+            background: linear-gradient(135deg, #8b0000 0%, #ff0000 100%);
+            color: white;
+        }
+        
+        .status-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .info-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .info-label {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            color: #333;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .action-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .action-card h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);
+            color: white;
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+            color: white;
+        }
+        
+        .btn-info {
+            background: linear-gradient(135deg, #00d2ff 0%, #3a47d5 100%);
+            color: white;
+        }
+        
+        .timeline {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .timeline h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            position: relative;
+            padding-left: 40px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #667eea;
+        }
+        
+        .timeline-item.success::before {
+            background: #38ef7d;
+        }
+        
+        .timeline-item.warning::before {
+            background: #f2994a;
+        }
+        
+        .timeline-item.error::before,
+        .timeline-item.danger::before {
+            background: #ee0979;
+        }
+        
+        .timeline-time {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-right: 15px;
+            min-width: 100px;
+        }
+        
+        .timeline-content {
+            flex: 1;
+        }
+        
+        .result-console {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            max-height: 400px;
+            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .result-console pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .webhook-status {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .webhook-list {
+            margin-top: 15px;
+        }
+        
+        .webhook-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .webhook-item .event-name {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .webhook-item .status {
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        .webhook-item .status.active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .webhook-item .status.inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .modal-header {
+            margin-bottom: 20px;
+        }
+        
+        .modal-header h3 {
+            color: #333;
+        }
+        
+        .license-generator {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        
+        .generated-key {
+            font-family: monospace;
+            font-size: 18px;
+            color: #667eea;
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border: 2px dashed #667eea;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0,0,0,.1);
+            border-radius: 50%;
+            border-top-color: #667eea;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔑 License System Tester</h1>
+        
+        <!-- License Status Banner -->
+        <div class="license-status-banner" id="status-banner">
+            <div class="status-header">
+                <h2 class="status-title">License Status</h2>
+                <span class="status-badge" id="status-badge">Loading...</span>
+            </div>
+            <div class="status-info" id="status-info">
+                <div class="info-card">
+                    <div class="info-label">Domain</div>
+                    <div class="info-value" id="info-domain">-</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">Days Remaining</div>
+                    <div class="info-value" id="info-days">-</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">Expires</div>
+                    <div class="info-value" id="info-expires">-</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-label">Webhooks</div>
+                    <div class="info-value" id="info-webhooks">-</div>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="days-progress">0%</div>
+            </div>
+        </div>
+        
+        <!-- Webhook Status -->
+        <div class="webhook-status">
+            <h2>🪝 Webhook Status</h2>
+            <p>Monitor webhook registration status</p>
+            <button class="btn btn-info" onclick="checkWebhooks()">Check Webhooks</button>
+            <button class="btn btn-warning" onclick="testWebhookCleanup()">Test Cleanup</button>
+            <button class="btn btn-success" onclick="reregisterWebhooks()">Re-register Webhooks</button>
+            <div class="webhook-list" id="webhook-list"></div>
+        </div>
+        
+        <!-- Action Cards -->
+        <div class="action-grid">
+            <!-- Check & Monitor -->
+            <div class="action-card">
+                <h2>📊 Check & Monitor</h2>
+                <div class="input-group">
+                    <label>Portal Domain</label>
+                    <input type="text" id="check-domain" value="test.bitrix24.com" placeholder="your.bitrix24.com">
+                </div>
+                <button class="btn btn-primary" onclick="checkLicenseStatus()">Check Status</button>
+                <button class="btn btn-info" onclick="checkFullDiagnostics()">Full Diagnostics</button>
+                <button class="btn btn-warning" onclick="monitorLicense()">Start Monitor</button>
+                <button class="btn btn-danger" onclick="stopMonitor()">Stop Monitor</button>
+            </div>
+            
+            <!-- License Activation -->
+            <div class="action-card">
+                <h2>✅ License Activation</h2>
+                <div class="input-group">
+                    <label>License Key</label>
+                    <input type="text" id="license-key" placeholder="XXXX-XXXX-XXXX-XXXX">
+                </div>
+                <div class="input-group">
+                    <label>Valid Until</label>
+                    <input type="date" id="valid-until">
+                </div>
+                <button class="btn btn-success" onclick="activateLicense()">Activate License</button>
+                <button class="btn btn-primary" onclick="validateKey()">Validate Key</button>
+                <button class="btn btn-info" onclick="generateTestKey()">Generate Test Key</button>
+            </div>
+            
+            <!-- Trial Management -->
+            <div class="action-card">
+                <h2>🎁 Trial Management</h2>
+                <div class="input-group">
+                    <label>Trial Action</label>
+                    <select id="trial-action">
+                        <option value="check">Check Status</option>
+                        <option value="expire">Simulate Expiry</option>
+                        <option value="reset">Reset Trial (Dev Only)</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="manageTrial()">Execute Action</button>
+                <div class="input-group">
+                    <label>SQL Command (for manual testing)</label>
+                    <input type="text" id="sql-preview" readonly style="font-family: monospace; font-size: 12px;">
+                </div>
+            </div>
+            
+            <!-- Testing Scenarios -->
+            <div class="action-card">
+                <h2>🧪 Testing Scenarios</h2>
+                <button class="btn btn-danger" onclick="testExpiredLicense()">Test Expired License</button>
+                <button class="btn btn-warning" onclick="testExpiringLicense()">Test Expiring Soon</button>
+                <button class="btn btn-info" onclick="testWebhookUnregistration()">Test Webhook Unregister</button>
+                <button class="btn btn-success" onclick="testWebhookReregistration()">Test Webhook Re-register</button>
+                <button class="btn btn-primary" onclick="runFullTestSuite()">Run Full Test Suite</button>
+            </div>
+            
+            <!-- License Operations -->
+            <div class="action-card">
+                <h2>⚙️ License Operations</h2>
+                <button class="btn btn-warning" onclick="extendLicense()">Extend License</button>
+                <button class="btn btn-danger" onclick="deactivateLicense()">Deactivate License</button>
+                <button class="btn btn-danger" onclick="blockPortal()">Block Portal</button>
+                <button class="btn btn-success" onclick="unblockPortal()">Unblock Portal</button>
+                <button class="btn btn-info" onclick="getLicenseStats()">Get Statistics</button>
+            </div>
+            
+            <!-- Cron Simulation -->
+            <div class="action-card">
+                <h2>⏰ Cron Job Simulation</h2>
+                <p>Test the automated cleanup process</p>
+                <button class="btn btn-primary" onclick="runCronJob()">Run Cron Job</button>
+                <button class="btn btn-info" onclick="viewCronLogs()">View Cron Logs</button>
+                <button class="btn btn-warning" onclick="testCronScenario()">Test Cleanup Scenario</button>
+                <div id="cron-status" style="margin-top: 10px; font-size: 0.9em; color: #666;"></div>
+            </div>
+        </div>
+        
+        <!-- Timeline -->
+        <div class="timeline">
+            <h2>📝 Activity Timeline</h2>
+            <div id="timeline-content">
+                <div class="timeline-item">
+                    <span class="timeline-time">Now</span>
+                    <span class="timeline-content">Ready for testing...</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Result Console -->
+        <div class="result-console">
+            <pre id="console-output">🖥️ Console Output
+=====================================
+License Testing System v1.0
+Ready for testing...
+</pre>
+        </div>
+        
+        <!-- License Key Generator Modal -->
+        <div class="modal" id="key-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>🔐 Test License Key Generator</h3>
+                </div>
+                <div class="license-generator">
+                    <p>Generated test license key:</p>
+                    <div class="generated-key" id="generated-key">XXXX-XXXX-XXXX-XXXX</div>
+                    <button class="btn btn-primary" onclick="copyKey()">Copy to Clipboard</button>
+                    <button class="btn btn-success" onclick="useGeneratedKey()">Use This Key</button>
+                    <button class="btn btn-warning" onclick="generateNewKey()">Generate New</button>
+                    <button class="btn btn-danger" onclick="closeModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Configuration
+        const API_BASE = '/bitrix24-app/api';
+        let APP_DATA = window.APP_DATA || {
+            domain: 'test.bitrix24.com',
+            app_sid: 'test_token',
+            member_id: 'test_member'
+        };
+        
+        let monitorInterval = null;
+        let currentStatus = null;
+        
+        // Initialize BX24 if available
+        if (typeof BX24 !== 'undefined') {
+            BX24.init(function() {
+                console.log('BX24 initialized');
+                APP_DATA = {
+                    ...APP_DATA,
+                    domain: BX24.getDomain(),
+                    app_sid: BX24.getAuth().access_token
+                };
+                checkLicenseStatus();
+            });
+        } else {
+            // Auto-check on load if not in Bitrix24
+            window.onload = function() {
+                checkLicenseStatus();
+            };
+        }
+        
+        // Logging functions
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const output = document.getElementById('console-output');
+            const typeSymbol = {
+                'info': 'ℹ️',
+                'success': '✅',
+                'warning': '⚠️',
+                'error': '❌',
+                'debug': '🔍'
+            }[type] || 'ℹ️';
+            
+            output.textContent += `\n[${timestamp}] ${typeSymbol} ${message}`;
+            output.scrollTop = output.scrollHeight;
+            
+            // Add to timeline
+            addTimelineItem(message, type);
+        }
+        
+        function addTimelineItem(content, type = 'info') {
+            const timeline = document.getElementById('timeline-content');
+            const item = document.createElement('div');
+            item.className = `timeline-item ${type}`;
+            item.innerHTML = `
+                <span class="timeline-time">${new Date().toLocaleTimeString()}</span>
+                <span class="timeline-content">${content}</span>
+            `;
+            timeline.insertBefore(item, timeline.firstChild.nextSibling);
+            
+            // Keep only last 10 items
+            while (timeline.children.length > 10) {
+                timeline.removeChild(timeline.lastChild);
+            }
+        }
+        
+        // API Helper
+        async function apiCall(endpoint, options = {}) {
+            try {
+                log(`API Call: ${endpoint}`, 'debug');
+                
+                const response = await fetch(API_BASE + endpoint, {
+                    ...options,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${APP_DATA.app_sid}`,
+                        ...options.headers
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'API Error');
+                }
+                
+                return data;
+            } catch (error) {
+                log(`API Error: ${error.message}`, 'error');
+                throw error;
+            }
+        }
+        
+        // License Status Functions
+        async function checkLicenseStatus() {
+            try {
+                const domain = document.getElementById('check-domain').value || APP_DATA.domain;
+                log(`Checking license status for ${domain}...`);
+                
+                const result = await apiCall(`/rest.php/license/check?domain=${domain}`);
+                
+                if (result.success) {
+                    currentStatus = result.data;
+                    updateStatusDisplay(result.data);
+                    log(`License status: ${result.data.license_status.status}`, 'success');
+                    
+                    // Check webhook status
+                    if (result.data.webhook_status === 'unregistered') {
+                        log('⚠️ Webhooks are unregistered!', 'warning');
+                    }
+                } else {
+                    log(`Failed to check license: ${result.message}`, 'error');
+                }
+                
+                return result;
+            } catch (error) {
+                log(`Error checking license: ${error.message}`, 'error');
+            }
+        }
+        
+        function updateStatusDisplay(data) {
+            const status = data.license_status || data;
+            const banner = document.getElementById('status-banner');
+            const badge = document.getElementById('status-badge');
+            
+            // Update banner class
+            banner.className = `license-status-banner ${status.status}`;
+            
+            // Update badge
+            badge.textContent = status.status.replace('_', ' ').toUpperCase();
+            badge.className = `status-badge ${status.status}`;
+            
+            // Update info
+            document.getElementById('info-domain').textContent = document.getElementById('check-domain').value || APP_DATA.domain;
+            document.getElementById('info-days').textContent = status.days_remaining || '0';
+            document.getElementById('info-expires').textContent = status.expires_at ? 
+                new Date(status.expires_at).toLocaleDateString() : 'N/A';
+            document.getElementById('info-webhooks').textContent = data.webhook_status || 'Unknown';
+            
+            // Update progress bar
+            const maxDays = status.status === 'trial' ? 14 : 365;
+            const percentage = Math.max(0, Math.min(100, (status.days_remaining / maxDays) * 100));
+            const progressBar = document.getElementById('days-progress');
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = Math.round(percentage) + '%';
+            
+            // Color based on days remaining
+            if (status.days_remaining <= 3) {
+                progressBar.style.background = 'linear-gradient(90deg, #ee0979 0%, #ff6a00 100%)';
+            } else if (status.days_remaining <= 7) {
+                progressBar.style.background = 'linear-gradient(90deg, #f2994a 0%, #f2c94c 100%)';
+            }
+        }
+        
+        // License Operations
+        async function activateLicense() {
+            try {
+                const key = document.getElementById('license-key').value;
+                const validUntil = document.getElementById('valid-until').value;
+                const domain = document.getElementById('check-domain').value || APP_DATA.domain;
+                
+                if (!key) {
+                    log('Please enter a license key', 'warning');
+                    return;
+                }
+                
+                log(`Activating license key: ${key}`);
+                
+                const result = await apiCall('/rest.php/license/activate', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        domain: domain,
+                        license_key: key,
+                        valid_until: validUntil ? validUntil + ' 23:59:59' : null
+                    })
+                });
+                
+                if (result.success) {
+                    log(`License activated successfully! Valid until: ${result.data.valid_until}`, 'success');
+                    
+                    if (result.data.webhooks_reregistered) {
+                        log('✅ Webhooks were re-registered automatically!', 'success');
+                    }
+                    
+                    // Refresh status
+                    await checkLicenseStatus();
+                } else {
+                    log(`Failed to activate license: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                log(`Error activating license: ${error.message}`, 'error');
+            }
+        }
+        
+        async function validateKey() {
+            const key = document.getElementById('license-key').value;
+            
+            if (!key) {
+                log('Please enter a license key to validate', 'warning');
+                return;
+            }
+            
+            log(`Validating key: ${key}`);
+            
+            try {
+                const result = await apiCall('/rest.php/license/validate', {
+                    method: 'POST',
+                    body: JSON.stringify({ license_key: key })
+                });
+                
+                if (result.data?.valid) {
+                    log(`✅ Key is valid! ${result.data.message}`, 'success');
+                } else {
+                    log(`❌ Key is invalid: ${result.data?.message}`, 'error');
+                }
+            } catch (error) {
+                log(`Validation error: ${error.message}`, 'error');
+            }
+        }
+        
+        // Key Generator
+        function generateTestKey() {
+            const segments = [];
+            for (let i = 0; i < 4; i++) {
+                let segment = '';
+                for (let j = 0; j < 4; j++) {
+                    segment += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'[Math.floor(Math.random() * 36)];
+                }
+                segments.push(segment);
+            }
+            const key = segments.join('-');
+            
+            document.getElementById('generated-key').textContent = key;
+            document.getElementById('key-modal').classList.add('show');
+            log(`Generated test key: ${key}`, 'info');
+        }
+        
+        function copyKey() {
+            const key = document.getElementById('generated-key').textContent;
+            navigator.clipboard.writeText(key);
+            log(`Copied key to clipboard: ${key}`, 'success');
+        }
+        
+        function useGeneratedKey() {
+            const key = document.getElementById('generated-key').textContent;
+            document.getElementById('license-key').value = key;
+            closeModal();
+            log(`Using generated key: ${key}`, 'info');
+        }
+        
+        function generateNewKey() {
+            generateTestKey();
+        }
+        
+        function closeModal() {
+            document.getElementById('key-modal').classList.remove('show');
+        }
+        
+        // Webhook Functions
+        async function checkWebhooks() {
+            try {
+                const domain = document.getElementById('check-domain').value || APP_DATA.domain;
+                log('Checking webhook status...');
+                
+                const result = await apiCall(`/rest.php/diagnostics/handlers?domain=${domain}`);
+                
+                if (result.success) {
+                    const handlers = result.data.event_handlers || [];
+                    const webhookList = document.getElementById('webhook-list');
+                    
+                    if (handlers.length === 0) {
+                        webhookList.innerHTML = '<p style="color: #666;">⚠️ No webhooks registered</p>';
+                        log('No webhooks found', 'warning');
+                    } else {
+                        webhookList.innerHTML = handlers.map(h => `
+                            <div class="webhook-item">
+                                <span class="event-name">${h.event}</span>
+                                <span class="status active">ACTIVE</span>
+                            </div>
+                        `).join('');
+                        log(`Found ${handlers.length} active webhooks`, 'success');
+                    }
+                } else {
+                    log('Failed to check webhooks', 'error');
+                }
+            } catch (error) {
+                log(`Error checking webhooks: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testWebhookCleanup() {
+            log('🧪 Testing webhook cleanup process...', 'warning');
+            
+            const domain = document.getElementById('check-domain').value || APP_DATA.domain;
+            
+            // Show SQL command for manual testing
+            const sql = `UPDATE app_portals SET trial_end_date = DATE_SUB(NOW(), INTERVAL 1 DAY) WHERE domain = '${domain}';`;
+            document.getElementById('sql-preview').value = sql;
+            
+            log('To test cleanup, run this SQL command:', 'info');
+            log(sql, 'debug');
+            log('Then run the cron job to trigger cleanup', 'info');
+        }
+        
+        async function reregisterWebhooks() {
+            log('Re-registering webhooks...', 'info');
+            
+            // This would be done through license activation normally
+            log('Webhooks are re-registered automatically when license is activated', 'info');
+            await activateLicense();
+        }
+        
+        // Trial Management
+        async function manageTrial() {
+            const action = document.getElementById('trial-action').value;
+            const domain = document.getElementById('check-domain').value || APP_DATA.domain;
+            
+            switch(action) {
+                case 'check':
+                    await checkLicenseStatus();
+                    break;
+                    
+                case 'expire':
+                    const expireSql = `UPDATE app_portals SET trial_end_date = DATE_SUB(NOW(), INTERVAL 1 DAY) WHERE domain = '${domain}';`;
+                    document.getElementById('sql-preview').value = expireSql;
+                    log('SQL to expire trial:', 'warning');
+                    log(expireSql, 'debug');
+                    break;
+                    
+                case 'reset':
+                    const resetSql = `UPDATE app_portals SET trial_used = 0, trial_end_date = DATE_ADD(NOW(), INTERVAL 14 DAY) WHERE domain = '${domain}';`;
+                    document.getElementById('sql-preview').value = resetSql;
+                    log('⚠️ SQL to reset trial (DEV ONLY):', 'warning');
+                    log(resetSql, 'debug');
+                    break;
+            }
+        }
+        
+        // Test Scenarios
+        async function testExpiredLicense() {
+            log('🧪 Testing expired license scenario...', 'warning');
+            
+            try {
+                // Make a webhook call to trigger license check
+                const result = await apiCall('/webhook.php', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        event: 'TEST_LICENSE_CHECK',
+                        auth: {
+                            domain: APP_DATA.domain,
+                            member_id: 'test_member',
+                            application_token: 'test_token'
+                        },
+                        data: {}
+                    })
+                });
+                
+                log('Response received - check if 402 Payment Required', 'info');
+            } catch (error) {
+                if (error.message.includes('402')) {
+                    log('✅ Correctly returned 402 Payment Required', 'success');
+                    log('Webhooks should be unregistered now', 'info');
+                    await checkWebhooks();
+                }
+            }
+        }
+        
+        async function testExpiringLicense() {
+            log('🧪 Testing expiring soon scenario...', 'warning');
+            
+            const sql = `UPDATE app_portals SET license_valid_until = DATE_ADD(NOW(), INTERVAL 3 DAY) WHERE domain = '${APP_DATA.domain}';`;
+            log('Set license to expire in 3 days:', 'info');
+            log(sql, 'debug');
+            
+            await checkLicenseStatus();
+        }
+        
+        async function testWebhookUnregistration() {
+            log('🧪 Testing webhook unregistration...', 'warning');
+            
+            log('1. Expire license/trial', 'info');
+            log('2. Make any webhook call', 'info');
+            log('3. Webhooks should auto-unregister', 'info');
+            
+            await testExpiredLicense();
+        }
+        
+        async function testWebhookReregistration() {
+            log('🧪 Testing webhook re-registration...', 'success');
+            
+            log('1. Activate a valid license', 'info');
+            log('2. Webhooks should auto-register', 'info');
+            
+            // Generate and use a test key
+            generateTestKey();
+        }
+        
+        async function runFullTestSuite() {
+            log('🚀 Running full test suite...', 'info');
+            
+            const tests = [
+                { name: 'License Status Check', fn: checkLicenseStatus },
+                { name: 'Webhook Status Check', fn: checkWebhooks },
+                { name: 'Diagnostics Check', fn: checkFullDiagnostics }
+            ];
+            
+            for (const test of tests) {
+                log(`Running: ${test.name}`, 'info');
+                try {
+                    await test.fn();
+                    log(`✅ ${test.name} passed`, 'success');
+                } catch (error) {
+                    log(`❌ ${test.name} failed: ${error.message}`, 'error');
+                }
+            }
+            
+            log('Test suite completed!', 'success');
+        }
+        
+        // Additional Operations
+        async function checkFullDiagnostics() {
+            const domain = document.getElementById('check-domain').value || APP_DATA.domain;
+            log('Running full diagnostics...', 'info');
+            
+            try {
+                const result = await apiCall(`/rest.php/diagnostics/full?domain=${domain}`);
+                
+                if (result.success) {
+                    log('Diagnostics completed:', 'success');
+                    log(JSON.stringify(result.data, null, 2), 'debug');
+                }
+            } catch (error) {
+                log(`Diagnostics failed: ${error.message}`, 'error');
+            }
+        }
+        
+        function monitorLicense() {
+            if (monitorInterval) {
+                log('Monitor already running', 'warning');
+                return;
+            }
+            
+            log('Starting license monitor (every 10 seconds)...', 'info');
+            
+            monitorInterval = setInterval(async () => {
+                await checkLicenseStatus();
+            }, 10000);
+        }
+        
+        function stopMonitor() {
+            if (monitorInterval) {
+                clearInterval(monitorInterval);
+                monitorInterval = null;
+                log('Monitor stopped', 'info');
+            }
+        }
+        
+        async function extendLicense() {
+            log('Extending license by 30 days...', 'info');
+            // Implementation would call the extend endpoint
+            log('Feature coming soon', 'warning');
+        }
+        
+        async function deactivateLicense() {
+            if (!confirm('Are you sure you want to deactivate the license?')) return;
+            
+            log('Deactivating license...', 'warning');
+            // Implementation would call deactivate endpoint
+        }
+        
+        async function blockPortal() {
+            const domain = document.getElementById('check-domain').value || APP_DATA.domain;
+            log(`Blocking portal: ${domain}`, 'warning');
+            
+            const sql = `UPDATE app_portals SET is_blocked = 1, block_reason = 'Manual block for testing' WHERE domain = '${domain}';`;
+            log('SQL to block portal:', 'debug');
+            log(sql, 'debug');
+        }
+        
+        async function unblockPortal() {
+            const domain = document.getElementById('check-domain').value || APP_DATA.domain;
+            log(`Unblocking portal: ${domain}`, 'success');
+            
+            const sql = `UPDATE app_portals SET is_blocked = 0, block_reason = NULL WHERE domain = '${domain}';`;
+            log('SQL to unblock portal:', 'debug');
+            log(sql, 'debug');
+        }
+        
+        async function getLicenseStats() {
+            log('Getting license statistics...', 'info');
+            
+            try {
+                const result = await apiCall('/rest.php/diagnostics/storage?domain=' + APP_DATA.domain);
+                
+                if (result.success) {
+                    log('Statistics:', 'success');
+                    log(`Total portals: ${result.data.portals}`, 'info');
+                    log(`Settings: ${result.data.settings}`, 'info');
+                    log(`Logs: ${result.data.logs}`, 'info');
+                }
+            } catch (error) {
+                log(`Failed to get stats: ${error.message}`, 'error');
+            }
+        }
+        
+        // Cron Functions
+        async function runCronJob() {
+            log('🔄 Simulating cron job execution...', 'info');
+            document.getElementById('cron-status').innerHTML = '<span class="loading-spinner"></span> Running...';
+            
+            log('Cron job would:', 'info');
+            log('1. Check all active portals', 'info');
+            log('2. Find expired licenses/trials', 'info');
+            log('3. Unregister webhooks for expired portals', 'info');
+            log('4. Send notifications', 'info');
+            log('5. Generate report', 'info');
+            
+            setTimeout(() => {
+                document.getElementById('cron-status').textContent = '✅ Cron job simulation completed';
+                log('Cron job completed successfully', 'success');
+            }, 3000);
+        }
+        
+        async function viewCronLogs() {
+            log('Fetching cron logs...', 'info');
+            
+            try {
+                const result = await apiCall(`/rest.php/logs/recent?domain=${APP_DATA.domain}&level=info`);
+                
+                if (result.success && result.data.errors) {
+                    log('Recent cron logs:', 'info');
+                    result.data.errors.forEach(entry => {
+                        log(`[${entry.timestamp}] ${entry.message}`, 'debug');
+                    });
+                }
+            } catch (error) {
+                log('No cron logs available', 'warning');
+            }
+        }
+        
+        async function testCronScenario() {
+            log('🧪 Testing complete cron scenario...', 'info');
+            
+            log('Step 1: Expire a portal', 'info');
+            log('Step 2: Run cron job', 'info');
+            log('Step 3: Check webhooks are unregistered', 'info');
+            log('Step 4: Activate license', 'info');
+            log('Step 5: Check webhooks are re-registered', 'info');
+            
+            log('Ready to execute scenario manually', 'success');
+        }
+    </script>
+</body>
+</html>
