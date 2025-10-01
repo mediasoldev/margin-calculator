@@ -1054,10 +1054,14 @@ onMounted(async () => {
   padding: 16px;
 }
 
-.currency-card {
+/* Cards */
+.currency-card,
+.controls-card,
+.products-card {
   margin-bottom: 16px;
 }
 
+/* Currency section */
 .currency-pair {
   text-align: center;
 }
@@ -1086,49 +1090,50 @@ onMounted(async () => {
   color: #d9d9d9;
 }
 
+[data-theme='dark'] .currency-divider {
+  color: rgba(255, 255, 255, 0.3);
+}
+
 .currency-rate {
   width: 100px;
 }
 
-.controls-card {
-  margin-bottom: 16px;
-}
-
-.products-card {
-  margin-bottom: 16px;
-}
-
+/* Price inputs */
 .price-input-group {
   display: flex;
   gap: 4px;
 }
 
+/* Table */
 .pricing-table :deep(.ant-table) {
   font-size: 13px;
 }
 
-.table-summary {
+/* Summary sections - для світлої теми використовуємо CSS змінні */
+.table-summary,
+.summary-bar {
   padding: 16px;
-  background: #fafafa;
+  background: var(--summary-bg, #f0f0f0);
+  border: 1px solid var(--summary-border, #d9d9d9);
   border-radius: 8px;
+}
+
+.table-summary {
   margin-top: 16px;
 }
 
-:global(.dark) .table-summary {
-  background: rgba(255, 255, 255, 0.04);
-}
-
 .summary-bar {
-  padding: 16px;
-  background: #fafafa;
-  border-radius: 8px;
   margin-top: 24px;
 }
 
-:global(.dark) .summary-bar {
-  background: rgba(255, 255, 255, 0.04);
+/* Для темної теми - фіксовані значення */
+[data-theme='dark'] .table-summary,
+[data-theme='dark'] .summary-bar {
+  background: #1f1f1f;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Summary items */
 .summary-item {
   display: flex;
   justify-content: space-between;
@@ -1137,7 +1142,7 @@ onMounted(async () => {
 
 .summary-label {
   font-weight: 500;
-  color: var(--text-color);
+  color: var(--text-color-secondary);
 }
 
 .summary-value {
@@ -1146,9 +1151,23 @@ onMounted(async () => {
   color: var(--primary-color);
 }
 
+/* Dark theme text colors - фіксовані */
+[data-theme='dark'] .summary-label {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+[data-theme='dark'] .summary-value {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Product summary */
 .product-summary {
   text-align: center;
   font-size: 16px;
+}
+
+[data-theme='dark'] .product-summary {
+  color: rgba(255, 255, 255, 0.85);
 }
 
 /* Mobile responsive */
@@ -1175,6 +1194,10 @@ onMounted(async () => {
     flex-direction: column;
     text-align: center;
     margin-bottom: 8px;
+  }
+  
+  .summary-value {
+    font-size: 16px;
   }
 }
 </style>

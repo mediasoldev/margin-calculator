@@ -386,10 +386,12 @@ export function useTheme() {
     if (actuallyDark) {
       document.documentElement.classList.add('dark')
       document.documentElement.classList.remove('light')
+      document.documentElement.setAttribute('data-theme', 'dark')
       document.body.style.backgroundColor = '#141414'
     } else {
       document.documentElement.classList.add('light')
       document.documentElement.classList.remove('dark')
+      document.documentElement.setAttribute('data-theme', 'light')
       document.body.style.backgroundColor = '#f0f2f5'
     }
     

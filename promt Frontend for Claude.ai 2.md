@@ -480,3 +480,51 @@ Build інтегрується з PHP backend в папку `public/app/`.
 5. **Ant Design** - тільки офіційні компоненти
 6. **CSS змінні** - для динамічних кольорів
 7. **Composition API** - ніякого Options API
+
+
+
+---------------------------------------------
+Також створіть `.env` файл для налаштування:
+
+```env
+# frontend/.env
+VITE_BACKEND_URL=http://localhost:8000/api
+```
+
+**Що потрібно зробити на backend:**
+
+1. Створити endpoint `/api/bitrix24/call`:
+```php
+// Приклад для PHP backend
+public function proxyCall(Request $request) {
+    $method = $request->input('method');
+    $params = $request->input('params', []);
+    
+    // Використати збережені OAuth токени
+    $result = CRest::call($method, $params);
+    
+    return response()->json([
+        'success' => true,
+        'result' => $result
+    ]);
+}
+```
+
+2. Створити endpoint `/api/bitrix24/batch`:
+```php
+public function proxyBatch(Request $request) {
+    $calls = $request->input('calls');
+    $batch = [];
+    
+    foreach ($calls as $index => $call) {
+        $batch["cmd_{$index}"] = [$call['method'], $call['params'] ?? []];
+    }
+    
+    $result = CRest::callBatch($batch);
+    
+    return response()->json([
+        'success' => true,
+        'results' => array_values($result)
+    ]);
+}
+```
