@@ -3,7 +3,7 @@
 <template>
   <a-layout class="main-layout">
     <!-- Desktop/Tablet Header -->
-    <a-layout-header v-show="!isMobile" class="desktop-header">
+    <a-layout-header v-show="!isMobile" class="desktop-header" :class="{ 'light-header': !isDarkMode }">
       <div class="header-content">
         <!-- Logo and Menu -->
         <div class="header-left">
@@ -14,7 +14,7 @@
           
           <a-menu
             v-model:selectedKeys="selectedKeys"
-            theme="dark"
+            :theme="isDarkMode ? 'dark' : 'light'"
             mode="horizontal"
             class="desktop-menu"
           >
@@ -28,6 +28,11 @@
               {{ $t('menu.settings') }}
             </a-menu-item>
             
+            <a-menu-item key="license" @click="navigateTo('/license')">
+              <template #icon><FileProtectOutlined /></template>
+              {{ $t('menu.license') }}
+            </a-menu-item>
+            
             <a-menu-item key="about" @click="navigateTo('/about')">
               <template #icon><InfoCircleOutlined /></template>
               {{ $t('menu.about') }}
@@ -38,7 +43,7 @@
         <!-- Controls -->
         <div class="header-right">
           <a-dropdown placement="bottomRight" :trigger="['click']">
-            <a-button type="text" class="lang-button">
+            <a-button type="text" class="lang-button" :class="{ 'light-lang-button': !isDarkMode }">
               <GlobalOutlined />
               <span class="lang-text">{{ currentLanguageName }}</span>
             </a-button>
@@ -66,7 +71,7 @@
     </a-layout-header>
     
     <!-- Mobile Header -->
-    <a-layout-header v-show="isMobile" class="mobile-header">
+    <a-layout-header v-show="isMobile" class="mobile-header" :class="{ 'light-header': !isDarkMode }">
       <div class="mobile-header-content">
         <MenuOutlined @click="drawerVisible = true" class="menu-trigger" />
         <span class="mobile-title">{{ $t('app.name') }}</span>
@@ -125,6 +130,11 @@
           {{ $t('menu.settings') }}
         </a-menu-item>
         
+        <a-menu-item key="license">
+          <template #icon><FileProtectOutlined /></template>
+          {{ $t('menu.license') }}
+        </a-menu-item>
+        
         <a-menu-item key="about">
           <template #icon><InfoCircleOutlined /></template>
           {{ $t('menu.about') }}
@@ -166,7 +176,8 @@ import {
   SettingOutlined, 
   InfoCircleOutlined, 
   GlobalOutlined,
-  MenuOutlined
+  MenuOutlined,
+  FileProtectOutlined
 } from '@ant-design/icons-vue'
 
 // Composables
@@ -270,11 +281,17 @@ watch(isDark, (newValue) => {
   background: transparent;
 }
 
-/* Desktop Header */
+/* Desktop Header - Dark Theme (default) */
 .desktop-header {
   padding: 0;
   background: #001529;
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* Desktop Header - Light Theme */
+.desktop-header.light-header {
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .header-content {
@@ -320,6 +337,10 @@ watch(isDark, (newValue) => {
   white-space: nowrap;
 }
 
+.light-header .logo-text {
+  color: rgba(0, 0, 0, 0.85);
+}
+
 .desktop-menu {
   background: transparent;
   border: none;
@@ -344,6 +365,14 @@ watch(isDark, (newValue) => {
   color: white;
 }
 
+.light-lang-button {
+  color: rgba(0, 0, 0, 0.65) !important;
+}
+
+.light-lang-button:hover {
+  color: rgba(0, 0, 0, 0.85) !important;
+}
+
 .lang-menu {
   min-width: 150px;
 }
@@ -358,12 +387,20 @@ watch(isDark, (newValue) => {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
+.light-header .theme-switch {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
 /* Mobile Header */
 .mobile-header {
   padding: 0;
   background: #001529;
   height: 56px;
   line-height: 56px;
+}
+
+.mobile-header.light-header {
+  background: #fff;
 }
 
 .mobile-header-content {
@@ -379,6 +416,10 @@ watch(isDark, (newValue) => {
   font-size: 20px;
 }
 
+.light-header .menu-trigger {
+  color: rgba(0, 0, 0, 0.85);
+}
+
 .mobile-title {
   color: white;
   font-size: 16px;
@@ -386,6 +427,10 @@ watch(isDark, (newValue) => {
   flex: 1;
   text-align: center;
   margin: 0 16px;
+}
+
+.light-header .mobile-title {
+  color: rgba(0, 0, 0, 0.85);
 }
 
 .mobile-controls {
@@ -397,6 +442,10 @@ watch(isDark, (newValue) => {
 .mobile-icon {
   color: rgba(255, 255, 255, 0.85);
   font-size: 18px;
+}
+
+.light-header .mobile-icon {
+  color: rgba(0, 0, 0, 0.65);
 }
 
 /* Mobile Drawer */
@@ -497,9 +546,24 @@ watch(isDark, (newValue) => {
   color: rgba(255, 255, 255, 0.65);
 }
 
+/* Menu hover effects for light theme */
+:deep(.ant-menu-light.ant-menu-horizontal > .ant-menu-item:hover) {
+  color: #1890ff;
+}
+
+:deep(.ant-menu-light.ant-menu-horizontal > .ant-menu-item-selected) {
+  color: #1890ff;
+  border-bottom-color: #1890ff;
+}
+
+/* Menu hover effects for dark theme */
+:deep(.ant-menu-dark.ant-menu-horizontal > .ant-menu-item:hover),
+:deep(.ant-menu-dark.ant-menu-horizontal > .ant-menu-item-selected) {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
 /* Responsive adjustments */
-@media (max-width: 768px) {
-  
+@media (max-width: 768px) { 
   .content-wrapper {
     padding: 16px;
     min-height: calc(100vh - 88px);
@@ -528,11 +592,5 @@ watch(isDark, (newValue) => {
 
 .menu-trigger:active {
   transform: scale(0.9);
-}
-
-/* Menu hover effects */
-:deep(.ant-menu-dark.ant-menu-horizontal > .ant-menu-item:hover),
-:deep(.ant-menu-item-selected) {
-  background-color: rgba(255, 255, 255, 0.1) !important;
 }
 </style>

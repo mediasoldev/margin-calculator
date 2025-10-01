@@ -6,9 +6,10 @@ export default {
     welcome: 'Welcome',
     loading: 'Loading...'
   },
-  menu: {
+    menu: {
     home: 'Home',
     settings: 'Settings',
+    license: 'License',
     about: 'About'
   },
   settings: {
@@ -19,7 +20,26 @@ export default {
     dark: 'Dark',
     auto: 'Auto',
     save: 'Save',
-    saved: 'Settings saved'
+    saved: 'Settings saved',
+    primaryColor: 'Primary Color',
+    textColor: 'Text Color',
+    textColorHint: 'Adjust text color for better contrast with light backgrounds',
+    compactMode: 'Compact Mode',
+    compactModeOn: 'Enabled - Reduced spacing',
+    compactModeOff: 'Disabled - Normal spacing',
+    animations: 'Animations',
+    animationsOn: 'Enabled - Smooth transitions',
+    animationsOff: 'Disabled - Instant changes',
+    preview: 'Theme Preview',
+    livePreview: 'Live Preview',
+    sampleTitle: 'Sample Title',
+    sampleText: 'This is sample text to preview your color choices. You can see how the primary color and text color work together.',
+    sampleButton: 'Primary Action',
+    sampleButtonSecondary: 'Secondary Action',
+    reset: 'Reset to Defaults',
+    saveSuccess: 'Settings saved successfully',
+    saveError: 'Failed to save settings',
+    resetSuccess: 'Settings reset to defaults'
   },
   home: {
     title: 'Dashboard',
@@ -33,7 +53,12 @@ export default {
     title: 'About',
     version: 'Version',
     developer: 'Developer',
-    license: 'License'
+    license: 'License',
+    features: 'Features',
+    feature1: 'Bitrix24 Integration',
+    feature2: 'Multi-language Support',
+    feature3: 'Dark/Light Theme',
+    feature4: 'Auto-resize Frame'
   },
   common: {
     yes: 'Yes',
@@ -43,5 +68,33 @@ export default {
     close: 'Close',
     error: 'Error',
     success: 'Success'
-  }
+  },
+    license: {
+    title: 'License',
+    subtitle: 'Manage your application license',
+    currentLicense: 'Current License',
+    terms: 'Terms & Conditions',
+    status: 'Status',
+    type: 'License Type',
+    validFrom: 'Valid From',
+    validUntil: 'Valid Until',
+    domain: 'Licensed Domain',
+    users: 'Number of Users',
+    active: 'Active',
+    expired: 'Expired',
+    expiringSoon: 'Expiring Soon',
+    checking: 'Checking...',
+    checkLicense: 'Check License',
+    activateLicense: 'Activate License',
+    licenseKey: 'License Key',
+    enterLicenseKey: 'Enter your license key',
+    activationNote: 'The license will be bound to the current domain',
+    checkSuccess: 'License successfully verified',
+    checkError: 'Error checking license',
+    keyRequired: 'Please enter a license key',
+    activationSuccess: 'License successfully activated',
+    activationError: 'Error activating license',
+    termsTitle: 'License Terms and Conditions',
+    termsContent: '<p>By using this software, you agree to the following terms...</p>'
+  },
 }
