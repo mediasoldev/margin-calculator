@@ -279,8 +279,6 @@ try {
   loading.value = false
 }
 ```
-
-
 ## Layout система для Bitrix24 додатку
 
 ### Два типи layouts:
@@ -332,6 +330,138 @@ const layoutComponent = computed(() => {
 - Налаштування, профіль, основні розділи
 
 
+## Hybrid API система для Bitrix24
+
+### Концепція
+Система автоматично вибирає джерело даних (прямий виклик BX24 або проксі через backend) на основі конфігурації. Це необхідно для випадків, коли користувач має обмежені права доступу.
+
+### Файлова структура
+```
+src/api/
+├── config/
+│   └── routing.ts          # Конфігурація маршрутизації
+├── DirectAPI.ts            # Прямі виклики BX24
+├── ProxyAPI.ts             # Виклики через backend
+├── HybridClient.ts         # Основний клієнт
+└── index.ts                # Публічні методи
+```
+
+### Використання в компонентах
+
+#### Базове використання:
+```typescript
+import { hybridClient } from '@/api'
+
+// Автоматичний вибір джерела на основі конфігурації
+const products = await hybridClient.call('crm.deal.productrows.get', { id: dealId })
+
+// Примусове використання proxy для методів з підвищеними правами
+const result = await hybridClient.call(
+  'entity.item.update',
+  { id: 1, data: {...} },
+  { forceSource: 'proxy' }
+)
+
+// З кешуванням
+const suppliers = await hybridClient.call(
+  'entity.item.get',
+  { entityTypeId: 'SUPPLIERS' },
+  { useCache: true }
+)
+```
+
+#### В компонентах сторінок:
+```typescript
+// У будь-якому компоненті
+const loadData = async () => {
+  loading.value = true
+  try {
+    // Метод автоматично визначить джерело з routing.ts
+    const response = await hybridClient.call('crm.product.list')
+    products.value = response.data
+  } catch (error) {
+    message.error('Failed to load products')
+  } finally {
+    loading.value = false
+  }
+}
+```
+
+### Конфігурація роутингу
+
+В файлі `routing.ts` явно вказано маршрутизацію:
+
+```typescript
+export const apiRouting = {
+  methods: {
+    // Прямі виклики - працюють під правами користувача
+    'crm.deal.get': 'direct',
+    'crm.product.list': 'direct',
+    
+    // Proxy виклики - потребують адмін прав
+    'crm.deal.update': 'proxy',
+    'entity.item.add': 'proxy'
+  },
+  
+  patterns: [
+    // Паттерни для груп методів
+    { pattern: '^user\\.admin', source: 'proxy' },
+    { pattern: '\\.delete$', source: 'proxy' }
+  ],
+  
+  default: 'direct'
+}
+```
+
+### Правила використання
+
+1. **Читання даних** - зазвичай `direct`
+2. **Запис/оновлення** - зазвичай `proxy`
+3. **Кастомні сутності** - завжди `proxy`
+4. **Batch запити** - автоматично групуються по джерелах
+
+### Обробка помилок
+
+```typescript
+try {
+  const result = await hybridClient.call('crm.deal.update', data)
+} catch (error) {
+  if (error.code === 'ACCESS_DENIED') {
+    // Користувач не має прав - використати proxy
+    const result = await hybridClient.call(
+      'crm.deal.update',
+      data,
+      { forceSource: 'proxy' }
+    )
+  }
+}
+```
+
+### Створення нових API методів
+
+```typescript
+// В api/index.ts
+export const myCustomMethod = async (params: any) => {
+  // Визначити метод і джерело в routing.ts
+  // Потім використовувати:
+  const response = await hybridClient.call('my.custom.method', params)
+  return response.data
+}
+```
+
+### Backend вимоги
+
+Backend повинен мати endpoint `/api/bitrix24/call` який:
+1. Приймає `{ method, params }`
+2. Використовує збережені OAuth токени
+3. Повертає результат в форматі `{ result: data }`
+
+### Критичні моменти
+
+- **Завжди додавати нові методи в routing.ts** перед використанням
+- **Proxy методи потребують налаштованого backend** з OAuth
+- **Direct методи працюють тільки в iframe Bitrix24**
+- **Кешування за замовчуванням 5 хвилин** для читання даних
 
 ## Build
 

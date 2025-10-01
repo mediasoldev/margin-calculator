@@ -359,7 +359,7 @@ watch(isDark, (newValue) => {
   background: transparent;
   border: none;
   line-height: 64px;
-  min-width: 500px;
+  min-width: 550px;
 }
 
 .header-right {
