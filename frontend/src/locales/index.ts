@@ -102,12 +102,12 @@ export function getCurrentLanguage(): AvailableLocales {
 // Назви мов для UI
 export const languageNames: Record<AvailableLocales, string> = {
   'en': 'English',
-  'ua': 'Українська',
+  'pl': 'Polski',
   'ru': 'Русский',
+  'ua': 'Українська',
   'de': 'Deutsch',
   'fr': 'Français',
   'it': 'Italiano',
-  'pl': 'Polski',
   'br': 'Português (BR)',
   'la': 'Español (LA)'
 }

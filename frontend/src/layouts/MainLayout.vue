@@ -3,15 +3,19 @@
 <template>
   <a-layout class="main-layout">
     <!-- Desktop/Tablet Header -->
-    <a-layout-header v-show="!isMobile" class="desktop-header" :class="{ 'light-header': !isDarkMode }">
+    <a-layout-header
+      v-show="!isMobile"
+      class="desktop-header"
+      :class="{ 'light-header': !isDarkMode }"
+    >
       <div class="header-content">
         <!-- Logo and Menu -->
         <div class="header-left">
           <div class="logo">
             <span class="logo-icon">B24</span>
-            <span class="logo-text">{{ $t('app.name') }}</span>
+            <span class="logo-text">{{ $t("app.name") }}</span>
           </div>
-          
+
           <a-menu
             v-model:selectedKeys="selectedKeys"
             :theme="isDarkMode ? 'dark' : 'light'"
@@ -21,44 +25,57 @@
           >
             <a-menu-item key="home" @click="navigateTo('/')">
               <template #icon><HomeOutlined /></template>
-              {{ $t('menu.home') }}
+              {{ $t("menu.home") }}
             </a-menu-item>
-            
+
             <a-menu-item key="settings" @click="navigateTo('/settings')">
               <template #icon><SettingOutlined /></template>
-              {{ $t('menu.settings') }}
+              {{ $t("menu.settings") }}
             </a-menu-item>
-            
+
             <a-menu-item key="license" @click="navigateTo('/license')">
               <template #icon><FileProtectOutlined /></template>
-              {{ $t('menu.license') }}
+              {{ $t("menu.license") }}
             </a-menu-item>
-            
+
             <a-menu-item key="about" @click="navigateTo('/about')">
               <template #icon><InfoCircleOutlined /></template>
-              {{ $t('menu.about') }}
+              {{ $t("menu.about") }}
             </a-menu-item>
           </a-menu>
         </div>
-        
+
         <!-- Controls -->
         <div class="header-right">
           <a-dropdown placement="bottomRight" :trigger="['click']">
-            <a-button type="text" class="lang-button" :class="{ 'light-lang-button': !isDarkMode }">
+            <a-button
+              type="text"
+              class="lang-button"
+              :class="{ 'light-lang-button': !isDarkMode }"
+            >
               <GlobalOutlined />
               <span class="lang-text">{{ currentLanguageName }}</span>
             </a-button>
-            
+
             <template #overlay>
               <a-menu @click="handleLanguageChange" class="lang-menu">
                 <a-menu-item v-for="lang in languages" :key="lang.code">
-                  <span class="flag">{{ lang.flag }}</span>
+                  <img
+                    :src="`https://flagcdn.com/16x12/${lang.flagCode}.png`"
+                    :alt="lang.code"
+                    style="
+                      width: 20px;
+                      height: 15px;
+                      margin-right: 8px;
+                      vertical-align: middle;
+                    "
+                  />
                   {{ lang.name }}
                 </a-menu-item>
               </a-menu>
             </template>
           </a-dropdown>
-          
+
           <a-switch
             v-model:checked="isDarkMode"
             @change="handleThemeToggle"
@@ -70,19 +87,32 @@
         </div>
       </div>
     </a-layout-header>
-    
+
     <!-- Mobile Header -->
-    <a-layout-header v-show="isMobile" class="mobile-header" :class="{ 'light-header': !isDarkMode }">
+    <a-layout-header
+      v-show="isMobile"
+      class="mobile-header"
+      :class="{ 'light-header': !isDarkMode }"
+    >
       <div class="mobile-header-content">
         <MenuOutlined @click="drawerVisible = true" class="menu-trigger" />
-        <span class="mobile-title">{{ $t('app.name') }}</span>
+        <span class="mobile-title">{{ $t("app.name") }}</span>
         <div class="mobile-controls">
           <a-dropdown placement="bottomRight" :trigger="['click']">
             <GlobalOutlined class="mobile-icon" />
             <template #overlay>
               <a-menu @click="handleLanguageChange" class="lang-menu">
                 <a-menu-item v-for="lang in languages" :key="lang.code">
-                  <span class="flag">{{ lang.flag }}</span>
+                  <img
+                    :src="`https://flagcdn.com/16x12/${lang.flagCode}.png`"
+                    :alt="lang.code"
+                    style="
+                      width: 20px;
+                      height: 15px;
+                      margin-right: 8px;
+                      vertical-align: middle;
+                    "
+                  />
                   {{ lang.name }}
                 </a-menu-item>
               </a-menu>
@@ -91,7 +121,7 @@
         </div>
       </div>
     </a-layout-header>
-    
+
     <!-- Mobile Drawer Menu -->
     <a-drawer
       v-model:open="drawerVisible"
@@ -114,7 +144,7 @@
           </div>
         </div>
       </div>
-      
+
       <a-menu
         v-model:selectedKeys="selectedKeys"
         mode="inline"
@@ -124,39 +154,36 @@
       >
         <a-menu-item key="home">
           <template #icon><HomeOutlined /></template>
-          {{ $t('menu.home') }}
+          {{ $t("menu.home") }}
         </a-menu-item>
-        
+
         <a-menu-item key="settings">
           <template #icon><SettingOutlined /></template>
-          {{ $t('menu.settings') }}
+          {{ $t("menu.settings") }}
         </a-menu-item>
-        
+
         <a-menu-item key="license">
           <template #icon><FileProtectOutlined /></template>
-          {{ $t('menu.license') }}
+          {{ $t("menu.license") }}
         </a-menu-item>
-        
+
         <a-menu-item key="about">
           <template #icon><InfoCircleOutlined /></template>
-          {{ $t('menu.about') }}
+          {{ $t("menu.about") }}
         </a-menu-item>
       </a-menu>
-      
+
       <div class="drawer-footer">
         <div class="theme-selector">
-          <span class="theme-label">{{ $t('settings.theme') }}</span>
-          <a-switch
-            v-model:checked="isDarkMode"
-            @change="handleThemeToggle"
-          >
+          <span class="theme-label">{{ $t("settings.theme") }}</span>
+          <a-switch v-model:checked="isDarkMode" @change="handleThemeToggle">
             <template #checkedChildren>🌙</template>
             <template #unCheckedChildren>☀️</template>
           </a-switch>
         </div>
       </div>
     </a-drawer>
-    
+
     <!-- Content -->
     <a-layout-content class="main-content">
       <div class="content-wrapper">
@@ -167,124 +194,150 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { useI18n } from 'vue-i18n'
-import { useTheme } from '@/composables/useTheme'
-import { useAppStore } from '@/stores/app'
-import { setLanguage, type AvailableLocales } from '@/locales'
-import { 
-  HomeOutlined, 
-  SettingOutlined, 
-  InfoCircleOutlined, 
+import { ref, computed, watch, onMounted, onUnmounted } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useI18n } from "vue-i18n";
+import { useTheme } from "@/composables/useTheme";
+import { useAppStore } from "@/stores/app";
+import { setLanguage, type AvailableLocales } from "@/locales";
+import {
+  HomeOutlined,
+  SettingOutlined,
+  InfoCircleOutlined,
   GlobalOutlined,
   MenuOutlined,
-  FileProtectOutlined
-} from '@ant-design/icons-vue'
+  FileProtectOutlined,
+} from "@ant-design/icons-vue";
 
 // Composables
-const router = useRouter()
-const route = useRoute()
-const { locale } = useI18n()
-const { isDark, toggleTheme, primaryColor } = useTheme()
-const appStore = useAppStore()
+const router = useRouter();
+const route = useRoute();
+const { locale } = useI18n();
+const { isDark, toggleTheme, primaryColor } = useTheme();
+const appStore = useAppStore();
 
 // State
-const selectedKeys = ref<string[]>([])
-const isMobile = ref(window.innerWidth < 768)
-const drawerVisible = ref(false)
-const isDarkMode = ref(isDark.value)
+const selectedKeys = ref<string[]>([]);
+const isMobile = ref(window.innerWidth < 768);
+const drawerVisible = ref(false);
+const isDarkMode = ref(isDark.value);
 
 // Languages data
+// const languages = [
+//   { code: 'en', name: 'English', flag: '🇬🇧' },
+//   { code: 'pl', name: 'Polski', flag: '🇵🇱' },
+//   { code: 'ru', name: 'Русский', flag: '🇷🇺' },
+//   { code: 'ua', name: 'Українська', flag: '🇺🇦' },
+//   { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+//   { code: 'fr', name: 'Français', flag: '🇫🇷' },
+//   { code: 'it', name: 'Italiano', flag: '🇮🇹' },
+//   { code: 'br', name: 'Português', flag: '🇧🇷' },
+//   { code: 'la', name: 'Español', flag: '🇪🇸' }
+// ]
+
 const languages = [
-  { code: 'en', name: 'English', flag: '🇬🇧' },
-  { code: 'ua', name: 'Українська', flag: '🇺🇦' },
-  { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-  { code: 'fr', name: 'Français', flag: '🇫🇷' },
-  { code: 'it', name: 'Italiano', flag: '🇮🇹' },
-  { code: 'pl', name: 'Polski', flag: '🇵🇱' },
-  { code: 'br', name: 'Português', flag: '🇧🇷' },
-  { code: 'la', name: 'Español', flag: '🇪🇸' }
-]
+  { code: "en", name: "English", flag: "🇬🇧", flagCode: "gb" },
+  { code: "pl", name: "Polski", flag: "🇵🇱", flagCode: "pl" },
+  { code: "ru", name: "Русский", flag: "🇷🇺", flagCode: "ru" },
+  { code: "ua", name: "Українська", flag: "🇺🇦", flagCode: "ua" },
+  { code: "de", name: "Deutsch", flag: "🇩🇪", flagCode: "de" },
+  { code: "fr", name: "Français", flag: "🇫🇷", flagCode: "fr" },
+  { code: "it", name: "Italiano", flag: "🇮🇹", flagCode: "it" },
+  { code: "br", name: "Português", flag: "🇧🇷", flagCode: "br" },
+  { code: "la", name: "Español", flag: "🇪🇸", flagCode: "es" },
+];
 
 // Computed
 const currentLanguageName = computed(() => {
   const shortNames: Record<AvailableLocales, string> = {
-    'en': 'EN', 'ua': 'UA', 'ru': 'RU', 'de': 'DE',
-    'fr': 'FR', 'it': 'IT', 'pl': 'PL', 'br': 'BR', 'la': 'LA'
-  }
-  return shortNames[locale.value as AvailableLocales] || 'EN'
-})
+    en: "EN",
+    ua: "UA",
+    ru: "RU",
+    de: "DE",
+    fr: "FR",
+    it: "IT",
+    pl: "PL",
+    br: "BR",
+    la: "LA",
+  };
+  return shortNames[locale.value as AvailableLocales] || "EN";
+});
 
-const userName = computed(() => appStore.userName || 'Guest')
-const userDomain = computed(() => appStore.domain || 'localhost')
-const userInitial = computed(() => userName.value.charAt(0).toUpperCase())
+const userName = computed(() => appStore.userName || "Guest");
+const userDomain = computed(() => appStore.domain || "localhost");
+const userInitial = computed(() => userName.value.charAt(0).toUpperCase());
 
 // Menu styles with dynamic primary color
 const menuStyle = computed(() => ({
-  '--menu-item-selected-color': !isDarkMode.value ? primaryColor.value : undefined,
-  '--menu-item-active-color': !isDarkMode.value ? primaryColor.value : undefined
-}))
+  "--menu-item-selected-color": !isDarkMode.value
+    ? primaryColor.value
+    : undefined,
+  "--menu-item-active-color": !isDarkMode.value
+    ? primaryColor.value
+    : undefined,
+}));
 
 const mobileMenuStyle = computed(() => ({
-  '--menu-item-selected-color': primaryColor.value,
-  '--menu-item-selected-bg': `${primaryColor.value}10`
-}))
+  "--menu-item-selected-color": primaryColor.value,
+  "--menu-item-selected-bg": `${primaryColor.value}10`,
+}));
 
 // Methods
 const checkMobile = () => {
-  isMobile.value = window.innerWidth < 768
+  isMobile.value = window.innerWidth < 768;
   if (!isMobile.value) {
-    drawerVisible.value = false
+    drawerVisible.value = false;
   }
-}
+};
 
 const navigateTo = (path: string) => {
-  router.push(path)
-}
+  router.push(path);
+};
 
 const handleLanguageChange = ({ key }: { key: string }) => {
-  setLanguage(key)
+  setLanguage(key);
   if (isMobile.value) {
     setTimeout(() => {
-      drawerVisible.value = false
-    }, 300)
+      drawerVisible.value = false;
+    }, 300);
   }
-}
+};
 
 const handleThemeToggle = () => {
-  toggleTheme()
-}
+  toggleTheme();
+};
 
 const handleMobileMenuClick = () => {
   setTimeout(() => {
-    drawerVisible.value = false
-  }, 200)
-}
+    drawerVisible.value = false;
+  }, 200);
+};
 
 // Lifecycle
 onMounted(() => {
-  checkMobile()
-  window.addEventListener('resize', checkMobile)
-  const routeName = route.name?.toString() || 'home'
-  selectedKeys.value = [routeName]
-})
+  checkMobile();
+  window.addEventListener("resize", checkMobile);
+  const routeName = route.name?.toString() || "home";
+  selectedKeys.value = [routeName];
+});
 
 onUnmounted(() => {
-  window.removeEventListener('resize', checkMobile)
-})
+  window.removeEventListener("resize", checkMobile);
+});
 
 // Watchers
-watch(() => route.name, (newName) => {
-  if (newName) {
-    selectedKeys.value = [newName.toString()]
+watch(
+  () => route.name,
+  (newName) => {
+    if (newName) {
+      selectedKeys.value = [newName.toString()];
+    }
   }
-})
+);
 
 watch(isDark, (newValue) => {
-  isDarkMode.value = newValue
-})
+  isDarkMode.value = newValue;
+});
 </script>
 
 <style scoped>
@@ -298,13 +351,13 @@ watch(isDark, (newValue) => {
 .desktop-header {
   padding: 0;
   background: #001529;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Desktop Header - Light Theme */
 .desktop-header.light-header {
   background: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .header-content {
@@ -391,10 +444,18 @@ watch(isDark, (newValue) => {
   min-width: 150px;
 }
 
-.flag {
+/* .flag {
   display: inline-block;
   width: 24px;
   margin-right: 8px;
+} */
+
+.flag-icon {
+  width: 20px;
+  height: 15px;
+  margin-right: 8px;
+  display: inline-block;
+  border-radius: 2px;
 }
 
 .theme-switch {
@@ -578,7 +639,10 @@ watch(isDark, (newValue) => {
 
 /* Mobile menu selected item */
 :deep(.ant-menu-inline .ant-menu-item-selected) {
-  background-color: var(--menu-item-selected-bg, rgba(24, 144, 255, 0.1)) !important;
+  background-color: var(
+    --menu-item-selected-bg,
+    rgba(24, 144, 255, 0.1)
+  ) !important;
   color: var(--menu-item-selected-color, #1890ff) !important;
 }
 
@@ -597,7 +661,7 @@ watch(isDark, (newValue) => {
   .main-content {
     padding: 16px;
   }
-  
+
   .content-wrapper {
     padding: 16px;
     min-height: calc(100vh - 88px);
@@ -609,11 +673,11 @@ watch(isDark, (newValue) => {
   .logo-text {
     display: none;
   }
-  
+
   .desktop-menu {
     min-width: auto;
   }
-  
+
   .lang-text {
     display: none;
   }

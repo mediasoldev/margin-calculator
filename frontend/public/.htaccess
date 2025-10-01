@@ -1,0 +1,18 @@
+# .htaccess для Vue Router SPA
+
+RewriteEngine On
+
+# Забороняємо доступ до конфігураційних файлів
+<FilesMatch "\.(env|json|lock|md)$">
+    Order deny,allow
+    Deny from all
+</FilesMatch>
+
+# Забороняємо перегляд директорій
+Options -Indexes
+
+# SPA routing - всі запити на index.html
+RewriteBase /v1/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^.*$ index.html [L]

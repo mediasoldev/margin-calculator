@@ -8,7 +8,8 @@ export type ThemeMode = 'light' | 'dark' | 'auto'
 
 // Persistent storage
 const themeMode = useLocalStorage<ThemeMode>('theme-mode', 'light')
-const primaryColor = useLocalStorage('primary-color', '#1677ff')
+// const primaryColor = useLocalStorage('primary-color', '#1677ff')
+const primaryColor = useLocalStorage('primary-color', '#722ed1')
 const textColor = useLocalStorage('text-color', '#000000')
 const compactMode = useLocalStorage('compact-mode', false)
 const enableAnimations = useLocalStorage('enable-animations', true)

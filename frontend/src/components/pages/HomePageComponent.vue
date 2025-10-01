@@ -80,6 +80,51 @@
       </a-col>
     </a-row>
 
+    <!-- Info Cards -->
+    <a-row :gutter="[16, 16]" style="margin-top: 24px">
+      <a-col :xs="24" :lg="12">
+        <a-card :title="$t('home.info.whereToFind.title')">
+          <a-alert
+            :message="$t('home.info.whereToFind.message')"
+            type="info"
+            show-icon
+          />
+          <div style="margin-top: 16px">
+            <a-typography-paragraph>
+              <ol>
+                <li>{{ $t('home.info.whereToFind.step1') }}</li>
+                <li>{{ $t('home.info.whereToFind.step2') }}</li>
+                <li>{{ $t('home.info.whereToFind.step3') }}</li>
+              </ol>
+            </a-typography-paragraph>
+          </div>
+        </a-card>
+      </a-col>
+      
+      <a-col :xs="24" :lg="12">
+        <a-card :title="$t('home.info.features.title')">
+          <a-list size="small">
+            <a-list-item>
+              <CheckCircleOutlined style="color: #52c41a; margin-right: 8px" />
+              {{ $t('home.info.features.item1') }}
+            </a-list-item>
+            <a-list-item>
+              <CheckCircleOutlined style="color: #52c41a; margin-right: 8px" />
+              {{ $t('home.info.features.item2') }}
+            </a-list-item>
+            <a-list-item>
+              <CheckCircleOutlined style="color: #52c41a; margin-right: 8px" />
+              {{ $t('home.info.features.item3') }}
+            </a-list-item>
+            <a-list-item>
+              <CheckCircleOutlined style="color: #52c41a; margin-right: 8px" />
+              {{ $t('home.info.features.item4') }}
+            </a-list-item>
+          </a-list>
+        </a-card>
+      </a-col>
+    </a-row>
+    
     <!-- How to Use -->
     <a-card style="margin-top: 24px" :title="$t('home.howToUse.title')">
       <a-steps direction="vertical" :current="-1">
@@ -129,53 +174,8 @@
       </a-steps>
     </a-card>
 
-    <!-- Info Cards -->
-    <a-row :gutter="[16, 16]" style="margin-top: 24px">
-      <a-col :xs="24" :lg="12">
-        <a-card :title="$t('home.info.whereToFind.title')">
-          <a-alert
-            :message="$t('home.info.whereToFind.message')"
-            type="info"
-            show-icon
-          />
-          <div style="margin-top: 16px">
-            <a-typography-paragraph>
-              <ol>
-                <li>{{ $t('home.info.whereToFind.step1') }}</li>
-                <li>{{ $t('home.info.whereToFind.step2') }}</li>
-                <li>{{ $t('home.info.whereToFind.step3') }}</li>
-              </ol>
-            </a-typography-paragraph>
-          </div>
-        </a-card>
-      </a-col>
-      
-      <a-col :xs="24" :lg="12">
-        <a-card :title="$t('home.info.features.title')">
-          <a-list size="small">
-            <a-list-item>
-              <CheckCircleOutlined style="color: #52c41a; margin-right: 8px" />
-              {{ $t('home.info.features.item1') }}
-            </a-list-item>
-            <a-list-item>
-              <CheckCircleOutlined style="color: #52c41a; margin-right: 8px" />
-              {{ $t('home.info.features.item2') }}
-            </a-list-item>
-            <a-list-item>
-              <CheckCircleOutlined style="color: #52c41a; margin-right: 8px" />
-              {{ $t('home.info.features.item3') }}
-            </a-list-item>
-            <a-list-item>
-              <CheckCircleOutlined style="color: #52c41a; margin-right: 8px" />
-              {{ $t('home.info.features.item4') }}
-            </a-list-item>
-          </a-list>
-        </a-card>
-      </a-col>
-    </a-row>
-
     <!-- Quick Actions -->
-    <a-card style="margin-top: 24px" :title="$t('home.quickActions.title')">
+    <!-- <a-card style="margin-top: 24px" :title="$t('home.quickActions.title')">
       <a-space wrap :size="16">
         <a-button 
           type="primary" 
@@ -203,10 +203,10 @@
           {{ $t('home.quickActions.documentation') }}
         </a-button>
       </a-space>
-    </a-card>
+    </a-card> -->
 
     <!-- Status -->
-    <a-card style="margin-top: 24px">
+    <!-- <a-card style="margin-top: 24px">
       <a-descriptions :title="$t('home.status.title')" bordered>
         <a-descriptions-item :label="$t('home.status.appVersion')">
           <a-tag color="blue">v1.0.0</a-tag>
@@ -227,7 +227,7 @@
           {{ lastSyncTime }}
         </a-descriptions-item>
       </a-descriptions>
-    </a-card>
+    </a-card> -->
   </div>
 </template>
 
