@@ -127,40 +127,37 @@ export default {
     },
   },
   about: {
-    title: "Informazioni sul Calcolatore prezzi",
+    title: "Informazioni sul Calcolatore di Margine",
     description:
-      "Un widget professionale per Bitrix24 che ti permette di calcolare i prezzi dei prodotti, i margini e gestire i costi direttamente nei tuoi affari",
+      "Il Calcolatore di Margine è un'applicazione di supporto per Bitrix24 che consente di valutare rapidamente la redditività del prodotto (margine) tenendo conto del prezzo di acquisto, trasporto, imballaggio e tassi di cambio. IMPORTANTE: l'applicazione non modifica l'importo della transazione, ma inserisce le informazioni sui prezzi del prodotto in campi aggiuntivi.",
 
     faq: {
       item1: {
-        question: "Come funziona il calcolatore prezzi?",
+        question: "Dove impostare i tassi di cambio e come vengono utilizzati?",
         answer:
-          "Il calcolatore recupera automaticamente i prodotti dal tuo affare Bitrix24, ti permette di impostare prezzi di acquisto, costi di trasporto e imballaggio, quindi calcola margini e totali con supporto multi-valuta.",
+          "Nella parte superiore dell'interfaccia ci sono campi per i tassi di cambio (ad esempio, USD/PLN, EUR/PLN, EUR/USD). Questi valori vengono utilizzati per convertire tutti gli importi nella valuta in cui è impostato il prezzo di vendita. Modifica il tasso - il calcolo verrà aggiornato automaticamente.",
       },
       item2: {
-        question: "Dove posso trovare il widget?",
+        question: "Come viene calcolato il margine (formula)?",
         answer:
-          "Il widget appare all'interno di ogni affare nel CRM Bitrix24. Apri qualsiasi affare e cerca la scheda o il pannello del widget Calcolatore prezzi.",
+          "Tutte le spese in entrata (acquisto, trasporto, imballaggio, ecc.) vengono convertite nella valuta del prezzo di vendita secondo i tassi specificati. Quindi viene applicata la formula: Ricavo Totale = Prezzo_di_Vendita × Quantità; Spese Totali = (Prezzo_di_Acquisto × Quantità) + Trasporto + Imballaggio + Altre_Spese; Margine = Ricavo Totale − Spese Totali; % Margine = (Margine / Ricavo Totale) × 100%",
       },
       item3: {
-        question: "Posso salvare prezzi specifici per fornitore?",
+        question: "Cosa significa il pulsante 'Salva'?",
         answer:
-          "Sì, puoi associare prezzi specifici a diversi fornitori per ogni prodotto. Questi prezzi vengono salvati e caricati automaticamente quando selezioni un fornitore.",
+          "Il pulsante salva il calcolo corrente all'interno dell'applicazione (nel proprio database dell'applicazione) per la successiva visualizzazione/analisi. Il salvataggio non modifica l'importo della transazione Bitrix24, ma apporta modifiche ai campi aggiuntivi per le informazioni sui prezzi.",
       },
       item4: {
-        question: "Quali valute sono supportate?",
+        question:
+          "Come funziona il recupero automatico del prezzo di acquisto quando si seleziona un fornitore?",
         answer:
-          "Il calcolatore supporta PLN, USD ed EUR con conversione in tempo reale basata sui tassi di cambio che configuri.",
+          "Quando si seleziona un fornitore, l'applicazione cerca nel proprio database il prezzo di quel fornitore per il prodotto selezionato e inserisce automaticamente il prezzo di acquisto + valuta. Se non ci sono prezzi per la combinazione 'fornitore-prodotto', il campo rimane vuoto e devi inserire il prezzo manualmente.",
       },
       item5: {
-        question: "Come vengono salvati i dati?",
+        question:
+          "Posso personalizzare la vista della tabella e l'insieme di colonne?",
         answer:
-          "Tutti i calcoli vengono salvati direttamente nell'affare Bitrix24. I dati includono tutti i dettagli di prezzo, margini e informazioni sui fornitori.",
-      },
-      item6: {
-        question: "Posso personalizzare quali campi vengono visualizzati?",
-        answer:
-          "Sì, puoi configurare quali colonne appaiono nel calcolatore tramite le impostazioni delle colonne. Alcuni campi sono obbligatori e non possono essere nascosti.",
+          "Sì. L'interfaccia include modalità di visualizzazione (tabella, schede, fisarmonica) e un pulsante 'Impostazioni' per configurare le colonne visibili. Utilizza questi pulsanti per nascondere/mostrare i campi richiesti.",
       },
     },
 

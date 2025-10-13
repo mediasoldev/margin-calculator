@@ -23,8 +23,7 @@ export default {
     saved: "Ustawienia zapisane",
     primaryColor: "Kolor główny",
     textColor: "Kolor tekstu",
-    textColorHint:
-      "Dostosuj kolor tekstu dla lepszego kontrastu z jasnym tłem",
+    textColorHint: "Dostosuj kolor tekstu dla lepszego kontrastu z jasnym tłem",
     compactMode: "Tryb kompaktowy",
     compactModeOn: "Włączony - Zmniejszone odstępy",
     compactModeOff: "Wyłączony - Normalne odstępy",
@@ -127,40 +126,36 @@ export default {
     },
   },
   about: {
-    title: "O Kalkulatorze cen",
+    title: "O Kalkulatorze Marży",
     description:
-      "Profesjonalny widget dla Bitrix24, który pozwala obliczać ceny produktów, marże i zarządzać kosztami bezpośrednio w Twoich transakcjach",
+      "Kalkulator Marży to aplikacja pomocnicza dla Bitrix24, która pozwala szybko ocenić rentowność produktu (marżę) z uwzględnieniem ceny zakupu, transportu, opakowania i kursów walut. WAŻNE: aplikacja nie zmienia kwoty transakcji, ale wprowadza informacje o cenach produktu do dodatkowych pól.",
 
     faq: {
       item1: {
-        question: "Jak działa kalkulator cen?",
+        question: "Gdzie ustawić kursy walut i jak są wykorzystywane?",
         answer:
-          "Kalkulator automatycznie pobiera produkty z Twojej transakcji Bitrix24, pozwala ustawić ceny zakupu, koszty transportu i pakowania, a następnie oblicza marże i sumy z obsługą wielu walut.",
+          "W górnej części interfejsu znajdują się pola dla kursów walut (na przykład USD/PLN, EUR/PLN, EUR/USD). Te wartości są wykorzystywane do konwersji wszystkich kwot na walutę, w której ustalona jest cena sprzedaży. Zmień kurs - obliczenie zostanie automatycznie zaktualizowane.",
       },
       item2: {
-        question: "Gdzie mogę znaleźć widget?",
+        question: "Jak obliczana jest marża (formuła)?",
         answer:
-          "Widget pojawia się wewnątrz każdej transakcji w CRM Bitrix24. Otwórz dowolną transakcję i szukaj zakładki lub panelu widgetu Kalkulator cen.",
+          "Wszystkie koszty (zakup, transport, opakowanie itp.) są przeliczane na walutę ceny sprzedaży według określonych kursów. Następnie stosowana jest formuła: Całkowity Przychód = Cena_Sprzedaży × Ilość; Całkowite Koszty = (Cena_Zakupu × Ilość) + Transport + Opakowanie + Inne_Koszty; Marża = Całkowity Przychód − Całkowite Koszty; % Marży = (Marża / Całkowity Przychód) × 100%",
       },
       item3: {
-        question: "Czy mogę zapisywać ceny specyficzne dla dostawców?",
+        question: "Co oznacza przycisk 'Zapisz'?",
         answer:
-          "Tak, możesz powiązać konkretne ceny z różnymi dostawcami dla każdego produktu. Te ceny są zapisywane i automatycznie ładowane po wybraniu dostawcy.",
+          "Przycisk zapisuje bieżące obliczenie wewnątrz aplikacji (we własnej bazie danych aplikacji) do dalszego przeglądania/analizy. Zapisanie nie zmienia kwoty transakcji Bitrix24, ale wprowadza zmiany do dodatkowych pól z informacjami o cenach.",
       },
       item4: {
-        question: "Jakie waluty są obsługiwane?",
+        question:
+          "Jak działa automatyczne pobieranie ceny zakupu przy wyborze dostawcy?",
         answer:
-          "Kalkulator obsługuje PLN, USD i EUR z konwersją w czasie rzeczywistym opartą na kursach walut, które konfigurujesz.",
+          "Przy wyborze dostawcy aplikacja przeszukuje swoją bazę danych w poszukiwaniu ceny tego dostawcy dla wybranego produktu i automatycznie wstawia cenę zakupu + walutę. Jeśli nie ma cen dla kombinacji 'dostawca-produkt', pole pozostaje puste i musisz wprowadzić cenę ręcznie.",
       },
       item5: {
-        question: "Jak dane są zapisywane?",
+        question: "Czy mogę dostosować widok tabeli i zestaw kolumn?",
         answer:
-          "Wszystkie obliczenia są zapisywane bezpośrednio w transakcji Bitrix24. Dane zawierają wszystkie szczegóły cenowe, marże i informacje o dostawcach.",
-      },
-      item6: {
-        question: "Czy mogę dostosować wyświetlane pola?",
-        answer:
-          "Tak, możesz skonfigurować, które kolumny pojawiają się w kalkulatorze poprzez ustawienia kolumn. Niektóre pola są wymagane i nie mogą być ukryte.",
+          "Tak. Interfejs zawiera tryby wyświetlania (tabela, karty, akordeon) oraz przycisk 'Ustawienia' do konfiguracji widocznych kolumn. Użyj tych przycisków, aby ukryć/pokazać wymagane pola.",
       },
     },
 

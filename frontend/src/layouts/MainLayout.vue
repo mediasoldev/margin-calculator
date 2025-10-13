@@ -189,6 +189,9 @@
       <div class="content-wrapper">
         <slot />
       </div>
+      
+      <!-- Footer -->
+      <FooterComponent />
     </a-layout-content>
   </a-layout>
 </template>
@@ -208,6 +211,7 @@ import {
   MenuOutlined,
   FileProtectOutlined,
 } from "@ant-design/icons-vue";
+import FooterComponent from "@/components/common/FooterComponent.vue";
 
 // Composables
 const router = useRouter();
@@ -221,19 +225,6 @@ const selectedKeys = ref<string[]>([]);
 const isMobile = ref(window.innerWidth < 768);
 const drawerVisible = ref(false);
 const isDarkMode = ref(isDark.value);
-
-// Languages data
-// const languages = [
-//   { code: 'en', name: 'English', flag: '🇬🇧' },
-//   { code: 'pl', name: 'Polski', flag: '🇵🇱' },
-//   { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-//   { code: 'ua', name: 'Українська', flag: '🇺🇦' },
-//   { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-//   { code: 'fr', name: 'Français', flag: '🇫🇷' },
-//   { code: 'it', name: 'Italiano', flag: '🇮🇹' },
-//   { code: 'br', name: 'Português', flag: '🇧🇷' },
-//   { code: 'la', name: 'Español', flag: '🇪🇸' }
-// ]
 
 const languages = [
   { code: "en", name: "English", flag: "🇬🇧", flagCode: "gb" },
@@ -345,6 +336,8 @@ watch(isDark, (newValue) => {
 .main-layout {
   min-height: 100vh;
   background: transparent;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Desktop Header - Dark Theme (default) */
@@ -443,12 +436,6 @@ watch(isDark, (newValue) => {
 .lang-menu {
   min-width: 150px;
 }
-
-/* .flag {
-  display: inline-block;
-  width: 24px;
-  margin-right: 8px;
-} */
 
 .flag-icon {
   width: 20px;
@@ -597,6 +584,9 @@ watch(isDark, (newValue) => {
 /* Content */
 .main-content {
   padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .content-wrapper {
@@ -604,6 +594,7 @@ watch(isDark, (newValue) => {
   border-radius: 8px;
   min-height: calc(100vh - 112px);
   background: var(--content-bg, white);
+  flex: 1;
 }
 
 /* Dark mode support */

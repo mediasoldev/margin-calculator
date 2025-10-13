@@ -43,7 +43,6 @@ export default {
     saveError: "Failed to save settings",
     resetSuccess: "Settings reset to defaults",
   },
-  // В файл frontend/src/locales/en/index.ts додати:
 
   home: {
     title: "Pricing Calculator for Bitrix24",
@@ -128,43 +127,37 @@ export default {
       documentationComingSoon: "Documentation coming soon",
     },
   },
-  // В файл frontend/src/locales/en/index.ts додати:
 
   about: {
-    title: "About Pricing Calculator",
+    title: "About Margin Calculator",
     description:
-      "A professional widget for Bitrix24 that allows you to calculate product prices, margins, and manage costs directly within your deals",
+      "Margin Calculator is a support application for Bitrix24 that allows you to quickly assess product profitability (margin) taking into account purchase price, transportation, packaging and currency exchange rates. IMPORTANT: the application does not change the deal amount, but enters product pricing information into additional fields.",
 
     faq: {
       item1: {
-        question: "How does the pricing calculator work?",
+        question: "Where to set currency exchange rates and how are they used?",
         answer:
-          "The calculator automatically pulls products from your Bitrix24 deal, allows you to set purchase prices, transport and packaging costs, then calculates margins and totals with multi-currency support.",
+          "At the top of the interface there are fields for exchange rates (for example, USD/PLN, EUR/PLN, EUR/USD). These values are used to convert all amounts to the currency in which the sale price is set. Change the rate - the calculation will update automatically.",
       },
       item2: {
-        question: "Where can I find the widget?",
+        question: "How is the margin calculated (formula)?",
         answer:
-          "The widget appears inside each deal in Bitrix24 CRM. Open any deal and look for the Pricing Calculator tab or widget panel.",
+          "All incoming expenses (purchase, transportation, packaging, etc.) are converted to the sale price currency according to the specified rates. Then the formula is applied: Total Revenue = Sale_Price × Quantity; Total Expenses = (Purchase_Price × Quantity) + Transportation + Packaging + Other_Expenses; Margin = Total Revenue − Total Expenses; Margin % = (Margin / Total Revenue) × 100%",
       },
       item3: {
-        question: "Can I save supplier-specific prices?",
+        question: "What does the 'Save' button mean?",
         answer:
-          "Yes, you can associate specific prices with different suppliers for each product. These prices are saved and automatically loaded when you select a supplier.",
+          "The button saves the current calculation inside the application (in the application's own database) for further viewing/analysis. Saving does not change the Bitrix24 deal amount, but makes changes to additional fields for pricing information.",
       },
       item4: {
-        question: "What currencies are supported?",
+        question: "How does automatic purchase price retrieval work when selecting a supplier?",
         answer:
-          "The calculator supports PLN, USD, and EUR with real-time conversion based on exchange rates you configure.",
+          "When selecting a supplier, the application searches its database for the price of that supplier for the selected product and automatically inserts the purchase price + currency. If there are no prices for the 'supplier-product' combination, the field remains empty and you need to enter the price manually.",
       },
       item5: {
-        question: "How is the data saved?",
+        question: "Can I customize the table view and set of columns?",
         answer:
-          "All calculations are saved directly to the Bitrix24 deal. The data includes all pricing details, margins, and supplier information.",
-      },
-      item6: {
-        question: "Can I customize which fields are displayed?",
-        answer:
-          "Yes, you can configure which columns appear in the calculator through the column settings. Some fields are required and cannot be hidden.",
+          "Yes. The interface includes display modes (table, cards, accordion) and a 'Settings' button to configure visible columns. Use these buttons to hide/show the required fields.",
       },
     },
 

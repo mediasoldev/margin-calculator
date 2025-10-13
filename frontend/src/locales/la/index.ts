@@ -127,40 +127,37 @@ export default {
     },
   },
   about: {
-    title: "Acerca de la Calculadora de precios",
+    title: "Acerca de la Calculadora de Margen",
     description:
-      "Un widget profesional para Bitrix24 que le permite calcular precios de productos, márgenes y gestionar costos directamente en sus negocios",
+      "La Calculadora de Margen es una aplicación de apoyo para Bitrix24 que permite evaluar rápidamente la rentabilidad del producto (margen) teniendo en cuenta el precio de compra, transporte, embalaje y tipos de cambio. IMPORTANTE: la aplicación no cambia el monto del negocio, sino que ingresa información de precios del producto en campos adicionales.",
 
     faq: {
       item1: {
-        question: "¿Cómo funciona la calculadora de precios?",
+        question: "¿Dónde establecer los tipos de cambio y cómo se utilizan?",
         answer:
-          "La calculadora automáticamente obtiene productos de su negocio Bitrix24, le permite establecer precios de compra, costos de transporte y empaque, luego calcula márgenes y totales con soporte multimoneda.",
+          "En la parte superior de la interfaz hay campos para los tipos de cambio (por ejemplo, USD/PLN, EUR/PLN, EUR/USD). Estos valores se utilizan para convertir todos los montos a la moneda en la que se establece el precio de venta. Cambie la tasa - el cálculo se actualizará automáticamente.",
       },
       item2: {
-        question: "¿Dónde puedo encontrar el widget?",
+        question: "¿Cómo se calcula el margen (fórmula)?",
         answer:
-          "El widget aparece dentro de cada negocio en el CRM Bitrix24. Abra cualquier negocio y busque la pestaña o panel del widget Calculadora de precios.",
+          "Todos los gastos entrantes (compra, transporte, embalaje, etc.) se convierten a la moneda del precio de venta según las tasas especificadas. Luego se aplica la fórmula: Ingresos Totales = Precio_de_Venta × Cantidad; Gastos Totales = (Precio_de_Compra × Cantidad) + Transporte + Embalaje + Otros_Gastos; Margen = Ingresos Totales − Gastos Totales; % de Margen = (Margen / Ingresos Totales) × 100%",
       },
       item3: {
-        question: "¿Puedo guardar precios específicos de proveedores?",
+        question: "¿Qué significa el botón 'Guardar'?",
         answer:
-          "Sí, puede asociar precios específicos con diferentes proveedores para cada producto. Estos precios se guardan y cargan automáticamente cuando selecciona un proveedor.",
+          "El botón guarda el cálculo actual dentro de la aplicación (en la propia base de datos de la aplicación) para su posterior visualización/análisis. Guardar no cambia el monto del negocio Bitrix24, sino que realiza cambios en campos adicionales para información de precios.",
       },
       item4: {
-        question: "¿Qué monedas son soportadas?",
+        question:
+          "¿Cómo funciona la recuperación automática del precio de compra al seleccionar un proveedor?",
         answer:
-          "La calculadora soporta PLN, USD y EUR con conversión en tiempo real basada en las tasas de cambio que configure.",
+          "Al seleccionar un proveedor, la aplicación busca en su base de datos el precio de ese proveedor para el producto seleccionado e inserta automáticamente el precio de compra + moneda. Si no hay precios para la combinación 'proveedor-producto', el campo permanece vacío y debe ingresar el precio manualmente.",
       },
       item5: {
-        question: "¿Cómo se guardan los datos?",
+        question:
+          "¿Puedo personalizar la vista de la tabla y el conjunto de columnas?",
         answer:
-          "Todos los cálculos se guardan directamente en el negocio Bitrix24. Los datos incluyen todos los detalles de precios, márgenes e información de proveedores.",
-      },
-      item6: {
-        question: "¿Puedo personalizar qué campos se muestran?",
-        answer:
-          "Sí, puede configurar qué columnas aparecen en la calculadora a través de la configuración de columnas. Algunos campos son obligatorios y no pueden ocultarse.",
+          "Sí. La interfaz incluye modos de visualización (tabla, tarjetas, acordeón) y un botón 'Configuración' para configurar columnas visibles. Use estos botones para ocultar/mostrar los campos requeridos.",
       },
     },
 

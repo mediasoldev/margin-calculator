@@ -68,7 +68,8 @@ export default {
       },
       step2: {
         title: "Deal in Bitrix24 öffnen",
-        description: "Navigieren Sie zu einem beliebigen Deal in Ihrem Bitrix24 CRM",
+        description:
+          "Navigieren Sie zu einem beliebigen Deal in Ihrem Bitrix24 CRM",
         note: "Das Widget ist in der Deal-Karte verfügbar",
       },
       step3: {
@@ -89,7 +90,8 @@ export default {
         message:
           "Der Preiskalkulator erscheint als eingebettetes Widget innerhalb von Bitrix24 Deals",
         step1: "Öffnen Sie einen beliebigen Deal im Bitrix24 CRM",
-        step2: 'Suchen Sie nach der Registerkarte oder dem Widget "Preiskalkulator"',
+        step2:
+          'Suchen Sie nach der Registerkarte oder dem Widget "Preiskalkulator"',
         step3: "Klicken Sie, um die Kalkulator-Oberfläche zu öffnen",
       },
       features: {
@@ -127,49 +129,46 @@ export default {
     },
   },
   about: {
-    title: "Über den Preiskalkulator",
+    title: "Über den Margenrechner",
     description:
-      "Ein professionelles Widget für Bitrix24, mit dem Sie Produktpreise, Margen berechnen und Kosten direkt in Ihren Deals verwalten können",
+      "Der Margenrechner ist eine Hilfsanwendung für Bitrix24, mit der Sie schnell die Rentabilität eines Produkts (Marge) unter Berücksichtigung von Einkaufspreis, Transport, Verpackung und Wechselkursen bewerten können. WICHTIG: Die Anwendung ändert nicht den Deal-Betrag, sondern trägt Produktpreisinformationen in zusätzliche Felder ein.",
 
     faq: {
       item1: {
-        question: "Wie funktioniert der Preiskalkulator?",
+        question:
+          "Wo werden Wechselkurse festgelegt und wie werden sie verwendet?",
         answer:
-          "Der Kalkulator ruft automatisch Produkte aus Ihrem Bitrix24 Deal ab, ermöglicht es Ihnen, Einkaufspreise, Transport- und Verpackungskosten festzulegen und berechnet dann Margen und Summen mit Unterstützung mehrerer Währungen.",
+          "Im oberen Bereich der Benutzeroberfläche befinden sich Felder für Wechselkurse (z. B. USD/PLN, EUR/PLN, EUR/USD). Diese Werte werden verwendet, um alle Beträge in die Währung umzurechnen, in der der Verkaufspreis festgelegt ist. Ändern Sie den Kurs - die Berechnung wird automatisch aktualisiert.",
       },
       item2: {
-        question: "Wo finde ich das Widget?",
+        question: "Wie wird die Marge berechnet (Formel)?",
         answer:
-          "Das Widget erscheint in jedem Deal im Bitrix24 CRM. Öffnen Sie einen beliebigen Deal und suchen Sie nach der Registerkarte oder dem Widget-Panel Preiskalkulator.",
+          "Alle eingehenden Ausgaben (Einkauf, Transport, Verpackung usw.) werden gemäß den angegebenen Kursen in die Verkaufspreiswährung umgerechnet. Dann wird die Formel angewendet: Gesamtumsatz = Verkaufspreis × Menge; Gesamtausgaben = (Einkaufspreis × Menge) + Transport + Verpackung + Sonstige_Ausgaben; Marge = Gesamtumsatz − Gesamtausgaben; Marge % = (Marge / Gesamtumsatz) × 100%",
       },
       item3: {
-        question: "Kann ich lieferantenspezifische Preise speichern?",
+        question: "Was bedeutet die Schaltfläche 'Speichern'?",
         answer:
-          "Ja, Sie können für jedes Produkt spezifische Preise mit verschiedenen Lieferanten verknüpfen. Diese Preise werden gespeichert und automatisch geladen, wenn Sie einen Lieferanten auswählen.",
+          "Die Schaltfläche speichert die aktuelle Berechnung in der Anwendung (in der eigenen Datenbank der Anwendung) zur weiteren Ansicht/Analyse. Das Speichern ändert nicht den Bitrix24-Deal-Betrag, sondern nimmt Änderungen an zusätzlichen Feldern für Preisinformationen vor.",
       },
       item4: {
-        question: "Welche Währungen werden unterstützt?",
+        question:
+          "Wie funktioniert das automatische Abrufen des Einkaufspreises bei Auswahl eines Lieferanten?",
         answer:
-          "Der Kalkulator unterstützt PLN, USD und EUR mit Echtzeit-Umrechnung basierend auf von Ihnen konfigurierten Wechselkursen.",
+          "Bei Auswahl eines Lieferanten durchsucht die Anwendung ihre Datenbank nach dem Preis dieses Lieferanten für das ausgewählte Produkt und fügt automatisch den Einkaufspreis + Währung ein. Wenn es keine Preise für die Kombination 'Lieferant-Produkt' gibt, bleibt das Feld leer und Sie müssen den Preis manuell eingeben.",
       },
       item5: {
-        question: "Wie werden die Daten gespeichert?",
+        question: "Kann ich die Tabellenansicht und den Spaltensatz anpassen?",
         answer:
-          "Alle Berechnungen werden direkt im Bitrix24 Deal gespeichert. Die Daten umfassen alle Preisdetails, Margen und Lieferanteninformationen.",
-      },
-      item6: {
-        question: "Kann ich anpassen, welche Felder angezeigt werden?",
-        answer:
-          "Ja, Sie können über die Spalteneinstellungen konfigurieren, welche Spalten im Kalkulator erscheinen. Einige Felder sind erforderlich und können nicht ausgeblendet werden.",
+          "Ja. Die Benutzeroberfläche enthält Anzeigemodi (Tabelle, Karten, Akkordeon) und eine Schaltfläche 'Einstellungen' zur Konfiguration sichtbarer Spalten. Verwenden Sie diese Schaltflächen, um die erforderlichen Felder ein-/auszublenden.",
       },
     },
 
     info: {
       title: "Anwendungsinformationen",
       version: "Version",
-      lastUpdate: "Letztes Update",
+      lastUpdate: "Letzte Aktualisierung",
       developer: "Entwickler",
-      developerName: "Ihre Firma",
+      developerName: "Ihr Unternehmen",
       support: "Support",
     },
   },

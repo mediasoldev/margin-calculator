@@ -54,13 +54,6 @@
         >
           <p>{{ $t('about.faq.item5.answer') }}</p>
         </a-collapse-panel>
-        
-        <a-collapse-panel 
-          key="6" 
-          :header="$t('about.faq.item6.question')"
-        >
-          <p>{{ $t('about.faq.item6.answer') }}</p>
-        </a-collapse-panel>
       </a-collapse>
     </a-card>
 

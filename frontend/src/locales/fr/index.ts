@@ -68,7 +68,8 @@ export default {
       },
       step2: {
         title: "Ouvrir une affaire dans Bitrix24",
-        description: "Naviguez vers n'importe quelle affaire dans votre CRM Bitrix24",
+        description:
+          "Naviguez vers n'importe quelle affaire dans votre CRM Bitrix24",
         note: "Le widget sera disponible dans la fiche de l'affaire",
       },
       step3: {
@@ -127,40 +128,38 @@ export default {
     },
   },
   about: {
-    title: "À propos du Calculateur de prix",
+    title: "À propos du Calculateur de Marge",
     description:
-      "Un widget professionnel pour Bitrix24 qui vous permet de calculer les prix des produits, les marges et de gérer les coûts directement dans vos affaires",
+      "Le Calculateur de Marge est une application d'assistance pour Bitrix24 qui vous permet d'évaluer rapidement la rentabilité d'un produit (marge) en tenant compte du prix d'achat, du transport, de l'emballage et des taux de change. IMPORTANT : l'application ne modifie pas le montant de la transaction, mais saisit les informations de tarification du produit dans des champs supplémentaires.",
 
     faq: {
       item1: {
-        question: "Comment fonctionne le calculateur de prix ?",
+        question:
+          "Où définir les taux de change et comment sont-ils utilisés ?",
         answer:
-          "Le calculateur récupère automatiquement les produits de votre affaire Bitrix24, vous permet de définir les prix d'achat, les coûts de transport et d'emballage, puis calcule les marges et les totaux avec support multi-devises.",
+          "En haut de l'interface, il y a des champs pour les taux de change (par exemple, USD/PLN, EUR/PLN, EUR/USD). Ces valeurs sont utilisées pour convertir tous les montants dans la devise dans laquelle le prix de vente est fixé. Modifiez le taux - le calcul sera mis à jour automatiquement.",
       },
       item2: {
-        question: "Où puis-je trouver le widget ?",
+        question: "Comment la marge est-elle calculée (formule) ?",
         answer:
-          "Le widget apparaît dans chaque affaire du CRM Bitrix24. Ouvrez n'importe quelle affaire et cherchez l'onglet ou le panneau du widget Calculateur de prix.",
+          "Toutes les dépenses entrantes (achat, transport, emballage, etc.) sont converties dans la devise du prix de vente selon les taux spécifiés. Ensuite, la formule est appliquée : Revenu Total = Prix_de_Vente × Quantité ; Dépenses Totales = (Prix_d'Achat × Quantité) + Transport + Emballage + Autres_Dépenses ; Marge = Revenu Total − Dépenses Totales ; % de Marge = (Marge / Revenu Total) × 100%",
       },
       item3: {
-        question: "Puis-je enregistrer des prix spécifiques aux fournisseurs ?",
+        question: "Que signifie le bouton 'Enregistrer' ?",
         answer:
-          "Oui, vous pouvez associer des prix spécifiques à différents fournisseurs pour chaque produit. Ces prix sont enregistrés et automatiquement chargés lorsque vous sélectionnez un fournisseur.",
+          "Le bouton enregistre le calcul actuel dans l'application (dans la propre base de données de l'application) pour consultation/analyse ultérieure. L'enregistrement ne modifie pas le montant de la transaction Bitrix24, mais apporte des modifications aux champs supplémentaires pour les informations de tarification.",
       },
       item4: {
-        question: "Quelles devises sont supportées ?",
+        question:
+          "Comment fonctionne la récupération automatique du prix d'achat lors de la sélection d'un fournisseur ?",
         answer:
-          "Le calculateur supporte PLN, USD et EUR avec conversion en temps réel basée sur les taux de change que vous configurez.",
+          "Lors de la sélection d'un fournisseur, l'application recherche dans sa base de données le prix de ce fournisseur pour le produit sélectionné et insère automatiquement le prix d'achat + la devise. S'il n'y a pas de prix pour la combinaison 'fournisseur-produit', le champ reste vide et vous devez saisir le prix manuellement.",
       },
       item5: {
-        question: "Comment les données sont-elles enregistrées ?",
+        question:
+          "Puis-je personnaliser la vue du tableau et l'ensemble des colonnes ?",
         answer:
-          "Tous les calculs sont enregistrés directement dans l'affaire Bitrix24. Les données incluent tous les détails de tarification, les marges et les informations sur les fournisseurs.",
-      },
-      item6: {
-        question: "Puis-je personnaliser les champs affichés ?",
-        answer:
-          "Oui, vous pouvez configurer quelles colonnes apparaissent dans le calculateur via les paramètres de colonnes. Certains champs sont obligatoires et ne peuvent pas être masqués.",
+          "Oui. L'interface comprend des modes d'affichage (tableau, cartes, accordéon) et un bouton 'Paramètres' pour configurer les colonnes visibles. Utilisez ces boutons pour masquer/afficher les champs requis.",
       },
     },
 

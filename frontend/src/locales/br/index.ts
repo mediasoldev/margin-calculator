@@ -127,40 +127,37 @@ export default {
     },
   },
   about: {
-    title: "Sobre a Calculadora de preços",
+    title: "Sobre a Calculadora de Margem",
     description:
-      "Um widget profissional para Bitrix24 que permite calcular preços de produtos, margens e gerenciar custos diretamente em seus negócios",
+      "A Calculadora de Margem é um aplicativo de suporte para Bitrix24 que permite avaliar rapidamente a lucratividade do produto (margem) levando em consideração o preço de compra, transporte, embalagem e taxas de câmbio. IMPORTANTE: o aplicativo não altera o valor do negócio, mas insere informações de precificação do produto em campos adicionais.",
 
     faq: {
       item1: {
-        question: "Como funciona a calculadora de preços?",
+        question: "Onde definir taxas de câmbio e como elas são usadas?",
         answer:
-          "A calculadora automaticamente busca produtos do seu negócio Bitrix24, permite definir preços de compra, custos de transporte e embalagem, depois calcula margens e totais com suporte multi-moeda.",
+          "Na parte superior da interface há campos para taxas de câmbio (por exemplo, USD/PLN, EUR/PLN, EUR/USD). Esses valores são usados para converter todos os valores para a moeda na qual o preço de venda está definido. Altere a taxa - o cálculo será atualizado automaticamente.",
       },
       item2: {
-        question: "Onde posso encontrar o widget?",
+        question: "Como a margem é calculada (fórmula)?",
         answer:
-          "O widget aparece dentro de cada negócio no CRM Bitrix24. Abra qualquer negócio e procure pela aba ou painel do widget Calculadora de preços.",
+          "Todas as despesas de entrada (compra, transporte, embalagem, etc.) são convertidas para a moeda do preço de venda de acordo com as taxas especificadas. Em seguida, a fórmula é aplicada: Receita Total = Preço_de_Venda × Quantidade; Despesas Totais = (Preço_de_Compra × Quantidade) + Transporte + Embalagem + Outras_Despesas; Margem = Receita Total − Despesas Totais; % de Margem = (Margem / Receita Total) × 100%",
       },
       item3: {
-        question: "Posso salvar preços específicos de fornecedores?",
+        question: "O que significa o botão 'Salvar'?",
         answer:
-          "Sim, você pode associar preços específicos a diferentes fornecedores para cada produto. Esses preços são salvos e carregados automaticamente quando você seleciona um fornecedor.",
+          "O botão salva o cálculo atual dentro do aplicativo (no próprio banco de dados do aplicativo) para visualização/análise posterior. Salvar não altera o valor do negócio Bitrix24, mas faz alterações em campos adicionais para informações de precificação.",
       },
       item4: {
-        question: "Quais moedas são suportadas?",
+        question:
+          "Como funciona a recuperação automática do preço de compra ao selecionar um fornecedor?",
         answer:
-          "A calculadora suporta PLN, USD e EUR com conversão em tempo real baseada nas taxas de câmbio que você configura.",
+          "Ao selecionar um fornecedor, o aplicativo pesquisa em seu banco de dados o preço desse fornecedor para o produto selecionado e insere automaticamente o preço de compra + moeda. Se não houver preços para a combinação 'fornecedor-produto', o campo permanece vazio e você precisa inserir o preço manualmente.",
       },
       item5: {
-        question: "Como os dados são salvos?",
+        question:
+          "Posso personalizar a visualização da tabela e o conjunto de colunas?",
         answer:
-          "Todos os cálculos são salvos diretamente no negócio Bitrix24. Os dados incluem todos os detalhes de preços, margens e informações de fornecedores.",
-      },
-      item6: {
-        question: "Posso personalizar quais campos são exibidos?",
-        answer:
-          "Sim, você pode configurar quais colunas aparecem na calculadora através das configurações de colunas. Alguns campos são obrigatórios e não podem ser ocultos.",
+          "Sim. A interface inclui modos de exibição (tabela, cartões, acordeão) e um botão 'Configurações' para configurar colunas visíveis. Use esses botões para ocultar/mostrar os campos necessários.",
       },
     },
 
