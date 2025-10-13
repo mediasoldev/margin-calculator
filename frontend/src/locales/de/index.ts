@@ -2,9 +2,9 @@
 
 export default {
   app: {
-    name: "Bitrix24 App",
+    name: "Bitrix24-Anwendung",
     welcome: "Willkommen",
-    loading: "Laden...",
+    loading: "Wird geladen...",
   },
   menu: {
     home: "Startseite",
@@ -14,7 +14,7 @@ export default {
   },
   settings: {
     title: "Einstellungen",
-    theme: "Thema",
+    theme: "Design",
     language: "Sprache",
     light: "Hell",
     dark: "Dunkel",
@@ -24,110 +24,54 @@ export default {
     primaryColor: "Primärfarbe",
     textColor: "Textfarbe",
     textColorHint:
-      "Passen Sie die Textfarbe für besseren Kontrast mit hellem Hintergrund an",
+      "Textfarbe für besseren Kontrast mit hellen Hintergründen anpassen",
     compactMode: "Kompaktmodus",
     compactModeOn: "Aktiviert - Reduzierte Abstände",
     compactModeOff: "Deaktiviert - Normale Abstände",
     animations: "Animationen",
-    animationsOn: "Aktiviert - Weiche Übergänge",
+    animationsOn: "Aktiviert - Sanfte Übergänge",
     animationsOff: "Deaktiviert - Sofortige Änderungen",
-    preview: "Themenvorschau",
+    preview: "Design-Vorschau",
     livePreview: "Live-Vorschau",
     sampleTitle: "Beispieltitel",
     sampleText:
-      "Dies ist ein Beispieltext zur Vorschau Ihrer Farbauswahl. Sie können sehen, wie die Primärfarbe und Textfarbe zusammenarbeiten.",
-    sampleButton: "Primäre Aktion",
-    sampleButtonSecondary: "Sekundäre Aktion",
+      "Dies ist ein Beispieltext zur Vorschau Ihrer Farbauswahl. Sie können sehen, wie die Primärfarbe und die Textfarbe zusammenarbeiten.",
+    sampleButton: "Hauptaktion",
+    sampleButtonSecondary: "Zweite Aktion",
     reset: "Auf Standard zurücksetzen",
     saveSuccess: "Einstellungen erfolgreich gespeichert",
-    saveError: "Fehler beim Speichern der Einstellungen",
+    saveError: "Einstellungen konnten nicht gespeichert werden",
     resetSuccess: "Einstellungen auf Standard zurückgesetzt",
   },
+
   home: {
-    title: "Preiskalkulator für Bitrix24",
+    title: "Margenrechner für Bitrix24",
     description:
-      "Professionelles Tool zur Berechnung von Produktpreisen, Margen und Verwaltung von Lieferantenkosten direkt in Ihren Bitrix24 Deals",
+      "Bewerten Sie schnell die Produktrentabilität unter Berücksichtigung von Einkaufspreis, Transport, Verpackung und Wechselkursen",
 
-    features: {
-      priceCalc: "Preisberechnung",
-      priceCalcDesc: "Automatische Margenberechnung",
-      currency: "Mehrwährungsfähigkeit",
-      currencyDesc: "Unterstützung für PLN, USD, EUR",
-      suppliers: "Lieferanten",
-      suppliersDesc: "Verwaltung von Lieferantenpreisen",
-      integration: "Integration",
-      integrationDesc: "Vollständige Bitrix24 Integration",
+    importantNotice: "Wichtig",
+    noticeDescription: "Die Anwendung ändert nicht den Deal-Betrag, sondern trägt Produktpreisinformationen in zusätzliche Felder ein",
+
+    whereToFind: {
+      title: "Wo das Widget zu finden ist",
+      step1: "Öffnen Sie einen beliebigen Deal in Bitrix24 CRM",
+      step2: "Suchen Sie nach dem Tab oder Widget 'Margenrechner' in der Deal-Karte",
+      step3: "Klicken Sie zum Öffnen und Berechnen von Margen",
     },
 
-    howToUse: {
-      title: "Anleitung",
-      step1: {
-        title: "Einstellungen konfigurieren",
-        description:
-          "Richten Sie Wechselkurse und Spalteneinstellungen im Einstellungsbereich ein",
-      },
-      step2: {
-        title: "Deal in Bitrix24 öffnen",
-        description:
-          "Navigieren Sie zu einem beliebigen Deal in Ihrem Bitrix24 CRM",
-        note: "Das Widget ist in der Deal-Karte verfügbar",
-      },
-      step3: {
-        title: "Kalkulator-Widget verwenden",
-        description:
-          "Klicken Sie auf das Preiskalkulator-Widget im Deal, um Preise und Margen für Produkte zu berechnen",
-      },
-      step4: {
-        title: "Im Deal speichern",
-        description:
-          "Berechnete Daten werden automatisch im Deal mit allen Preisdetails gespeichert",
-      },
-    },
-
-    info: {
-      whereToFind: {
-        title: "Wo finde ich das Widget",
-        message:
-          "Der Preiskalkulator erscheint als eingebettetes Widget innerhalb von Bitrix24 Deals",
-        step1: "Öffnen Sie einen beliebigen Deal im Bitrix24 CRM",
-        step2:
-          'Suchen Sie nach der Registerkarte oder dem Widget "Preiskalkulator"',
-        step3: "Klicken Sie, um die Kalkulator-Oberfläche zu öffnen",
-      },
-      features: {
-        title: "Hauptfunktionen",
-        item1: "Echtzeit-Währungsumrechnung",
-        item2: "Lieferantenspezifische Preise",
-        item3: "Verfolgung von Transport- und Verpackungskosten",
-        item4: "Automatische Margenberechnung",
-      },
-    },
-
-    quickActions: {
-      title: "Schnellaktionen",
-      settings: "Einstellungen konfigurieren",
-      testWidget: "Widget testen",
-      documentation: "Dokumentation anzeigen",
-    },
-
-    status: {
-      title: "Systemstatus",
-      appVersion: "App-Version",
-      bitrixConnection: "Bitrix24 Verbindung",
-      connected: "Verbunden",
-      disconnected: "Getrennt",
-      user: "Aktueller Benutzer",
-      domain: "Domain",
-      language: "Sprache",
-      lastSync: "Letzte Synchronisation",
-    },
-
-    messages: {
-      widgetOpened: "Widget in neuem Fenster geöffnet",
-      widgetError: "Fehler beim Öffnen des Widgets",
-      documentationComingSoon: "Dokumentation kommt bald",
+    keyFeatures: {
+      title: "Hauptfunktionen",
+      currencies: "Mehrwährung",
+      currenciesDesc: "Unterstützung für PLN, USD, EUR mit automatischer Konvertierung",
+      margin: "Margenberechnung",
+      marginDesc: "Automatische Berechnung mit allen Kosten",
+      suppliers: "Lieferantenpreise",
+      suppliersDesc: "Automatisches Ausfüllen von Einkaufspreisen aus der Lieferantendatenbank",
+      flexible: "Flexible Anzeige",
+      flexibleDesc: "Anpassbare Tabellen-, Karten- oder Akkordeonansicht",
     },
   },
+
   about: {
     title: "Über den Margenrechner",
     description:
@@ -135,8 +79,7 @@ export default {
 
     faq: {
       item1: {
-        question:
-          "Wo werden Wechselkurse festgelegt und wie werden sie verwendet?",
+        question: "Wo werden Wechselkurse festgelegt und wie werden sie verwendet?",
         answer:
           "Im oberen Bereich der Benutzeroberfläche befinden sich Felder für Wechselkurse (z. B. USD/PLN, EUR/PLN, EUR/USD). Diese Werte werden verwendet, um alle Beträge in die Währung umzurechnen, in der der Verkaufspreis festgelegt ist. Ändern Sie den Kurs - die Berechnung wird automatisch aktualisiert.",
       },
@@ -151,8 +94,7 @@ export default {
           "Die Schaltfläche speichert die aktuelle Berechnung in der Anwendung (in der eigenen Datenbank der Anwendung) zur weiteren Ansicht/Analyse. Das Speichern ändert nicht den Bitrix24-Deal-Betrag, sondern nimmt Änderungen an zusätzlichen Feldern für Preisinformationen vor.",
       },
       item4: {
-        question:
-          "Wie funktioniert das automatische Abrufen des Einkaufspreises bei Auswahl eines Lieferanten?",
+        question: "Wie funktioniert das automatische Abrufen des Einkaufspreises bei Auswahl eines Lieferanten?",
         answer:
           "Bei Auswahl eines Lieferanten durchsucht die Anwendung ihre Datenbank nach dem Preis dieses Lieferanten für das ausgewählte Produkt und fügt automatisch den Einkaufspreis + Währung ein. Wenn es keine Preise für die Kombination 'Lieferant-Produkt' gibt, bleibt das Feld leer und Sie müssen den Preis manuell eingeben.",
       },
@@ -172,6 +114,7 @@ export default {
       support: "Support",
     },
   },
+  
   common: {
     yes: "Ja",
     no: "Nein",
@@ -181,35 +124,29 @@ export default {
     error: "Fehler",
     success: "Erfolg",
   },
+
   license: {
     title: "Lizenz",
-    subtitle: "Verwalten Sie Ihre Anwendungslizenz",
-    currentLicense: "Aktuelle Lizenz",
-    terms: "Geschäftsbedingungen",
-    status: "Status",
-    type: "Lizenztyp",
-    validFrom: "Gültig von",
-    validUntil: "Gültig bis",
-    domain: "Lizenzierte Domain",
-    users: "Anzahl der Benutzer",
-    active: "Aktiv",
-    expired: "Abgelaufen",
-    expiringSoon: "Läuft bald ab",
-    checking: "Überprüfung...",
-    checkLicense: "Lizenz überprüfen",
-    activateLicense: "Lizenz aktivieren",
+    subtitle: "Lizenzinformationen der Anwendung",
     licenseKey: "Lizenzschlüssel",
-    enterLicenseKey: "Geben Sie Ihren Lizenzschlüssel ein",
-    activationNote: "Die Lizenz wird an die aktuelle Domain gebunden",
-    checkSuccess: "Lizenz erfolgreich überprüft",
-    checkError: "Fehler bei der Lizenzüberprüfung",
-    keyRequired: "Bitte geben Sie einen Lizenzschlüssel ein",
-    activationSuccess: "Lizenz erfolgreich aktiviert",
-    activationError: "Fehler bei der Lizenzaktivierung",
-    termsTitle: "Lizenzbedingungen",
-    termsContent:
-      "<p>Durch die Nutzung dieser Software stimmen Sie den folgenden Bedingungen zu...</p>",
+    validUntil: "Gültig bis",
+    expiresIn: "Läuft ab in",
+    days: "Tagen",
+    today: "Heute",
+    expired: "Abgelaufen",
+    trial: "Testversion",
+    licensedTo: "Lizenziert für",
+    maxUsers: "Maximale Benutzer",
+    unlimited: "Unbegrenzt",
+    noLicense: "Kein Lizenzschlüssel",
+    purchaseContactTitle: "Um einen Lizenzschlüssel zu kaufen, kontaktieren Sie uns auf beliebige Weise:",
+    website: "Webseite",
+    phone: "Telefon",
+    email: "E-Mail",
+    onlineChat: "Online-Chat",
+    checkError: "Fehler bei der Lizenzprüfung",
   },
+
   pricing: {
     currencyInfo: "Währungsinformationen",
     product: "Produkt",
@@ -229,6 +166,6 @@ export default {
     packaging: "Verpackung",
     marginPercent: "Marge %",
     margin: "Marge",
-    saveSuccess: "Kalkulation erfolgreich gespeichert",
+    saveSuccess: "Berechnung erfolgreich gespeichert",
   },
 };

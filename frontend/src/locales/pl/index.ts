@@ -23,7 +23,8 @@ export default {
     saved: "Ustawienia zapisane",
     primaryColor: "Kolor główny",
     textColor: "Kolor tekstu",
-    textColorHint: "Dostosuj kolor tekstu dla lepszego kontrastu z jasnym tłem",
+    textColorHint:
+      "Dostosuj kolor tekstu dla lepszego kontrastu z jasnymi tłami",
     compactMode: "Tryb kompaktowy",
     compactModeOn: "Włączony - Zmniejszone odstępy",
     compactModeOff: "Wyłączony - Normalne odstępy",
@@ -34,97 +35,43 @@ export default {
     livePreview: "Podgląd na żywo",
     sampleTitle: "Przykładowy tytuł",
     sampleText:
-      "To jest przykładowy tekst do podglądu wybranych kolorów. Możesz zobaczyć, jak kolor główny i kolor tekstu współpracują ze sobą.",
-    sampleButton: "Akcja główna",
-    sampleButtonSecondary: "Akcja dodatkowa",
+      "To jest przykładowy tekst do podglądu Twoich wyborów kolorów. Możesz zobaczyć, jak kolor główny i kolor tekstu współpracują ze sobą.",
+    sampleButton: "Główna akcja",
+    sampleButtonSecondary: "Druga akcja",
     reset: "Przywróć domyślne",
     saveSuccess: "Ustawienia zapisane pomyślnie",
     saveError: "Nie udało się zapisać ustawień",
     resetSuccess: "Ustawienia przywrócone do domyślnych",
   },
+
   home: {
-    title: "Kalkulator cen dla Bitrix24",
+    title: "Kalkulator Marży dla Bitrix24",
     description:
-      "Profesjonalne narzędzie do obliczania cen produktów, marż i zarządzania kosztami dostawców bezpośrednio w transakcjach Bitrix24",
+      "Szybko oceń rentowność produktu z uwzględnieniem ceny zakupu, transportu, opakowania i kursów walut",
 
-    features: {
-      priceCalc: "Obliczanie cen",
-      priceCalcDesc: "Automatyczne obliczanie marży",
-      currency: "Wielowalutowość",
-      currencyDesc: "Wsparcie dla PLN, USD, EUR",
-      suppliers: "Dostawcy",
-      suppliersDesc: "Zarządzanie cenami dostawców",
-      integration: "Integracja",
-      integrationDesc: "Pełna integracja z Bitrix24",
+    importantNotice: "Ważne",
+    noticeDescription: "Aplikacja nie zmienia kwoty transakcji, ale wprowadza informacje o cenach produktu do dodatkowych pól",
+
+    whereToFind: {
+      title: "Gdzie znaleźć widżet",
+      step1: "Otwórz dowolną transakcję w Bitrix24 CRM",
+      step2: "Poszukaj zakładki lub widżetu 'Kalkulator Marży' w karcie transakcji",
+      step3: "Kliknij, aby otworzyć i rozpocząć obliczanie marż",
     },
 
-    howToUse: {
-      title: "Jak używać",
-      step1: {
-        title: "Skonfiguruj ustawienia",
-        description:
-          "Ustaw kursy walut i preferencje kolumn w sekcji Ustawienia",
-      },
-      step2: {
-        title: "Otwórz transakcję w Bitrix24",
-        description: "Przejdź do dowolnej transakcji w Twoim CRM Bitrix24",
-        note: "Widget będzie dostępny w karcie transakcji",
-      },
-      step3: {
-        title: "Użyj widgetu kalkulatora",
-        description:
-          "Kliknij widget Kalkulator cen w transakcji, aby obliczyć ceny i marże dla produktów",
-      },
-      step4: {
-        title: "Zapisz do transakcji",
-        description:
-          "Obliczone dane są automatycznie zapisywane w transakcji ze wszystkimi szczegółami cenowymi",
-      },
-    },
-
-    info: {
-      whereToFind: {
-        title: "Gdzie znaleźć widget",
-        message:
-          "Kalkulator cen pojawia się jako osadzony widget wewnątrz transakcji Bitrix24",
-        step1: "Otwórz dowolną transakcję w CRM Bitrix24",
-        step2: 'Szukaj zakładki lub widgetu "Kalkulator cen"',
-        step3: "Kliknij, aby otworzyć interfejs kalkulatora",
-      },
-      features: {
-        title: "Kluczowe funkcje",
-        item1: "Konwersja walut w czasie rzeczywistym",
-        item2: "Ceny specyficzne dla dostawców",
-        item3: "Śledzenie kosztów transportu i pakowania",
-        item4: "Automatyczne obliczanie marży",
-      },
-    },
-
-    quickActions: {
-      title: "Szybkie akcje",
-      settings: "Skonfiguruj ustawienia",
-      testWidget: "Testuj widget",
-      documentation: "Zobacz dokumentację",
-    },
-
-    status: {
-      title: "Status systemu",
-      appVersion: "Wersja aplikacji",
-      bitrixConnection: "Połączenie z Bitrix24",
-      connected: "Połączono",
-      disconnected: "Rozłączono",
-      user: "Bieżący użytkownik",
-      domain: "Domena",
-      language: "Język",
-      lastSync: "Ostatnia synchronizacja",
-    },
-
-    messages: {
-      widgetOpened: "Widget otwarty w nowym oknie",
-      widgetError: "Błąd podczas otwierania widgetu",
-      documentationComingSoon: "Dokumentacja wkrótce",
+    keyFeatures: {
+      title: "Kluczowe funkcje",
+      currencies: "Wiele walut",
+      currenciesDesc: "Obsługa PLN, USD, EUR z automatyczną konwersją",
+      margin: "Obliczanie marży",
+      marginDesc: "Automatyczne obliczanie z uwzględnieniem wszystkich kosztów",
+      suppliers: "Ceny dostawców",
+      suppliersDesc: "Automatyczne uzupełnianie cen zakupu z bazy dostawców",
+      flexible: "Elastyczny widok",
+      flexibleDesc: "Konfigurowalny widok tabeli, kart lub akordeonu",
     },
   },
+
   about: {
     title: "O Kalkulatorze Marży",
     description:
@@ -147,8 +94,7 @@ export default {
           "Przycisk zapisuje bieżące obliczenie wewnątrz aplikacji (we własnej bazie danych aplikacji) do dalszego przeglądania/analizy. Zapisanie nie zmienia kwoty transakcji Bitrix24, ale wprowadza zmiany do dodatkowych pól z informacjami o cenach.",
       },
       item4: {
-        question:
-          "Jak działa automatyczne pobieranie ceny zakupu przy wyborze dostawcy?",
+        question: "Jak działa automatyczne pobieranie ceny zakupu przy wyborze dostawcy?",
         answer:
           "Przy wyborze dostawcy aplikacja przeszukuje swoją bazę danych w poszukiwaniu ceny tego dostawcy dla wybranego produktu i automatycznie wstawia cenę zakupu + walutę. Jeśli nie ma cen dla kombinacji 'dostawca-produkt', pole pozostaje puste i musisz wprowadzić cenę ręcznie.",
       },
@@ -168,6 +114,7 @@ export default {
       support: "Wsparcie",
     },
   },
+  
   common: {
     yes: "Tak",
     no: "Nie",
@@ -177,35 +124,29 @@ export default {
     error: "Błąd",
     success: "Sukces",
   },
+
   license: {
     title: "Licencja",
-    subtitle: "Zarządzaj licencją aplikacji",
-    currentLicense: "Bieżąca licencja",
-    terms: "Warunki i postanowienia",
-    status: "Status",
-    type: "Typ licencji",
-    validFrom: "Ważna od",
+    subtitle: "Informacje o licencji aplikacji",
+    licenseKey: "Klucz licencyjny",
     validUntil: "Ważna do",
-    domain: "Licencjonowana domena",
-    users: "Liczba użytkowników",
-    active: "Aktywna",
+    expiresIn: "Wygasa za",
+    days: "dni",
+    today: "Dziś",
     expired: "Wygasła",
-    expiringSoon: "Wkrótce wygasa",
-    checking: "Sprawdzanie...",
-    checkLicense: "Sprawdź licencję",
-    activateLicense: "Aktywuj licencję",
-    licenseKey: "Klucz licencji",
-    enterLicenseKey: "Wprowadź swój klucz licencji",
-    activationNote: "Licencja zostanie powiązana z bieżącą domeną",
-    checkSuccess: "Licencja pomyślnie zweryfikowana",
-    checkError: "Błąd podczas sprawdzania licencji",
-    keyRequired: "Proszę wprowadzić klucz licencji",
-    activationSuccess: "Licencja pomyślnie aktywowana",
-    activationError: "Błąd podczas aktywacji licencji",
-    termsTitle: "Warunki i postanowienia licencji",
-    termsContent:
-      "<p>Korzystając z tego oprogramowania, zgadzasz się na następujące warunki...</p>",
+    trial: "Wersja próbna",
+    licensedTo: "Licencjonowana dla",
+    maxUsers: "Maksymalna liczba użytkowników",
+    unlimited: "Nieograniczona",
+    noLicense: "Brak klucza licencyjnego",
+    purchaseContactTitle: "Aby zakupić klucz licencyjny, skontaktuj się z nami w dowolny wygodny sposób:",
+    website: "Strona internetowa",
+    phone: "Telefon",
+    email: "E-mail",
+    onlineChat: "Chat online",
+    checkError: "Błąd sprawdzania licencji",
   },
+
   pricing: {
     currencyInfo: "Informacje o walucie",
     product: "Produkt",
@@ -214,17 +155,17 @@ export default {
     salePrice: "Cena sprzedaży",
     purchasePrice: "Cena zakupu",
     transportCost: "Koszt transportu",
-    packagingCost: "Koszt pakowania",
+    packagingCost: "Koszt opakowania",
     action: "Akcja",
     addProduct: "Dodaj produkt",
-    totalAmount: "Suma całkowita",
-    totalMargin: "Marża całkowita",
+    totalAmount: "Całkowita kwota",
+    totalMargin: "Całkowita marża",
     save: "Zapisz",
     marginCalculation: "Obliczanie marży",
     unnamed: "Produkt bez nazwy",
-    packaging: "Pakowanie",
+    packaging: "Opakowanie",
     marginPercent: "Marża %",
     margin: "Marża",
-    saveSuccess: "Obliczenia zapisane pomyślnie",
+    saveSuccess: "Obliczenie zapisane pomyślnie",
   },
 };

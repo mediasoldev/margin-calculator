@@ -11,10 +11,10 @@
       <div class="header-content">
         <!-- Logo and Menu -->
         <div class="header-left">
-          <div class="logo">
+          <!-- <div class="logo">
             <span class="logo-icon">B24</span>
             <span class="logo-text">{{ $t("app.name") }}</span>
-          </div>
+          </div> -->
 
           <a-menu
             v-model:selectedKeys="selectedKeys"
@@ -583,7 +583,7 @@ watch(isDark, (newValue) => {
 
 /* Content */
 .main-content {
-  padding: 24px;
+  padding: 0px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -650,7 +650,7 @@ watch(isDark, (newValue) => {
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .main-content {
-    padding: 16px;
+    padding: 0px;
   }
 
   .content-wrapper {

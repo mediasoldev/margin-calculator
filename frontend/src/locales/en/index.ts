@@ -45,86 +45,30 @@ export default {
   },
 
   home: {
-    title: "Pricing Calculator for Bitrix24",
+    title: "Margin Calculator for Bitrix24",
     description:
-      "Professional tool for calculating product prices, margins, and managing supplier costs directly in your Bitrix24 deals",
+      "Quickly assess product profitability with purchase price, transportation, packaging and currency exchange rates",
 
-    features: {
-      priceCalc: "Price Calculation",
-      priceCalcDesc: "Automatic margin calculation",
-      currency: "Multi-currency",
-      currencyDesc: "Support for PLN, USD, EUR",
-      suppliers: "Suppliers",
-      suppliersDesc: "Supplier price management",
-      integration: "Integration",
-      integrationDesc: "Full Bitrix24 integration",
+    importantNotice: "Important",
+    noticeDescription: "This application does not change the deal amount, but enters product pricing information into additional fields",
+
+    whereToFind: {
+      title: "Where to Find the Widget",
+      step1: "Open any deal in Bitrix24 CRM",
+      step2: "Look for 'Margin Calculator' tab or widget in the deal card",
+      step3: "Click to open and start calculating margins",
     },
 
-    howToUse: {
-      title: "How to Use",
-      step1: {
-        title: "Configure Settings",
-        description:
-          "Set up currency exchange rates and column preferences in the Settings section",
-      },
-      step2: {
-        title: "Open Deal in Bitrix24",
-        description: "Navigate to any deal in your Bitrix24 CRM",
-        note: "The widget will be available in the deal card",
-      },
-      step3: {
-        title: "Use Calculator Widget",
-        description:
-          "Click on the Pricing Calculator widget in the deal to calculate prices and margins for products",
-      },
-      step4: {
-        title: "Save to Deal",
-        description:
-          "Calculated data is automatically saved to the deal with all pricing details",
-      },
-    },
-
-    info: {
-      whereToFind: {
-        title: "Where to Find the Widget",
-        message:
-          "The pricing calculator appears as an embedded widget inside Bitrix24 deals",
-        step1: "Open any deal in Bitrix24 CRM",
-        step2: 'Look for "Pricing Calculator" tab or widget',
-        step3: "Click to open the calculator interface",
-      },
-      features: {
-        title: "Key Features",
-        item1: "Real-time currency conversion",
-        item2: "Supplier-specific pricing",
-        item3: "Transport and packaging cost tracking",
-        item4: "Automatic margin calculation",
-      },
-    },
-
-    quickActions: {
-      title: "Quick Actions",
-      settings: "Configure Settings",
-      testWidget: "Test Widget",
-      documentation: "View Documentation",
-    },
-
-    status: {
-      title: "System Status",
-      appVersion: "App Version",
-      bitrixConnection: "Bitrix24 Connection",
-      connected: "Connected",
-      disconnected: "Disconnected",
-      user: "Current User",
-      domain: "Domain",
-      language: "Language",
-      lastSync: "Last Sync",
-    },
-
-    messages: {
-      widgetOpened: "Widget opened in new window",
-      widgetError: "Error opening widget",
-      documentationComingSoon: "Documentation coming soon",
+    keyFeatures: {
+      title: "Key Features",
+      currencies: "Multi-currency",
+      currenciesDesc: "Support for PLN, USD, EUR with automatic conversion",
+      margin: "Margin Calculation",
+      marginDesc: "Automatic calculation with all costs included",
+      suppliers: "Supplier Prices",
+      suppliersDesc: "Auto-fill purchase prices from supplier database",
+      flexible: "Flexible Display",
+      flexibleDesc: "Customizable table, cards, or accordion view",
     },
   },
 
@@ -170,6 +114,7 @@ export default {
       support: "Support",
     },
   },
+  
   common: {
     yes: "Yes",
     no: "No",
@@ -179,35 +124,29 @@ export default {
     error: "Error",
     success: "Success",
   },
+
   license: {
     title: "License",
-    subtitle: "Manage your application license",
-    currentLicense: "Current License",
-    terms: "Terms & Conditions",
-    status: "Status",
-    type: "License Type",
-    validFrom: "Valid From",
-    validUntil: "Valid Until",
-    domain: "Licensed Domain",
-    users: "Number of Users",
-    active: "Active",
-    expired: "Expired",
-    expiringSoon: "Expiring Soon",
-    checking: "Checking...",
-    checkLicense: "Check License",
-    activateLicense: "Activate License",
+    subtitle: "Application License Information",
     licenseKey: "License Key",
-    enterLicenseKey: "Enter your license key",
-    activationNote: "The license will be bound to the current domain",
-    checkSuccess: "License successfully verified",
+    validUntil: "Valid Until",
+    expiresIn: "Expires In",
+    days: "days",
+    today: "Today",
+    expired: "Expired",
+    trial: "Trial Version",
+    licensedTo: "Licensed To",
+    maxUsers: "Maximum Users",
+    unlimited: "Unlimited",
+    noLicense: "No license key",
+    purchaseContactTitle: "To purchase a license key, contact us in any convenient way:",
+    website: "Website",
+    phone: "Phone",
+    email: "Email",
+    onlineChat: "Online chat",
     checkError: "Error checking license",
-    keyRequired: "Please enter a license key",
-    activationSuccess: "License successfully activated",
-    activationError: "Error activating license",
-    termsTitle: "License Terms and Conditions",
-    termsContent:
-      "<p>By using this software, you agree to the following terms...</p>",
   },
+
   pricing: {
     currencyInfo: "Currency Information",
     product: "Product",

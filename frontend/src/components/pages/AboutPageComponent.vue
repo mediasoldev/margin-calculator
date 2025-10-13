@@ -58,7 +58,7 @@
     </a-card>
 
     <!-- Version Info -->
-    <a-card style="margin-top: 24px">
+    <!-- <a-card style="margin-top: 24px">
       <a-descriptions :title="$t('about.info.title')" :column="{ xs: 1, sm: 2, md: 2 }">
         <a-descriptions-item :label="$t('about.info.version')">
           <a-tag color="blue">1.0.0</a-tag>
@@ -73,7 +73,7 @@
           <a href="mailto:support@example.com">support@example.com</a>
         </a-descriptions-item>
       </a-descriptions>
-    </a-card>
+    </a-card> -->
   </div>
 </template>
 

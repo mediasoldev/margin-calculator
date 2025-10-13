@@ -1,159 +1,163 @@
 <!-- frontend/src/components/pages/LicensePageComponent.vue -->
 
 <template>
-  <div>
-    <a-page-header
-      :title="$t('license.title')"
-      :sub-title="$t('license.subtitle')"
-    />
-    
-    <a-card style="margin-top: 24px">
-      <a-tabs v-model:activeKey="activeKey">
-        <a-tab-pane key="current" :tab="$t('license.currentLicense')">
-          <a-descriptions bordered :column="{ xxl: 2, xl: 2, lg: 2, md: 1, sm: 1, xs: 1 }">
-            <a-descriptions-item :label="$t('license.status')">
-              <a-badge :status="licenseStatus" :text="licenseStatusText" />
-            </a-descriptions-item>
-            <a-descriptions-item :label="$t('license.type')">
-              {{ licenseType }}
-            </a-descriptions-item>
-            <a-descriptions-item :label="$t('license.validFrom')">
-              {{ formatDate(licenseValidFrom) }}
-            </a-descriptions-item>
-            <a-descriptions-item :label="$t('license.validUntil')">
-              {{ formatDate(licenseValidUntil) }}
-            </a-descriptions-item>
-            <a-descriptions-item :label="$t('license.domain')" :span="2">
-              {{ appStore.domain || 'localhost' }}
-            </a-descriptions-item>
-            <a-descriptions-item :label="$t('license.users')" :span="2">
-              {{ licenseUsers }}
-            </a-descriptions-item>
-          </a-descriptions>
-          
-          <a-divider />
-          
-          <a-space>
-            <a-button type="primary" @click="checkLicense" :loading="checkingLicense">
-              <ReloadOutlined /> {{ $t('license.checkLicense') }}
-            </a-button>
-            <a-button @click="showActivationModal">
-              <KeyOutlined /> {{ $t('license.activateLicense') }}
-            </a-button>
-          </a-space>
-        </a-tab-pane>
-        
-        <a-tab-pane key="terms" :tab="$t('license.terms')">
-          <a-typography>
-            <a-typography-title :level="4">{{ $t('license.termsTitle') }}</a-typography-title>
-            <a-typography-paragraph>
-              <div v-html="$t('license.termsContent')"></div>
-            </a-typography-paragraph>
-          </a-typography>
-        </a-tab-pane>
-      </a-tabs>
-    </a-card>
-    
-    <!-- License Activation Modal -->
-    <a-modal
-      v-model:open="activationModalVisible"
-      :title="$t('license.activateLicense')"
-      @ok="activateLicense"
-      :confirm-loading="activatingLicense"
-    >
-      <a-form layout="vertical">
-        <a-form-item :label="$t('license.licenseKey')" required>
+  <div style="padding-top: 30px; max-width: 600px; margin: auto">
+    <a-spin :spinning="isLoading">
+      <!-- License Information Form -->
+      <a-form :disabled="true">
+        <a-form-item :label="$t('license.licenseKey')">
           <a-input
-            v-model:value="licenseKey"
-            :placeholder="$t('license.enterLicenseKey')"
-            size="large"
+            v-model:value="displayLicenseKey"
+            :placeholder="$t('license.noLicense')"
           />
         </a-form-item>
-        <a-alert
-          :message="$t('license.activationNote')"
-          type="info"
-          show-icon
-        />
+
+        <a-form-item :label="$t('license.validUntil')">
+          <div style="padding: 4px 11px; background: #fafafa; border: 1px solid #d9d9d9; border-radius: 6px">
+            {{ formatDate(license?.expiresAt) }}
+          </div>
+        </a-form-item>
+
+        <a-form-item :label="$t('license.expiresIn')">
+          <h3 v-if="daysLeft.days > 0" style="margin: 0">
+            {{ daysLeft.days }} {{ $t('license.days') }}
+          </h3>
+          <h3 v-else-if="daysLeft.days === 0" style="color: #faad14; margin: 0">
+            {{ $t('license.today') }}
+          </h3>
+          <h3 v-else style="color: #f5222d; margin: 0">
+            {{ $t('license.expired') }}
+          </h3>
+        </a-form-item>
+
+        <a-form-item :label="$t('license.trial')">
+          <h3 :style="license?.isTrial ? { color: '#fa8c16', margin: 0 } : { color: '#52c41a', margin: 0 }">
+            {{ license?.isTrial ? $t('common.yes') : $t('common.no') }}
+          </h3>
+        </a-form-item>
+
+        <a-form-item :label="$t('license.licensedTo')">
+          <div style="padding: 4px 11px; background: #fafafa; border: 1px solid #d9d9d9; border-radius: 6px">
+            {{ license?.licensedTo || appStore.domain || 'localhost' }}
+          </div>
+        </a-form-item>
+
+        <a-form-item :label="$t('license.maxUsers')">
+          <div style="padding: 4px 11px; background: #fafafa; border: 1px solid #d9d9d9; border-radius: 6px">
+            {{ license?.maxUsers || $t('license.unlimited') }}
+          </div>
+        </a-form-item>
       </a-form>
-    </a-modal>
+
+      <!-- Divider -->
+      <a-divider />
+
+      <!-- Contact Information -->
+      <div style="text-align: center">
+        <h3>{{ $t('license.purchaseContactTitle') }}</h3>
+        <h4>{{ companyInfo.name }}</h4>
+
+        <p>
+          {{ $t('license.website') }}:
+          <a :href="companyInfo.website" target="_blank">
+            {{ companyInfo.website }}
+          </a>
+        </p>
+
+        <p>
+          {{ $t('license.phone') }}:
+          <a :href="`tel:${companyInfo.phone}`">{{ companyInfo.phoneDisplay }}</a>
+        </p>
+
+        <p>
+          {{ $t('license.onlineChat') }}:
+          <a :href="companyInfo.chatUrl" target="_blank">
+            {{ companyInfo.chatUrl }}
+          </a>
+        </p>
+
+        <p>
+          {{ $t('license.email') }}:
+          <a :href="`mailto:${companyInfo.email}`">{{ companyInfo.email }}</a>
+        </p>
+      </div>
+
+      <br />
+    </a-spin>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'
-import { KeyOutlined, ReloadOutlined } from '@ant-design/icons-vue'
+import { useLicense } from '@/composables/useLicense'
+import { LICENSE_CONFIG } from '@/config/license.config'
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs'
 
 const { t } = useI18n()
 const appStore = useAppStore()
+const { 
+  license, 
+  isLoading, 
+  daysLeft,
+  fetchLicense: fetchLicenseData
+} = useLicense()
 
-// State
-const activeKey = ref('current')
-const activationModalVisible = ref(false)
-const licenseKey = ref('')
-const checkingLicense = ref(false)
-const activatingLicense = ref(false)
-
-// Mock license data (замініть на реальні дані з API)
-const licenseStatus = ref<'success' | 'error' | 'warning' | 'processing'>('success')
-const licenseType = ref('Professional')
-const licenseValidFrom = ref(new Date('2024-01-01'))
-const licenseValidUntil = ref(new Date('2025-01-01'))
-const licenseUsers = ref('Unlimited')
+// Company info from config
+const companyInfo = LICENSE_CONFIG.company
 
 // Computed
-const licenseStatusText = computed(() => {
-  const statusMap = {
-    'success': t('license.active'),
-    'error': t('license.expired'),
-    'warning': t('license.expiringSoon'),
-    'processing': t('license.checking')
-  }
-  return statusMap[licenseStatus.value]
+const displayLicenseKey = computed(() => {
+  return license.value?.licenseKey || ''
 })
 
 // Methods
-const formatDate = (date: Date) => {
+const formatDate = (date: string | undefined) => {
+  if (!date) return 'N/A'
   return dayjs(date).format('DD.MM.YYYY')
 }
 
-const showActivationModal = () => {
-  activationModalVisible.value = true
-  licenseKey.value = ''
-}
-
 const checkLicense = async () => {
-  checkingLicense.value = true
   try {
-    // Тут буде виклик API для перевірки ліцензії
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    message.success(t('license.checkSuccess'))
+    const result = await fetchLicenseData()
+    if (!result.success && result.error) {
+      console.error('License check failed:', result.error)
+      message.error(t('license.checkError'))
+    }
   } catch (error) {
+    console.error('Error checking license:', error)
     message.error(t('license.checkError'))
-  } finally {
-    checkingLicense.value = false
   }
 }
 
-const activateLicense = async () => {
-  if (!licenseKey.value) {
-    message.error(t('license.keyRequired'))
-    return
-  }
-  
-  activatingLicense.value = true
-  try {
-    // Тут буде виклик API для активації ліцензії
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    message.success(t('license.activationSuccess'))
-    activationModalVisible.value = false
-  } catch (error) {
-    message.error(t('license.activationError'))
-  } finally {
-    activatingLicense.value = false
-  }
-}
+// Lifecycle
+onMounted(async () => {
+  await checkLicense()
+})
 </script>
+
+<style scoped>
+:deep(.ant-form-item-label > label) {
+  font-weight: 500;
+}
+
+h3, h4 {
+  margin-bottom: 16px;
+}
+
+p {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+a {
+  color: #1890ff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+</style>

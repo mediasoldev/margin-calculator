@@ -21,7 +21,7 @@ export default {
     auto: "Automático",
     save: "Salvar",
     saved: "Configurações salvas",
-    primaryColor: "Cor primária",
+    primaryColor: "Cor principal",
     textColor: "Cor do texto",
     textColorHint:
       "Ajuste a cor do texto para melhor contraste com fundos claros",
@@ -35,97 +35,43 @@ export default {
     livePreview: "Visualização ao vivo",
     sampleTitle: "Título de exemplo",
     sampleText:
-      "Este é um texto de exemplo para visualizar suas escolhas de cores. Você pode ver como a cor primária e a cor do texto funcionam juntas.",
-    sampleButton: "Ação primária",
+      "Este é um texto de exemplo para visualizar suas escolhas de cores. Você pode ver como a cor principal e a cor do texto funcionam juntas.",
+    sampleButton: "Ação principal",
     sampleButtonSecondary: "Ação secundária",
-    reset: "Restaurar padrões",
+    reset: "Redefinir para padrão",
     saveSuccess: "Configurações salvas com sucesso",
     saveError: "Falha ao salvar configurações",
-    resetSuccess: "Configurações restauradas aos padrões",
+    resetSuccess: "Configurações redefinidas para padrão",
   },
+
   home: {
-    title: "Calculadora de preços para Bitrix24",
+    title: "Calculadora de Margem para Bitrix24",
     description:
-      "Ferramenta profissional para calcular preços de produtos, margens e gerenciar custos de fornecedores diretamente em seus negócios Bitrix24",
+      "Avalie rapidamente a lucratividade do produto levando em consideração o preço de compra, transporte, embalagem e taxas de câmbio",
 
-    features: {
-      priceCalc: "Cálculo de preços",
-      priceCalcDesc: "Cálculo automático de margem",
-      currency: "Multi-moeda",
-      currencyDesc: "Suporte para PLN, USD, EUR",
-      suppliers: "Fornecedores",
-      suppliersDesc: "Gerenciamento de preços de fornecedores",
-      integration: "Integração",
-      integrationDesc: "Integração completa com Bitrix24",
+    importantNotice: "Importante",
+    noticeDescription: "O aplicativo não altera o valor do negócio, mas insere informações de precificação do produto em campos adicionais",
+
+    whereToFind: {
+      title: "Onde encontrar o widget",
+      step1: "Abra qualquer negócio no Bitrix24 CRM",
+      step2: "Procure pela aba ou widget 'Calculadora de Margem' no cartão do negócio",
+      step3: "Clique para abrir e começar a calcular margens",
     },
 
-    howToUse: {
-      title: "Como usar",
-      step1: {
-        title: "Configure as definições",
-        description:
-          "Configure taxas de câmbio e preferências de colunas na seção Configurações",
-      },
-      step2: {
-        title: "Abra um negócio no Bitrix24",
-        description: "Navegue para qualquer negócio em seu CRM Bitrix24",
-        note: "O widget estará disponível no cartão do negócio",
-      },
-      step3: {
-        title: "Use o widget calculadora",
-        description:
-          "Clique no widget Calculadora de preços no negócio para calcular preços e margens para produtos",
-      },
-      step4: {
-        title: "Salvar no negócio",
-        description:
-          "Os dados calculados são automaticamente salvos no negócio com todos os detalhes de preços",
-      },
-    },
-
-    info: {
-      whereToFind: {
-        title: "Onde encontrar o widget",
-        message:
-          "A calculadora de preços aparece como um widget incorporado dentro dos negócios Bitrix24",
-        step1: "Abra qualquer negócio no CRM Bitrix24",
-        step2: 'Procure pela aba ou widget "Calculadora de preços"',
-        step3: "Clique para abrir a interface da calculadora",
-      },
-      features: {
-        title: "Recursos principais",
-        item1: "Conversão de moeda em tempo real",
-        item2: "Preços específicos do fornecedor",
-        item3: "Rastreamento de custos de transporte e embalagem",
-        item4: "Cálculo automático de margem",
-      },
-    },
-
-    quickActions: {
-      title: "Ações rápidas",
-      settings: "Configurar definições",
-      testWidget: "Testar widget",
-      documentation: "Ver documentação",
-    },
-
-    status: {
-      title: "Status do sistema",
-      appVersion: "Versão do aplicativo",
-      bitrixConnection: "Conexão Bitrix24",
-      connected: "Conectado",
-      disconnected: "Desconectado",
-      user: "Usuário atual",
-      domain: "Domínio",
-      language: "Idioma",
-      lastSync: "Última sincronização",
-    },
-
-    messages: {
-      widgetOpened: "Widget aberto em nova janela",
-      widgetError: "Erro ao abrir widget",
-      documentationComingSoon: "Documentação em breve",
+    keyFeatures: {
+      title: "Recursos principais",
+      currencies: "Multi-moedas",
+      currenciesDesc: "Suporte para PLN, USD, EUR com conversão automática",
+      margin: "Cálculo de margem",
+      marginDesc: "Cálculo automático com todos os custos incluídos",
+      suppliers: "Preços de fornecedores",
+      suppliersDesc: "Preenchimento automático de preços de compra do banco de dados de fornecedores",
+      flexible: "Exibição flexível",
+      flexibleDesc: "Vista de tabela, cartões ou acordeão personalizável",
     },
   },
+
   about: {
     title: "Sobre a Calculadora de Margem",
     description:
@@ -148,14 +94,12 @@ export default {
           "O botão salva o cálculo atual dentro do aplicativo (no próprio banco de dados do aplicativo) para visualização/análise posterior. Salvar não altera o valor do negócio Bitrix24, mas faz alterações em campos adicionais para informações de precificação.",
       },
       item4: {
-        question:
-          "Como funciona a recuperação automática do preço de compra ao selecionar um fornecedor?",
+        question: "Como funciona a recuperação automática do preço de compra ao selecionar um fornecedor?",
         answer:
           "Ao selecionar um fornecedor, o aplicativo pesquisa em seu banco de dados o preço desse fornecedor para o produto selecionado e insere automaticamente o preço de compra + moeda. Se não houver preços para a combinação 'fornecedor-produto', o campo permanece vazio e você precisa inserir o preço manualmente.",
       },
       item5: {
-        question:
-          "Posso personalizar a visualização da tabela e o conjunto de colunas?",
+        question: "Posso personalizar a visualização da tabela e o conjunto de colunas?",
         answer:
           "Sim. A interface inclui modos de exibição (tabela, cartões, acordeão) e um botão 'Configurações' para configurar colunas visíveis. Use esses botões para ocultar/mostrar os campos necessários.",
       },
@@ -170,6 +114,7 @@ export default {
       support: "Suporte",
     },
   },
+  
   common: {
     yes: "Sim",
     no: "Não",
@@ -179,35 +124,29 @@ export default {
     error: "Erro",
     success: "Sucesso",
   },
+
   license: {
     title: "Licença",
-    subtitle: "Gerencie sua licença de aplicativo",
-    currentLicense: "Licença atual",
-    terms: "Termos e condições",
-    status: "Status",
-    type: "Tipo de licença",
-    validFrom: "Válida desde",
-    validUntil: "Válida até",
-    domain: "Domínio licenciado",
-    users: "Número de usuários",
-    active: "Ativa",
-    expired: "Expirada",
-    expiringSoon: "Expirando em breve",
-    checking: "Verificando...",
-    checkLicense: "Verificar licença",
-    activateLicense: "Ativar licença",
+    subtitle: "Informações da licença do aplicativo",
     licenseKey: "Chave de licença",
-    enterLicenseKey: "Digite sua chave de licença",
-    activationNote: "A licença será vinculada ao domínio atual",
-    checkSuccess: "Licença verificada com sucesso",
+    validUntil: "Válida até",
+    expiresIn: "Expira em",
+    days: "dias",
+    today: "Hoje",
+    expired: "Expirada",
+    trial: "Versão de teste",
+    licensedTo: "Licenciada para",
+    maxUsers: "Usuários máximos",
+    unlimited: "Ilimitados",
+    noLicense: "Sem chave de licença",
+    purchaseContactTitle: "Para adquirir uma chave de licença, entre em contato conosco de qualquer forma conveniente:",
+    website: "Site",
+    phone: "Telefone",
+    email: "E-mail",
+    onlineChat: "Chat online",
     checkError: "Erro ao verificar licença",
-    keyRequired: "Por favor, digite uma chave de licença",
-    activationSuccess: "Licença ativada com sucesso",
-    activationError: "Erro ao ativar licença",
-    termsTitle: "Termos e condições da licença",
-    termsContent:
-      "<p>Ao usar este software, você concorda com os seguintes termos...</p>",
   },
+
   pricing: {
     currencyInfo: "Informações de moeda",
     product: "Produto",
