@@ -1,172 +1,63 @@
 <!-- install/install.html -->
-<!-- Installation UI and Script -->
-<style>
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-        margin: 0;
-        padding: 20px;
-        background: #f5f5f5;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Installing Application</title>
     
-    .install-container {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        padding: 40px;
-        max-width: 500px;
-        width: 100%;
-        text-align: center;
-    }
-    
-    .logo {
-        width: 80px;
-        height: 80px;
-        margin: 0 auto 20px;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 36px;
-        font-weight: bold;
-    }
-    
-    h1 {
-        color: #333;
-        margin: 0 0 10px;
-        font-size: 24px;
-    }
-    
-    .status {
-        color: #666;
-        margin: 20px 0;
-        font-size: 16px;
-    }
-    
-    .spinner {
-        border: 3px solid #f3f3f3;
-        border-top: 3px solid #667eea;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        animation: spin 1s linear infinite;
-        margin: 20px auto;
-    }
-    
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    
-    .error {
-        background: #fee;
-        color: #c33;
-        padding: 15px;
-        border-radius: 5px;
-        margin: 20px 0;
-        display: none;
-    }
-    
-    .success {
-        background: #efe;
-        color: #3c3;
-        padding: 15px;
-        border-radius: 5px;
-        margin: 20px 0;
-        display: none;
-    }
-    
-    .progress-bar {
-        background: #f0f0f0;
-        height: 6px;
-        border-radius: 3px;
-        overflow: hidden;
-        margin: 20px 0;
-    }
-    
-    .progress-fill {
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        height: 100%;
-        width: 0%;
-        transition: width 0.3s ease;
-    }
-    
-    .step {
-        display: flex;
-        align-items: center;
-        padding: 10px 0;
-        color: #999;
-    }
-    
-    .step.active {
-        color: #333;
-    }
-    
-    .step.completed {
-        color: #4caf50;
-    }
-    
-    .step-icon {
-        width: 24px;
-        height: 24px;
-        border: 2px solid currentColor;
-        border-radius: 50%;
-        margin-right: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-    }
-    
-    .step.completed .step-icon {
-        background: #4caf50;
-        border-color: #4caf50;
-        color: white;
-    }
-</style>
-
-<div class="install-container">
-    <div class="logo">B24</div>
-    <h1>Installing Application</h1>
-    
-    <div class="status">Please wait while we set up your application...</div>
-    
-    <div class="spinner" id="spinner"></div>
-    
-    <div class="progress-bar">
-        <div class="progress-fill" id="progress"></div>
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/install.css">
+</head>
+<body>
+    <div class="install-container">
+        <div class="logo">B24</div>
+        <h1>Installing Application</h1>
+        
+        <div class="status">Please wait while we set up your application...</div>
+        
+        <div class="spinner" id="spinner"></div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress"></div>
+        </div>
+        
+        <div class="steps" style="text-align: left; margin: 20px 0;">
+            <div class="step" id="step1">
+                <div class="step-icon">1</div>
+                <span>Connecting to Bitrix24</span>
+            </div>
+            <div class="step" id="step2">
+                <div class="step-icon">2</div>
+                <span>Setting up webhooks</span>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-icon">3</div>
+                <span>Registering placements</span>
+            </div>
+            <div class="step" id="step4">
+                <div class="step-icon">4</div>
+                <span>Creating data storages</span>
+            </div>
+            <div class="step" id="step5">
+                <div class="step-icon">5</div>
+                <span>Finalizing installation</span>
+            </div>
+        </div>
+        
+        <div class="error" id="error"></div>
+        <div class="success" id="success">Installation completed successfully!</div>
     </div>
     
-    <div class="steps" style="text-align: left; margin: 20px 0;">
-        <div class="step" id="step1">
-            <div class="step-icon">1</div>
-            <span>Connecting to Bitrix24...</span>
-        </div>
-        <div class="step" id="step2">
-            <div class="step-icon">2</div>
-            <span>Registering application...</span>
-        </div>
-        <div class="step" id="step3">
-            <div class="step-icon">3</div>
-            <span>Setting up event handlers...</span>
-        </div>
-        <div class="step" id="step4">
-            <div class="step-icon">4</div>
-            <span>Finalizing installation...</span>
-        </div>
-    </div>
+    <!-- Bitrix24 JS SDK -->
+    <script src="//api.bitrix24.com/api/v1/"></script>
     
-    <div class="error" id="error"></div>
-    <div class="success" id="success">Installation completed successfully!</div>
-</div>
-
-<!-- Load Bitrix24 JS SDK -->
-<script src="//api.bitrix24.com/api/v1/"></script>
-
-<!-- Load installation script -->
-<script src="install.js?q=001"></script>
+    <!-- Application modules -->
+    <script src="js/webhooks.js"></script>
+    <script src="js/placements.js"></script>
+    <script src="js/storage.js"></script>
+    
+    <!-- Main installation file -->
+    <script src="js/install.js"></script>
+</body>
+</html>

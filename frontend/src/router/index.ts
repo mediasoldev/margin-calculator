@@ -10,6 +10,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import("@/views/HomeView.vue"),
     meta: { layout: 'main' }
   },
+    // Редірект з index.php на головну
+  {
+    path: "/index.php",
+    redirect: "/"
+  },
   {
     path: "/settings",
     name: "settings",
