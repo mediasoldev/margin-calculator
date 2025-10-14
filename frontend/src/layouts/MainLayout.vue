@@ -192,6 +192,9 @@
       
       <!-- Footer -->
       <FooterComponent />
+
+      <!-- Data Collection Form -->
+      <DataCollectionForm />
     </a-layout-content>
   </a-layout>
 </template>
@@ -212,6 +215,7 @@ import {
   FileProtectOutlined,
 } from "@ant-design/icons-vue";
 import FooterComponent from "@/components/common/FooterComponent.vue";
+import DataCollectionForm from "@/components/common/DataCollectionForm.vue";
 
 // Composables
 const router = useRouter();

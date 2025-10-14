@@ -6,6 +6,8 @@
       <div class="widget-wrapper">
         <slot />
       </div>
+      <!-- Data Collection Form -->
+      <DataCollectionForm />
     </a-layout-content>
   </a-layout>
 </template>
@@ -14,6 +16,7 @@
 import { onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useBX24 } from '@/composables/useBX24'
+import DataCollectionForm from "@/components/common/DataCollectionForm.vue";
 
 const route = useRoute()
 const bx24 = useBX24()

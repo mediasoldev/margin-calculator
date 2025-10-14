@@ -1,4 +1,4 @@
-// public/install/install.js
+// install/install.js
 /**
  * Installation JavaScript
  * Handles the Bitrix24 application installation process

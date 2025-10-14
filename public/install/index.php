@@ -1,4 +1,4 @@
-<!-- public/install/index.php -->
+<!-- install/index.php -->
 <?php
 /**
  * Installation entry point
@@ -10,7 +10,7 @@
 define('REQUIRE_DATABASE', true);
 
 // Bootstrap the application
-require_once __DIR__ . '/../../backend/bootstrap.php';
+require_once __DIR__ . '/../backend/bootstrap.php';
 
 
 // Get installation parameters from Bitrix24
