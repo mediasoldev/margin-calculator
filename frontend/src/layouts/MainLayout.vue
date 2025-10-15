@@ -594,9 +594,9 @@ watch(isDark, (newValue) => {
 }
 
 .content-wrapper {
-  padding: 24px;
+  padding: 0px;
   border-radius: 8px;
-  min-height: calc(100vh - 112px);
+  min-height: calc(100vh - 196px);
   background: var(--content-bg, white);
   flex: 1;
 }

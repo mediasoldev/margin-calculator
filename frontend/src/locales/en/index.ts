@@ -148,24 +148,75 @@ export default {
   },
 
   pricing: {
+    // Currency section
     currencyInfo: "Currency Information",
+    currencyRates: "Exchange Rates",
+    
+    // Column names
     product: "Product",
     productName: "Product Name",
     quantity: "Quantity",
     salePrice: "Sale Price",
     purchasePrice: "Purchase Price",
+    supplier: "Supplier",
     transportCost: "Transport Cost",
     packagingCost: "Packaging Cost",
-    action: "Action",
-    addProduct: "Add Product",
-    totalAmount: "Total Amount",
+    marginPercent: "Margin %",
+    marginAmount: "Margin (per unit)",
     totalMargin: "Total Margin",
+    action: "Action",
+    
+    // View modes
+    viewMode: "View Mode",
+    tableView: "Table",
+    cardsView: "Cards",
+    accordionView: "Accordion",
+    
+    // Actions
+    columns: "Columns",
+    refresh: "Refresh",
     save: "Save",
-    marginCalculation: "Margin Calculation",
+    addProduct: "Add Product",
+    edit: "Edit",
+    selectSupplier: "Select Supplier",
+    
+    // Column settings modal
+    columnSettings: "Column Settings",
+    requiredColumns: "Required Columns",
+    optionalColumns: "Optional Columns",
+    alwaysVisible: "Always Visible",
+    required: "Required",
+    resetToDefaults: "Reset to Defaults",
+    
+    // Summary
+    totalAmount: "Total Amount",
+    productMargin: "Product Margin",
+    
+    // Messages
+    productsLoaded: "Products loaded successfully",
+    loadError: "Error loading products",
+    priceLoadError: "Error loading supplier price",
+    saveSuccess: "Calculation saved successfully",
+    saveError: "Error saving calculation",
+    
+    // Unnamed product
     unnamed: "Unnamed Product",
     packaging: "Packaging",
-    marginPercent: "Margin %",
-    margin: "Margin",
-    saveSuccess: "Calculation saved successfully",
+    marginCalculation: "Margin Calculation",
+
+    columnSettingsInfo: "Drag to reorder columns. Required columns cannot be hidden but can be reordered.",
+    availableColumns: "Available Columns",
+    visible: "visible",
+    order: "Order",
+    show: "Show",
+    columnName: "Column Name",
+    status: "Status",
+    productField: "Product Field",
+    optional: "Optional",
+    showAll: "Show All",
+    hideOptional: "Hide Optional",
+
+    cardsViewComingSoon: "Cards view - Coming soon",
+    accordionViewComingSoon: "Accordion view - Coming soon",
   },
 };
