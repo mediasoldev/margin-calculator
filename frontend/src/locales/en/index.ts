@@ -162,7 +162,8 @@ export default {
     transportCost: "Transport Cost",
     packagingCost: "Packaging Cost",
     marginPercent: "Margin %",
-    marginAmount: "Margin (per unit)",
+    marginPerUnit: "Margin (per unit)",
+    marginAmount: "Margin (calculated)",
     totalMargin: "Total Margin",
     action: "Action",
     
@@ -182,11 +183,22 @@ export default {
     
     // Column settings modal
     columnSettings: "Column Settings",
+    columnSettingsInfo: "Drag to reorder columns. Required columns cannot be hidden but can be reordered.",
     requiredColumns: "Required Columns",
     optionalColumns: "Optional Columns",
+    availableColumns: "Available Columns",
     alwaysVisible: "Always Visible",
     required: "Required",
+    optional: "Optional",
+    productField: "Product Field",
     resetToDefaults: "Reset to Defaults",
+    visible: "visible",
+    order: "Order",
+    show: "Show",
+    columnName: "Column Name",
+    status: "Status",
+    showAll: "Show All",
+    hideOptional: "Hide Optional",
     
     // Summary
     totalAmount: "Total Amount",
@@ -199,24 +211,13 @@ export default {
     saveSuccess: "Calculation saved successfully",
     saveError: "Error saving calculation",
     
+    // Placeholder
+    cardsViewComingSoon: "Cards view - Coming soon",
+    accordionViewComingSoon: "Accordion view - Coming soon",
+    
     // Unnamed product
     unnamed: "Unnamed Product",
     packaging: "Packaging",
     marginCalculation: "Margin Calculation",
-
-    columnSettingsInfo: "Drag to reorder columns. Required columns cannot be hidden but can be reordered.",
-    availableColumns: "Available Columns",
-    visible: "visible",
-    order: "Order",
-    show: "Show",
-    columnName: "Column Name",
-    status: "Status",
-    productField: "Product Field",
-    optional: "Optional",
-    showAll: "Show All",
-    hideOptional: "Hide Optional",
-
-    cardsViewComingSoon: "Cards view - Coming soon",
-    accordionViewComingSoon: "Accordion view - Coming soon",
   },
 };
