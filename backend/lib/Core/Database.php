@@ -428,6 +428,10 @@ class Database
                 'installed_by' => $data['installed_by'] ?? $data['user_id'] ?? null
             ];
 
+            if($data['newDomain'] == "Y"){
+                $fields['license_valid_until'] = $data['trial_end_date'];
+            }
+
             if(isset($data['is_blocked'])){
                 $fields['is_blocked'] = $data['is_blocked'];
             }

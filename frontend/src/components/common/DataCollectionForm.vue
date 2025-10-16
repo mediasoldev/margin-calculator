@@ -40,8 +40,9 @@ import type {
   PostMessageToIframe
 } from '@/types/dataCollection.types'
 
+console.log({DATA_COLLECTION_CONFIG})
 // Composables
-const { license } = useLicense()
+const { license, fetchLicense } = useLicense()
 const bx24 = useBX24()
 
 // State
@@ -115,9 +116,6 @@ const fetchApi = async <T>(
   try {
     const response = await fetch(endpoint, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify(data),
     })
 
@@ -172,6 +170,8 @@ const checkAndShowForm = async (): Promise<void> => {
   if (!DATA_COLLECTION_CONFIG.enabled) {
     return
   }
+console.log({license})
+
 
   // Check if license is trial
   if (!license.value?.isTrial) {
@@ -207,7 +207,7 @@ const checkAndShowForm = async (): Promise<void> => {
 // Lifecycle
 onMounted(async () => {
   window.addEventListener('message', receiveMessage)
-
+  fetchLicense()
   // Fit window after mount
   if (window.BX24?.fitWindow) {
     setTimeout(() => {

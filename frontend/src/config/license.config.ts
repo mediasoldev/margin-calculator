@@ -2,7 +2,7 @@
 
 /**
  * License configuration
- * Customize this file for each new project
+ * Real production configuration
  */
 
 export const LICENSE_CONFIG = {
@@ -22,28 +22,11 @@ export const LICENSE_CONFIG = {
     trialDurationDays: 14, // Default trial period
   },
 
-  // API endpoints (to be configured later)
+  // API endpoints
   api: {
-    checkLicense: '/api/license/check',
-    activateLicense: '/api/license/activate',
-    // For now, these are placeholders - will be implemented with real backend
+    checkLicense: '/api/rest.php/license/check',
+    activateLicense: '/api/rest.php/license/activate',
   },
-
-  // Demo/Mock license data (for development)
-  mockLicense: {
-    enabled: true, // Set to false when real API is ready
-    data: {
-      licenseKey: 'DEMO-XXXX-XXXX-XXXX-XXXX',
-      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days from now
-      isActive: true,
-      isTrial: true,
-      licensedTo: 'Demo User',
-      maxUsers: null,
-      features: ['all'],
-      type: 'Trial',
-      createdAt: new Date().toISOString(),
-    }
-  }
 }
 
 export default LICENSE_CONFIG

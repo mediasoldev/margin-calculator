@@ -3,6 +3,16 @@
 <template>
   <div style="padding-top: 30px; max-width: 600px; margin: auto">
     <a-spin :spinning="isLoading">
+      <!-- License Status Alert -->
+      <a-alert
+        v-if="license && shouldShowWarning"
+        :message="licenseMessage"
+        :type="alertType"
+        :show-icon="true"
+        style="margin-bottom: 24px"
+        banner
+      />
+
       <!-- License Information Form -->
       <a-form :disabled="true">
         <a-form-item :label="$t('license.licenseKey')">
@@ -14,12 +24,12 @@
 
         <a-form-item :label="$t('license.validUntil')">
           <div style="padding: 4px 11px; background: #fafafa; border: 1px solid #d9d9d9; border-radius: 6px">
-            {{ formatDate(license?.expiresAt) }}
+            {{ formattedExpirationDate || 'N/A' }}
           </div>
         </a-form-item>
 
         <a-form-item :label="$t('license.expiresIn')">
-          <h3 v-if="daysLeft.days > 0" style="margin: 0">
+          <h3 v-if="daysLeft.days > 0" :style="{ color: daysLeft.isExpiringSoon ? '#faad14' : '#52c41a', margin: 0 }">
             {{ daysLeft.days }} {{ $t('license.days') }}
           </h3>
           <h3 v-else-if="daysLeft.days === 0" style="color: #faad14; margin: 0">
@@ -38,7 +48,7 @@
 
         <a-form-item :label="$t('license.licensedTo')">
           <div style="padding: 4px 11px; background: #fafafa; border: 1px solid #d9d9d9; border-radius: 6px">
-            {{ license?.licensedTo || appStore.domain || 'localhost' }}
+            {{ license?.licensedTo || appData?.domain || 'N/A' }}
           </div>
         </a-form-item>
 
@@ -46,6 +56,13 @@
           <div style="padding: 4px 11px; background: #fafafa; border: 1px solid #d9d9d9; border-radius: 6px">
             {{ license?.maxUsers || $t('license.unlimited') }}
           </div>
+        </a-form-item>
+
+        <!-- License Status Badge -->
+        <a-form-item label="Status">
+          <a-tag :color="licenseBadgeColor" style="font-size: 14px; padding: 4px 12px">
+            {{ licenseStatusText }}
+          </a-tag>
         </a-form-item>
       </a-form>
 
@@ -88,21 +105,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted, inject } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useAppStore } from '@/stores/app'
 import { useLicense } from '@/composables/useLicense'
 import { LICENSE_CONFIG } from '@/config/license.config'
 import { message } from 'ant-design-vue'
-import dayjs from 'dayjs'
 
 const { t } = useI18n()
-const appStore = useAppStore()
+
+const appData = inject('appData', window.APP_DATA)
+
 const { 
   license, 
   isLoading, 
   daysLeft,
-  fetchLicense: fetchLicenseData
+  licenseMessage,
+  licenseStatusText,
+  licenseBadgeStatus,
+  shouldShowWarning,
+  formattedExpirationDate,
+  fetchLicense
 } = useLicense()
 
 // Company info from config
@@ -110,30 +132,64 @@ const companyInfo = LICENSE_CONFIG.company
 
 // Computed
 const displayLicenseKey = computed(() => {
-  return license.value?.licenseKey || ''
+  if (!license.value?.licenseKey) return ''
+  
+  // Mask license key: XXXX-XXXX-XXXX-XXXX -> XXXX-****-****-XXXX
+  const key = license.value.licenseKey
+  const parts = key.split('-')
+  
+  if (parts.length === 4) {
+    return `${parts[0]}-****-****-${parts[3]}`
+  }
+  
+  return key
+})
+
+const alertType = computed(() => {
+  if (!license.value) return 'warning'
+  
+  if (daysLeft.value.isExpired) return 'error'
+  if (daysLeft.value.isExpiringSoon) return 'warning'
+  if (license.value.isTrial) return 'info'
+  
+  return 'success'
+})
+
+const licenseBadgeColor = computed(() => {
+  const colorMap = {
+    success: 'green',
+    error: 'red',
+    warning: 'orange',
+    processing: 'blue',
+    default: 'default'
+  }
+  return colorMap[licenseBadgeStatus.value] || 'default'
 })
 
 // Methods
-const formatDate = (date: string | undefined) => {
-  if (!date) return 'N/A'
-  return dayjs(date).format('DD.MM.YYYY')
-}
-
 const checkLicense = async () => {
   try {
-    const result = await fetchLicenseData()
+    const result = await fetchLicense()
+    
     if (!result.success && result.error) {
-      console.error('License check failed:', result.error)
+      console.error('[LicensePage] License check failed:', result.error)
       message.error(t('license.checkError'))
+    } else {
+      console.log('[LicensePage] License loaded:', {
+        status: licenseStatusText.value,
+        daysLeft: daysLeft.value.days,
+        isTrial: license.value?.isTrial
+      })
     }
   } catch (error) {
-    console.error('Error checking license:', error)
+    console.error('[LicensePage] Error checking license:', error)
     message.error(t('license.checkError'))
   }
 }
 
 // Lifecycle
 onMounted(async () => {
+  console.log('[LicensePage] Component mounted, loading license...')
   await checkLicense()
 })
 </script>
@@ -159,5 +215,9 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+:deep(.ant-alert) {
+  border-radius: 8px;
 }
 </style>

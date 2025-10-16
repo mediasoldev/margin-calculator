@@ -9,7 +9,7 @@ header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-cache, no-store, must-revalidate');
 
 // Bootstrap the application
-require_once __DIR__ . '/../backend/bootstrap.php';
+require_once __DIR__ . '/../../backend/bootstrap.php';
 
 use Core\Database;
 use Core\Logger;

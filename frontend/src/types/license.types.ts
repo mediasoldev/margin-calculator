@@ -15,15 +15,15 @@ export enum LicenseStatus {
  * License data interface
  */
 export interface License {
-  licenseKey: string
-  expiresAt: string // ISO date string format: "2025-12-31T23:59:59Z"
+  licenseKey: string | null
+  expiresAt: string | null
   isActive: boolean
   isTrial: boolean
-  licensedTo: string // Domain or company name
-  maxUsers: number | null // null = unlimited
-  features: string[]
-  createdAt?: string // Optional: when license was created
-  type?: string // Optional: license type (e.g., "Professional", "Enterprise")
+  licensedTo: string
+  maxUsers: number | null
+  features: string[] | any
+  type: string
+  createdAt: string
 }
 
 /**

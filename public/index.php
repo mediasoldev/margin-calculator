@@ -1,4 +1,3 @@
-<!-- public/index.php -->
 <?php
 /**
  * Main application entry point
@@ -56,17 +55,102 @@ if (!$portal) {
 // Check license status
 $licenseStatus = $db->checkLicenseStatus($params['DOMAIN']);
 
-// If license is not valid, show license required page
-if (!$licenseStatus['is_valid']) {
-    // Allow access to license activation page
-    if (isset($_GET['action']) && $_GET['action'] === 'activate_license') {
-        // Continue to show license activation form
-    } else {
-        // Show license expired/required message
-        // showLicenseRequiredPage($licenseStatus, $params);
+// ✅ Form complete license object
+$licenseData = [
+    // Main license info
+    'license_key' => $portal['license_key'] ?? null,
+    'is_valid' => $licenseStatus['is_valid'] ?? false,
+    'is_active' => (bool)$portal['is_active'],
+    'is_trial' => (bool)$portal['is_trial'],
+    'trial_used' => (bool)$portal['trial_used'],
+    
+    // Dates
+    'trial_end_date' => $portal['trial_end_date'] ?? null,
+    'license_valid_until' => $portal['license_valid_until'] ?? null,
+    'license_activated_at' => $portal['license_activated_at'] ?? null,
+    'expires_at' => $portal['is_trial'] 
+        ? $portal['trial_end_date'] 
+        : $portal['license_valid_until'],
+    
+    // License details
+    'licensed_to' => $params['DOMAIN'],
+    'license_activated_by' => $portal['license_activated_by'] ?? null,
+    'type' => $portal['is_trial'] ? 'Trial' : 'Professional',
+    
+    // Status info from checkLicenseStatus
+    'status_message' => $licenseStatus['message'] ?? '',
+    'days_remaining' => $licenseStatus['days_remaining'] ?? 0,
+    
+    // Block status
+    'is_blocked' => (bool)$portal['is_blocked'],
+    'block_reason' => $portal['block_reason'] ?? null,
+    
+    // Features and limits
+    'max_users' => isset($portal['max_users']) ? (int)$portal['max_users'] : null,
+    'features' => isset($settings['features']) ? json_decode($settings['features'], true) : ['all'],
+    
+    // Installation info
+    'installed_at' => $portal['installed_at'] ?? null,
+    'created_at' => $portal['created_at'] ?? null,
+];
 
-        print_r('<h3>Show license expired</h3>');
-        // exit;
+// ✅ Check if license is NOT valid and NOT in activation mode
+if (!$licenseStatus['is_valid']) {
+    if (isset($_GET['action']) && $_GET['action'] === 'activate_license') {
+        // Allow access to license activation page
+        $logger->info('Accessing license activation page', [
+            'domain' => $params['DOMAIN'],
+            'license_status' => $licenseStatus
+        ]);
+    } else {
+        // Block access - show license expired page
+        $logger->warning('Access blocked - license invalid', [
+            'domain' => $params['DOMAIN'],
+            'license_status' => $licenseStatus
+        ]);
+        
+        // TODO: Create proper license expired page template
+        echo '<!DOCTYPE html>
+        <html>
+        <head>
+            <title>License Required</title>
+            <style>
+                body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+                .error-box { 
+                    max-width: 600px; 
+                    margin: 0 auto; 
+                    padding: 30px; 
+                    border: 2px solid #ff4d4f; 
+                    border-radius: 8px;
+                    background: #fff2f0;
+                }
+                h1 { color: #ff4d4f; }
+                .message { margin: 20px 0; font-size: 16px; }
+                .btn { 
+                    display: inline-block;
+                    padding: 10px 20px;
+                    background: #1890ff;
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 4px;
+                    margin-top: 20px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="error-box">
+                <h1>⚠️ License Required</h1>
+                <div class="message">
+                    <p><strong>' . htmlspecialchars($licenseStatus['message']) . '</strong></p>
+                    <p>Domain: ' . htmlspecialchars($params['DOMAIN']) . '</p>
+                </div>
+                <a href="?action=activate_license&' . http_build_query($_REQUEST) . '" class="btn">
+                    Activate License
+                </a>
+            </div>
+        </body>
+        </html>';
+        exit;
     }
 }
 
@@ -81,6 +165,16 @@ if (!empty($params['AUTH_ID']) && !empty($params['REFRESH_ID'])) {
 
 // Load portal settings
 $settings = $db->getSettings($portal['id']);
+
+// Generate secure session token for API access
+session_start();
+$sessionToken = bin2hex(random_bytes(32));
+$_SESSION['api_token'] = $sessionToken;
+$_SESSION['domain'] = $params['DOMAIN'];
+$_SESSION['user_id'] = $params['USER_ID'];
+$_SESSION['portal_id'] = $portal['id'];
+$_SESSION['token_created'] = time();
+$_SESSION['token_expires'] = time() + 3600; // 1 hour
 
 // Prepare data for frontend
 $appData = [
@@ -98,15 +192,19 @@ $appData = [
     'is_admin' => false, // Will be determined by JS
     'settings' => $settings,
     'api_endpoint' => '/api/rest.php',
-    'is_trial' => (bool)$portal['is_trial'],
-    'trial_end_date' => $portal['trial_end_date'] ?? null,
+    'session_token' => $sessionToken,
+    
+    // ✅ Complete license object
+    'license' => $licenseData,
 ];
 
 // Log application access
 $logger->info('Application accessed', [
     'domain' => $params['DOMAIN'],
     'user_id' => $params['USER_ID'],
-    'placement' => $params['PLACEMENT']
+    'placement' => $params['PLACEMENT'],
+    'license_valid' => $licenseStatus['is_valid'],
+    'is_trial' => $portal['is_trial']
 ]);
 
 ?>
@@ -116,19 +214,26 @@ $logger->info('Application accessed', [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Bitrix24 App</title>
+    <title>Bitrix24 App - Margin Calculator</title>
     
     <!-- Pass data to JavaScript -->
     <script>
         window.APP_DATA = <?php echo json_encode($appData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+        console.log('[PHP] APP_DATA initialized:', {
+            domain: window.APP_DATA.domain,
+            hasSessionToken: !!window.APP_DATA.session_token,
+            licenseValid: window.APP_DATA.license?.is_valid,
+            isTrial: window.APP_DATA.license?.is_trial,
+            daysRemaining: window.APP_DATA.license?.days_remaining
+        });
     </script>
     
     <!-- Bitrix24 JS SDK -->
     <script src="//api.bitrix24.com/api/v1/"></script>
     
-
 </head>
 <body>
+    
     <!-- Include main HTML file -->
     <?php require_once __DIR__ . '/index.html'; ?>
 </body>

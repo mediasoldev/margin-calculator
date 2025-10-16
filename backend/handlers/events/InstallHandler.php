@@ -94,9 +94,8 @@ class InstallHandler extends BaseHandler
                 $authData['trial_end_date'] = date('Y-m-d H:i:s', strtotime("+{$trialDays} days"));
                 $authData['installed_at'] = date('Y-m-d H:i:s');
                 $authData['installed_by'] = $authData['user_id'];
+                $authData['newDomain'] = "Y";
             }
-            
-
 
             // Save portal to database
             if (!$this->db) {

@@ -17,7 +17,7 @@ header('Cache-Control: no-cache, no-store, must-revalidate');
 define('REQUIRE_DATABASE', true);
 
 // Bootstrap the application
-require_once __DIR__ . '/../backend/bootstrap.php';
+require_once __DIR__ . '/../../backend/bootstrap.php';
 
 use Core\Database;
 use Core\Logger;
