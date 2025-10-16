@@ -6,7 +6,7 @@
       :columns="tableColumns"
       :data-source="context.products.value"
       :pagination="false"
-      :scroll="{ x: 1800 }"
+      :scroll="{ x: 1400 }"
       row-key="id"
       class="pricing-table"
       bordered
@@ -217,13 +217,6 @@
           </a-input-number>
         </template>
 
-        <!-- Margin Amount column (read-only) -->
-        <template v-else-if="column.key === 'marginAmount'">
-          <span :style="{ color: context.getMarginColor(record._marginAmount || 0), fontWeight: '500' }">
-            {{ context.formatCurrency(record._marginAmount || 0, 'PLN') }}
-          </span>
-        </template>
-
         <!-- Action column -->
         <template v-else-if="column.key === 'action'">
           <a-button type="text" danger size="small" @click="deleteProduct(record)">
@@ -261,8 +254,8 @@ const tableColumns = computed(() => {
     title: col.title,
     key: col.key,
     dataIndex: col.key,
-    width: col.width || 150,
     ellipsis: true,
+    ...(col.width && { width: col.width }),
   }))
 })
 

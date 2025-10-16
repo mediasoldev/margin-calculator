@@ -129,6 +129,7 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
+import { DEFAULT_COLUMNS, DYNAMIC_FIELDS_MOCK } from '@/config/defaultColumns.config'
 import { useI18n } from 'vue-i18n'
 import draggable from 'vuedraggable'
 import { 
@@ -192,85 +193,18 @@ const initializeColumns = () => {
   allColumnsList.value = sortedColumns.map(col => ({ ...col }))
 }
 
-/**
- * Mock function to fetch dynamic product fields from Bitrix24
- * TODO: Replace with real API call to crm.productrow.fields
- */
-const fetchDynamicProductFields = (): ColumnConfig[] => {
-  // Mock data - simulating Bitrix24 product fields
-  return [
-    {
-      key: 'PRODUCT_ID',
-      title: 'Product ID',
-      required: false,
-      locked: false,
-      visible: false,
-      order: 100,
-      isDynamic: true
-    },
-    {
-      key: 'MEASURE_NAME',
-      title: 'Unit of Measure',
-      required: false,
-      locked: false,
-      visible: false,
-      order: 101,
-      isDynamic: true
-    },
-    {
-      key: 'DISCOUNT_RATE',
-      title: 'Discount Rate',
-      required: false,
-      locked: false,
-      visible: false,
-      order: 102,
-      isDynamic: true
-    },
-    {
-      key: 'TAX_RATE',
-      title: 'Tax Rate',
-      required: false,
-      locked: false,
-      visible: false,
-      order: 103,
-      isDynamic: true
-    },
-  ]
-  
-  /**
-   * Real implementation will be:
-   * 
-   * const fields = await BX24.callMethod('crm.productrow.fields')
-   * return fields.map((field, index) => ({
-   *   key: field.ID,
-   *   title: field.TITLE,
-   *   required: false,
-   *   locked: false,
-   *   visible: false,
-   *   order: 100 + index,
-   *   isDynamic: true
-   * }))
-   */
-}
-
 // Get default column configuration
 const getDefaultColumns = (): ColumnConfig[] => {
-  const staticColumns = [
-    { key: 'product', title: t('pricing.product'), required: true, locked: true, visible: true, order: 1 },
-    { key: 'quantity', title: t('pricing.quantity'), required: true, locked: true, visible: true, order: 2 },
-    { key: 'salePrice', title: t('pricing.salePrice'), required: true, locked: true, visible: true, order: 3 },
-    { key: 'purchasePrice', title: t('pricing.purchasePrice'), required: true, locked: true, visible: true, order: 4 },
-    { key: 'totalMargin', title: t('pricing.totalMargin'), required: true, locked: true, visible: true, order: 5 },
-    { key: 'supplier', title: t('pricing.supplier'), required: false, locked: false, visible: true, order: 6 },
-    { key: 'transportCost', title: t('pricing.transportCost'), required: false, locked: false, visible: true, order: 7 },
-    { key: 'packagingCost', title: t('pricing.packagingCost'), required: false, locked: false, visible: true, order: 8 },
-    { key: 'marginPercent', title: t('pricing.marginPercent'), required: false, locked: false, visible: true, order: 9 },
-    { key: 'marginAmount', title: t('pricing.marginAmount'), required: false, locked: false, visible: true, order: 10 },
-    { key: 'action', title: t('pricing.action'), required: true, locked: true, visible: true, order: 11 },
-  ]
+  // Map and add translations
+  const staticColumns = DEFAULT_COLUMNS.map(col => ({
+    ...col,
+    title: t(`pricing.${col.key}`)
+  }))
   
-  // Add dynamic product fields
-  const dynamicFields = fetchDynamicProductFields()
+  const dynamicFields = DYNAMIC_FIELDS_MOCK.map(col => ({
+    ...col,
+    title: col.key // або title з API
+  }))
   
   return [...staticColumns, ...dynamicFields]
 }

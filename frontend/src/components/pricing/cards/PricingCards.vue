@@ -250,19 +250,6 @@
               </a-input-number>
             </a-descriptions-item>
 
-            <!-- Margin Amount (read-only) -->
-            <a-descriptions-item 
-              v-if="isColumnVisible('marginAmount')"
-              :label="getColumnTitle('marginAmount')"
-            >
-              <span 
-                class="margin-value"
-                :style="{ color: context.getMarginColor(product._marginAmount || 0) }"
-              >
-                {{ context.formatCurrency(product._marginAmount || 0, 'PLN') }}
-              </span>
-            </a-descriptions-item>
-
             <!-- Dynamic fields (read-only) -->
             <template v-for="col in dynamicColumns" :key="col.key">
               <a-descriptions-item 

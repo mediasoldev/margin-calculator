@@ -5,6 +5,8 @@ import { useI18n } from 'vue-i18n'
 import type { ColumnConfig } from '@/types/pricing.types'
 import { STORAGE_KEYS } from '@/types/pricing.types'
 
+import { DEFAULT_COLUMNS, DYNAMIC_FIELDS_MOCK } from '@/config/defaultColumns.config'
+
 export function useColumnManagement() {
   const { t } = useI18n()
 
@@ -14,158 +16,20 @@ export function useColumnManagement() {
    * Get default columns configuration
    */
   const getDefaultColumns = (): ColumnConfig[] => {
-    return [
-      { 
-        key: 'product', 
-        title: t('pricing.product'), 
-        required: true, 
-        locked: true, 
-        visible: true, 
-        order: 1, 
-        width: 200 
-      },
-      { 
-        key: 'quantity', 
-        title: t('pricing.quantity'), 
-        required: true, 
-        locked: true, 
-        visible: true, 
-        order: 2, 
-        width: 100 
-      },
-      { 
-        key: 'salePrice', 
-        title: t('pricing.salePrice'), 
-        required: true, 
-        locked: true, 
-        visible: true, 
-        order: 3, 
-        width: 200 
-      },
-      { 
-        key: 'purchasePrice', 
-        title: t('pricing.purchasePrice'), 
-        required: true, 
-        locked: true, 
-        visible: true, 
-        order: 4, 
-        width: 200 
-      },
-      { 
-        key: 'totalMargin', 
-        title: t('pricing.totalMargin'), 
-        required: true, 
-        locked: true, 
-        visible: true, 
-        order: 5, 
-        width: 160 
-      },
-      { 
-        key: 'supplier', 
-        title: t('pricing.supplier'), 
-        required: false, 
-        locked: false, 
-        visible: true, 
-        order: 6, 
-        width: 180 
-      },
-      { 
-        key: 'transportCost', 
-        title: t('pricing.transportCost'), 
-        required: false, 
-        locked: false, 
-        visible: true, 
-        order: 7, 
-        width: 200 
-      },
-      { 
-        key: 'packagingCost', 
-        title: t('pricing.packagingCost'), 
-        required: false, 
-        locked: false, 
-        visible: true, 
-        order: 8, 
-        width: 200 
-      },
-      { 
-        key: 'marginPercent', 
-        title: t('pricing.marginPercent'), 
-        required: false, 
-        locked: false, 
-        visible: true, 
-        order: 9, 
-        width: 120 
-      },
-      { 
-        key: 'marginPerUnit', 
-        title: t('pricing.marginPerUnit'), 
-        required: false, 
-        locked: false, 
-        visible: true, 
-        order: 10, 
-        width: 150 
-      },
-      { 
-        key: 'marginAmount', 
-        title: t('pricing.marginAmount'), 
-        required: false, 
-        locked: false, 
-        visible: false, 
-        order: 11, 
-        width: 150 
-      },
-      { 
-        key: 'action', 
-        title: t('pricing.action'), 
-        required: true, 
-        locked: true, 
-        visible: true, 
-        order: 12, 
-        width: 80 
-      },
-      // Dynamic fields (mock)
-      { 
-        key: 'PRODUCT_ID', 
-        title: 'Product ID', 
-        required: false, 
-        locked: false, 
-        visible: false, 
-        order: 100, 
-        width: 120, 
-        isDynamic: true 
-      },
-      { 
-        key: 'MEASURE_NAME', 
-        title: 'Unit of Measure', 
-        required: false, 
-        locked: false, 
-        visible: false, 
-        order: 101, 
-        width: 150, 
-        isDynamic: true 
-      },
-      { 
-        key: 'DISCOUNT_RATE', 
-        title: 'Discount Rate', 
-        required: false, 
-        locked: false, 
-        visible: false, 
-        order: 102, 
-        width: 120, 
-        isDynamic: true 
-      },
-      { 
-        key: 'TAX_RATE', 
-        title: 'Tax Rate', 
-        required: false, 
-        locked: false, 
-        visible: false, 
-        order: 103, 
-        width: 100, 
-        isDynamic: true 
-      },
-    ]
+    // Map and add translations
+    const staticColumns = DEFAULT_COLUMNS.map(col => ({
+      ...col,
+      title: t(`pricing.${col.key}`)
+    }))
+    
+    const dynamicFields = DYNAMIC_FIELDS_MOCK.map(col => ({
+      ...col,
+      title: col.key // або title з API
+    }))
+    
+    return [...staticColumns, ...dynamicFields]
   }
+
 
   /**
    * Load columns configuration from localStorage

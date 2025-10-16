@@ -272,24 +272,6 @@
               </a-form-item>
             </a-col>
 
-            <!-- Margin Amount (read-only) -->
-            <a-col 
-              v-if="isColumnVisible('marginAmount')"
-              :xs="24" 
-              :md="12"
-            >
-              <a-form-item :label="getColumnTitle('marginAmount')">
-                <div class="margin-display">
-                  <span 
-                    class="margin-value"
-                    :style="{ color: context.getMarginColor(product._marginAmount || 0) }"
-                  >
-                    {{ context.formatCurrency(product._marginAmount || 0, 'PLN') }}
-                  </span>
-                </div>
-              </a-form-item>
-            </a-col>
-
             <!-- Dynamic fields (read-only) -->
             <template v-for="col in dynamicColumns" :key="col.key">
               <a-col 
