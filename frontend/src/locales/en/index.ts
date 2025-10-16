@@ -50,7 +50,8 @@ export default {
       "Quickly assess product profitability with purchase price, transportation, packaging and currency exchange rates",
 
     importantNotice: "Important",
-    noticeDescription: "This application does not change the deal amount, but enters product pricing information into additional fields",
+    noticeDescription:
+      "This application does not change the deal amount, but enters product pricing information into additional fields",
 
     whereToFind: {
       title: "Where to Find the Widget",
@@ -94,7 +95,8 @@ export default {
           "The button saves the current calculation inside the application (in the application's own database) for further viewing/analysis. Saving does not change the Bitrix24 deal amount, but makes changes to additional fields for pricing information.",
       },
       item4: {
-        question: "How does automatic purchase price retrieval work when selecting a supplier?",
+        question:
+          "How does automatic purchase price retrieval work when selecting a supplier?",
         answer:
           "When selecting a supplier, the application searches its database for the price of that supplier for the selected product and automatically inserts the purchase price + currency. If there are no prices for the 'supplier-product' combination, the field remains empty and you need to enter the price manually.",
       },
@@ -114,7 +116,7 @@ export default {
       support: "Support",
     },
   },
-  
+
   common: {
     yes: "Yes",
     no: "No",
@@ -139,7 +141,8 @@ export default {
     maxUsers: "Maximum Users",
     unlimited: "Unlimited",
     noLicense: "No license key",
-    purchaseContactTitle: "To purchase a license key, contact us in any convenient way:",
+    purchaseContactTitle:
+      "To purchase a license key, contact us in any convenient way:",
     website: "Website",
     phone: "Phone",
     email: "Email",
@@ -151,7 +154,7 @@ export default {
     // Currency section
     currencyInfo: "Currency Information",
     currencyRates: "Exchange Rates",
-    
+
     // Column names (main fields)
     product: "Product",
     productName: "Product Name",
@@ -166,13 +169,13 @@ export default {
     marginAmount: "Margin (calculated)",
     totalMargin: "Total Margin",
     action: "Action",
-    
+
     // View modes
     viewMode: "View Mode",
     tableView: "Table",
     cardsView: "Cards",
     accordionView: "Accordion",
-    
+
     // Actions
     columns: "Columns",
     refresh: "Refresh",
@@ -184,7 +187,8 @@ export default {
 
     // Column settings modal
     columnSettings: "Column Settings",
-    columnSettingsInfo: "Drag to reorder columns. Required columns cannot be hidden but can be reordered.",
+    columnSettingsInfo:
+      "Drag to reorder columns. Required columns cannot be hidden but can be reordered.",
     requiredColumns: "Required Columns",
     optionalColumns: "Optional Columns",
     availableColumns: "Available Columns",
@@ -206,7 +210,7 @@ export default {
     // Summary
     totalAmount: "Total Amount",
     productMargin: "Product Margin",
-    
+
     // Messages
     productsLoaded: "Products loaded successfully",
     loadedFromBitrix: "Products loaded from Bitrix24 successfully",
@@ -214,12 +218,12 @@ export default {
     priceLoadError: "Error loading supplier price",
     saveSuccess: "Calculation saved successfully",
     saveError: "Error saving calculation",
-    
+
     // Comparison status messages
     savedMatchesDeal: "✓ Saved calculation matches current deal",
     savedDiffersFromDeal: "⚠ Saved calculation differs from current deal",
     notCalculatedYet: "ℹ Calculation not saved yet",
-    
+
     // Supplier modal
     addSupplier: "Add Supplier",
     editSupplier: "Edit Supplier",
@@ -231,16 +235,16 @@ export default {
     pleaseSelectCompany: "Please select a company",
     pleaseEnterValidPrice: "Please enter a valid price",
     pleaseSelectCurrency: "Please select a currency",
-    
+
     // Placeholder
     cardsViewComingSoon: "Cards view - Coming soon",
     accordionViewComingSoon: "Accordion view - Coming soon",
-    
+
     // Unnamed product
     unnamed: "Unnamed Product",
     packaging: "Packaging",
     marginCalculation: "Margin Calculation",
-    
+
     // Dynamic ProductRow fields (from Bitrix24 API)
     ID: "ID",
     OWNER_ID: "Owner ID",

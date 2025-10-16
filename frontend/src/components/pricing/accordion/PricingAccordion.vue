@@ -50,274 +50,227 @@
           class="accordion-form"
         >
           <a-row :gutter="16">
-            <!-- Quantity -->
-            <a-col 
-              v-if="isColumnVisible('quantity')"
-              :xs="24" 
-              :md="12"
-            >
-              <a-form-item :label="getColumnTitle('quantity')">
-                <a-input-number
-                  v-model:value="product.quantity"
-                  :min="0"
-                  style="width: 100%"
-                  @change="context.calculateProductValues(product)"
-                />
-              </a-form-item>
-            </a-col>
+            <template v-for="col in sortedVisibleColumns" :key="col.key">
+              <template v-if="col.key !== 'product' && col.key !== 'action'">
 
-            <!-- Sale Price -->
-            <a-col 
-              v-if="isColumnVisible('salePrice')"
-              :xs="24" 
-              :md="12"
-            >
-              <a-form-item :label="getColumnTitle('salePrice')">
-                <a-space style="width: 100%">
-                  <a-input-number
-                    v-model:value="product.salePrice"
-                    :min="0"
-                    :step="0.01"
-                    :precision="2"
-                    style="flex: 1"
-                    @change="context.calculateProductValues(product)"
-                  />
-                  <a-select
-                    v-model:value="product.saleCurrency"
-                    style="width: 80px"
-                    @change="context.calculateProductValues(product)"
-                  >
-                    <a-select-option value="PLN">PLN</a-select-option>
-                    <a-select-option value="USD">USD</a-select-option>
-                    <a-select-option value="EUR">EUR</a-select-option>
-                  </a-select>
-                </a-space>
-              </a-form-item>
-            </a-col>
+                <a-col v-if="col.key === 'quantity'" :xs="24" :md="12">
+                  <a-form-item :label="col.title">
+                    <a-input-number
+                      v-model:value="product.quantity"
+                      :min="0"
+                      style="width: 100%"
+                      @change="context.calculateProductValues(product)"
+                    />
+                  </a-form-item>
+                </a-col>
 
-            <!-- Purchase Price -->
-            <a-col 
-              v-if="isColumnVisible('purchasePrice')"
-              :xs="24" 
-              :md="12"
-            >
-              <a-form-item :label="getColumnTitle('purchasePrice')">
-                <a-space style="width: 100%">
-                  <a-input-number
-                    v-model:value="product.purchasePrice"
-                    :min="0"
-                    :step="0.01"
-                    :precision="2"
-                    style="flex: 1"
-                    @change="context.calculateProductValues(product)"
-                  />
-                  <a-select
-                    v-model:value="product.purchaseCurrency"
-                    style="width: 80px"
-                    @change="context.calculateProductValues(product)"
-                  >
-                    <a-select-option value="PLN">PLN</a-select-option>
-                    <a-select-option value="USD">USD</a-select-option>
-                    <a-select-option value="EUR">EUR</a-select-option>
-                  </a-select>
-                </a-space>
-              </a-form-item>
-            </a-col>
-
-            <!-- Total Margin (editable) -->
-            <a-col 
-              v-if="isColumnVisible('totalMargin')"
-              :xs="24" 
-              :md="12"
-            >
-              <a-form-item :label="getColumnTitle('totalMargin')">
-                <a-input-number
-                  v-model:value="product._totalMarginInput"
-                  :step="0.01"
-                  :precision="2"
-                  style="width: 100%"
-                  @change="context.recalculateFromTotalMargin(product)"
-                >
-                  <template #addonAfter>
-                    <span :style="{ color: context.getMarginColor(product._totalMarginInput || 0) }">
-                      PLN
-                    </span>
-                  </template>
-                </a-input-number>
-              </a-form-item>
-            </a-col>
-
-            <!-- Supplier -->
-            <a-col 
-              v-if="isColumnVisible('supplier')"
-              :xs="24" 
-              :md="12"
-            >
-              <a-form-item :label="getColumnTitle('supplier')">
-                <a-select
-                  v-model:value="product.supplierId"
-                  style="width: 100%"
-                  :placeholder="$t('pricing.selectSupplier')"
-                  show-search
-                  :filter-option="filterSupplierOption"
-                  @change="(value: any) => onSupplierChange(product, value)"
-                >
-                  <template #dropdownRender="{ menuNode }">
-                    <v-nodes :vnodes="menuNode" />
-                    <a-divider style="margin: 4px 0" />
-                    <div
-                      style="padding: 4px 8px; cursor: pointer"
-                      @mousedown="(e: any) => e.preventDefault()"
-                      @click="openAddSupplierModal(product)"
-                    >
-                      <PlusOutlined /> {{ $t('pricing.addSupplier') }}
-                    </div>
-                  </template>
-                  
-                  <a-select-option
-                    v-for="supplier in getProductSuppliers(product.productId)"
-                    :key="supplier.company_id"
-                    :value="supplier.company_id"
-                    :label="`${supplier.price} ${supplier.currency} - ${supplier.company_name}`"
-                  >
-                    <div class="supplier-option">
-                      <span class="supplier-price">{{ supplier.price }} {{ supplier.currency }}</span>
-                      <span class="supplier-name">{{ supplier.company_name }}</span>
-                      <a-button
-                        type="link"
-                        size="small"
-                        @click.stop="openEditSupplierModal(product, supplier)"
-                        class="edit-supplier-btn"
+                <a-col v-else-if="col.key === 'salePrice'" :xs="24" :md="12">
+                  <a-form-item :label="col.title">
+                    <a-space style="width: 100%">
+                      <a-input-number
+                        v-model:value="product.salePrice"
+                        :min="0"
+                        :step="0.01"
+                        :precision="2"
+                        style="flex: 1"
+                        @change="context.calculateProductValues(product)"
+                      />
+                      <a-select
+                        v-model:value="product.saleCurrency"
+                        style="width: 80px"
+                        @change="context.calculateProductValues(product)"
                       >
-                        <EditOutlined />
-                      </a-button>
-                    </div>
-                  </a-select-option>
-                </a-select>
-              </a-form-item>
-            </a-col>
+                        <a-select-option value="PLN">PLN</a-select-option>
+                        <a-select-option value="USD">USD</a-select-option>
+                        <a-select-option value="EUR">EUR</a-select-option>
+                      </a-select>
+                    </a-space>
+                  </a-form-item>
+                </a-col>
 
-            <!-- Transport Cost -->
-            <a-col 
-              v-if="isColumnVisible('transportCost')"
-              :xs="24" 
-              :md="12"
-            >
-              <a-form-item :label="getColumnTitle('transportCost')">
-                <a-space style="width: 100%">
-                  <a-input-number
-                    v-model:value="product.transportCost"
-                    :min="0"
-                    :step="0.01"
-                    :precision="2"
-                    style="flex: 1"
-                    @change="context.calculateProductValues(product)"
-                  />
-                  <a-select
-                    v-model:value="product.transportCurrency"
-                    style="width: 80px"
-                    @change="context.calculateProductValues(product)"
-                  >
-                    <a-select-option value="PLN">PLN</a-select-option>
-                    <a-select-option value="USD">USD</a-select-option>
-                    <a-select-option value="EUR">EUR</a-select-option>
-                  </a-select>
-                </a-space>
-              </a-form-item>
-            </a-col>
+                <a-col v-else-if="col.key === 'purchasePrice'" :xs="24" :md="12">
+                  <a-form-item :label="col.title">
+                    <a-space style="width: 100%">
+                      <a-input-number
+                        v-model:value="product.purchasePrice"
+                        :min="0"
+                        :step="0.01"
+                        :precision="2"
+                        style="flex: 1"
+                        @change="context.calculateProductValues(product)"
+                      />
+                      <a-select
+                        v-model:value="product.purchaseCurrency"
+                        style="width: 80px"
+                        @change="context.calculateProductValues(product)"
+                      >
+                        <a-select-option value="PLN">PLN</a-select-option>
+                        <a-select-option value="USD">USD</a-select-option>
+                        <a-select-option value="EUR">EUR</a-select-option>
+                      </a-select>
+                    </a-space>
+                  </a-form-item>
+                </a-col>
 
-            <!-- Packaging Cost -->
-            <a-col 
-              v-if="isColumnVisible('packagingCost')"
-              :xs="24" 
-              :md="12"
-            >
-              <a-form-item :label="getColumnTitle('packagingCost')">
-                <a-space style="width: 100%">
-                  <a-input-number
-                    v-model:value="product.packagingCost"
-                    :min="0"
-                    :step="0.01"
-                    :precision="2"
-                    style="flex: 1"
-                    @change="context.calculateProductValues(product)"
-                  />
-                  <a-select
-                    v-model:value="product.packagingCurrency"
-                    style="width: 80px"
-                    @change="context.calculateProductValues(product)"
-                  >
-                    <a-select-option value="PLN">PLN</a-select-option>
-                    <a-select-option value="USD">USD</a-select-option>
-                    <a-select-option value="EUR">EUR</a-select-option>
-                  </a-select>
-                </a-space>
-              </a-form-item>
-            </a-col>
+                <a-col v-else-if="col.key === 'totalMargin'" :xs="24" :md="12">
+                  <a-form-item :label="col.title">
+                    <a-input-number
+                      v-model:value="product._totalMarginInput"
+                      :step="0.01"
+                      :precision="2"
+                      style="width: 100%"
+                      @change="context.recalculateFromTotalMargin(product)"
+                    >
+                      <template #addonAfter>
+                        <span :style="{ color: context.getMarginColor(product._totalMarginInput || 0) }">
+                          PLN
+                        </span>
+                      </template>
+                    </a-input-number>
+                  </a-form-item>
+                </a-col>
 
-            <!-- Margin Percent (editable) -->
-            <a-col 
-              v-if="isColumnVisible('marginPercent')"
-              :xs="24" 
-              :md="12"
-            >
-              <a-form-item :label="getColumnTitle('marginPercent')">
-                <a-input-number
-                  v-model:value="product._marginPercentInput"
-                  :min="0"
-                  :max="100"
-                  :step="0.1"
-                  :precision="2"
-                  suffix="%"
-                  style="width: 100%"
-                  @change="context.recalculateFromMarginPercent(product)"
-                />
-              </a-form-item>
-            </a-col>
+                <a-col v-else-if="col.key === 'supplier'" :xs="24" :md="12">
+                  <a-form-item :label="col.title">
+                    <a-select
+                      v-model:value="product.supplierId"
+                      style="width: 100%"
+                      :placeholder="$t('pricing.selectSupplier')"
+                      show-search
+                      :filter-option="filterSupplierOption"
+                      @change="(value: any) => onSupplierChange(product, value)"
+                    >
+                      <template #dropdownRender="{ menuNode }">
+                        <v-nodes :vnodes="menuNode" />
+                        <a-divider style="margin: 4px 0" />
+                        <div
+                          style="padding: 4px 8px; cursor: pointer"
+                          @mousedown="(e: any) => e.preventDefault()"
+                          @click="openAddSupplierModal(product)"
+                        >
+                          <PlusOutlined /> {{ $t('pricing.addSupplier') }}
+                        </div>
+                      </template>
+                      
+                      <a-select-option
+                        v-for="supplier in getProductSuppliers(product.productId)"
+                        :key="supplier.company_id"
+                        :value="supplier.company_id"
+                        :label="`${supplier.price} ${supplier.currency} - ${supplier.company_name}`"
+                      >
+                        <div class="supplier-option">
+                          <span class="supplier-price">{{ supplier.price }} {{ supplier.currency }}</span>
+                          <span class="supplier-name">{{ supplier.company_name }}</span>
+                          <a-button
+                            type="link"
+                            size="small"
+                            @click.stop="openEditSupplierModal(product, supplier)"
+                            class="edit-supplier-btn"
+                          >
+                            <EditOutlined />
+                          </a-button>
+                        </div>
+                      </a-select-option>
+                    </a-select>
+                  </a-form-item>
+                </a-col>
 
-            <!-- Margin Per Unit (editable) -->
-            <a-col 
-              v-if="isColumnVisible('marginPerUnit')"
-              :xs="24" 
-              :md="12"
-            >
-              <a-form-item :label="getColumnTitle('marginPerUnit')">
-                <a-input-number
-                  v-model:value="product._marginPerUnitInput"
-                  :step="0.01"
-                  :precision="2"
-                  style="width: 100%"
-                  @change="context.recalculateFromMarginPerUnit(product)"
-                >
-                  <template #addonAfter>
-                    <span :style="{ color: context.getMarginColor(product._marginPerUnitInput || 0) }">
-                      PLN
+                <a-col v-else-if="col.key === 'transportCost'" :xs="24" :md="12">
+                  <a-form-item :label="col.title">
+                    <a-space style="width: 100%">
+                      <a-input-number
+                        v-model:value="product.transportCost"
+                        :min="0"
+                        :step="0.01"
+                        :precision="2"
+                        style="flex: 1"
+                        @change="context.calculateProductValues(product)"
+                      />
+                      <a-select
+                        v-model:value="product.transportCurrency"
+                        style="width: 80px"
+                        @change="context.calculateProductValues(product)"
+                      >
+                        <a-select-option value="PLN">PLN</a-select-option>
+                        <a-select-option value="USD">USD</a-select-option>
+                        <a-select-option value="EUR">EUR</a-select-option>
+                      </a-select>
+                    </a-space>
+                  </a-form-item>
+                </a-col>
+
+                <a-col v-else-if="col.key === 'packagingCost'" :xs="24" :md="12">
+                  <a-form-item :label="col.title">
+                    <a-space style="width: 100%">
+                      <a-input-number
+                        v-model:value="product.packagingCost"
+                        :min="0"
+                        :step="0.01"
+                        :precision="2"
+                        style="flex: 1"
+                        @change="context.calculateProductValues(product)"
+                      />
+                      <a-select
+                        v-model:value="product.packagingCurrency"
+                        style="width: 80px"
+                        @change="context.calculateProductValues(product)"
+                      >
+                        <a-select-option value="PLN">PLN</a-select-option>
+                        <a-select-option value="USD">USD</a-select-option>
+                        <a-select-option value="EUR">EUR</a-select-option>
+                      </a-select>
+                    </a-space>
+                  </a-form-item>
+                </a-col>
+
+                <a-col v-else-if="col.key === 'marginPercent'" :xs="24" :md="12">
+                  <a-form-item :label="col.title">
+                    <a-input-number
+                      v-model:value="product._marginPercentInput"
+                      :min="0"
+                      :max="100"
+                      :step="0.1"
+                      :precision="2"
+                      suffix="%"
+                      style="width: 100%"
+                      @change="context.recalculateFromMarginPercent(product)"
+                    />
+                  </a-form-item>
+                </a-col>
+
+                <a-col v-else-if="col.key === 'marginPerUnit'" :xs="24" :md="12">
+                  <a-form-item :label="col.title">
+                    <a-input-number
+                      v-model:value="product._marginPerUnitInput"
+                      :step="0.01"
+                      :precision="2"
+                      style="width: 100%"
+                      @change="context.recalculateFromMarginPerUnit(product)"
+                    >
+                      <template #addonAfter>
+                        <span :style="{ color: context.getMarginColor(product._marginPerUnitInput || 0) }">
+                          PLN
+                        </span>
+                      </template>
+                    </a-input-number>
+                  </a-form-item>
+                </a-col>
+
+                <a-col v-else :xs="24" :md="12">
+                  <a-form-item :label="col.title">
+                    <span class="dynamic-field-value">
+                      {{ formatDynamicValue(product[col.key]) }}
                     </span>
-                  </template>
-                </a-input-number>
-              </a-form-item>
-            </a-col>
+                  </a-form-item>
+                </a-col>
 
-            <!-- Dynamic fields (read-only) -->
-            <template v-for="col in dynamicColumns" :key="col.key">
-              <a-col 
-                v-if="isColumnVisible(col.key)"
-                :xs="24" 
-                :md="12"
-              >
-                <a-form-item :label="col.title">
-                  <span class="dynamic-field-value">
-                    {{ formatDynamicValue(product[col.key]) }}
-                  </span>
-                </a-form-item>
-              </a-col>
+              </template>
             </template>
           </a-row>
         </a-form>
       </a-collapse-panel>
     </a-collapse>
 
-    <!-- Edit Product Name Modal -->
     <a-modal
       v-model:open="editModalVisible"
       :title="$t('pricing.edit')"
@@ -331,7 +284,6 @@
       </a-form>
     </a-modal>
 
-    <!-- Add/Edit Supplier Modal -->
     <AddSupplierModal
       v-model:open="supplierModalVisible"
       :product-id="currentProductId"
@@ -348,10 +300,8 @@ import { message } from 'ant-design-vue'
 import type { Product } from '@/types/pricing.types'
 import AddSupplierModal from '@/components/pricing/AddSupplierModal.vue'
 
-// Inject context from parent
 const context = inject('pricingContext') as any
 
-// Local state
 const activeKeys = ref<string[]>([])
 const editModalVisible = ref(false)
 const editingProduct = ref<Product | null>(null)
@@ -361,38 +311,22 @@ const currentProductId = ref<string>('')
 const currentProduct = ref<Product | null>(null)
 const editingSupplier = ref<any>(null)
 
-// Helper component for vnodes rendering
 const VNodes = (props: { vnodes: any }) => props.vnodes
 
-// Computed
 const visibleProducts = computed(() => context.products.value)
 
-const dynamicColumns = computed(() => {
-  const cols = toRaw(context.allColumns?.value || context.allColumns || [])
-  return cols.filter((col: any) => col.isDynamic)
+const sortedVisibleColumns = computed(() => {
+  const cols = toRaw(context.visibleColumns?.value || context.visibleColumns || [])
+  return [...cols].sort((a: any, b: any) => a.order - b.order)
 })
 
-// Get suppliers for product
 const getProductSuppliers = (productId: string): any[] => {
   return context.getSuppliersForProduct(productId) || []
 }
 
-// Filter supplier options for search
 const filterSupplierOption = (input: string, option: any) => {
   const label = option.label || ''
   return label.toLowerCase().includes(input.toLowerCase())
-}
-
-// Helper methods
-const isColumnVisible = (key: string): boolean => {
-  const cols = toRaw(context.visibleColumns?.value || context.visibleColumns || [])
-  return cols.some((col: any) => col.key === key)
-}
-
-const getColumnTitle = (key: string): string => {
-  const cols = toRaw(context.allColumns?.value || context.allColumns || [])
-  const column = cols.find((col: any) => col.key === key)
-  return column?.title || key
 }
 
 const getMarginTagColor = (margin: number): string => {
@@ -401,15 +335,14 @@ const getMarginTagColor = (margin: number): string => {
   return 'default'
 }
 
-// Format dynamic field values
 const formatDynamicValue = (value: any): string => {
-  if (value === null || value === undefined) return '-'
+  if (value === null || value === undefined || value === '') return '-'
   if (typeof value === 'boolean') return value ? 'Yes' : 'No'
   if (Array.isArray(value)) return value.join(', ')
+  if (typeof value === 'object') return JSON.stringify(value)
   return String(value)
 }
 
-// Handlers
 const editProduct = (product: Product) => {
   editingProduct.value = product
   editingName.value = product.name
@@ -435,7 +368,6 @@ const deleteProduct = (product: Product) => {
   }
 }
 
-// Supplier change
 const onSupplierChange = async (product: Product, supplierId: string) => {
   console.log('[PricingAccordion] Supplier changed:', supplierId)
   
@@ -453,7 +385,6 @@ const onSupplierChange = async (product: Product, supplierId: string) => {
   }
 }
 
-// Open Add Supplier Modal
 const openAddSupplierModal = (product: Product) => {
   currentProductId.value = product.productId
   currentProduct.value = product
@@ -461,7 +392,6 @@ const openAddSupplierModal = (product: Product) => {
   supplierModalVisible.value = true
 }
 
-// Open Edit Supplier Modal
 const openEditSupplierModal = (product: Product, supplier: any) => {
   currentProductId.value = product.productId
   currentProduct.value = product
@@ -474,7 +404,6 @@ const openEditSupplierModal = (product: Product, supplier: any) => {
   supplierModalVisible.value = true
 }
 
-// Handle Supplier Save
 const handleSupplierSave = async (data: any) => {
   try {
     if (editingSupplier.value) {
@@ -563,22 +492,6 @@ const handleSupplierSave = async (data: any) => {
   font-size: 13px;
 }
 
-.margin-display {
-  padding: 4px 11px;
-  border: 1px solid var(--ant-border-color);
-  border-radius: 6px;
-  background: var(--ant-background-color-light);
-}
-
-[data-theme='dark'] .margin-display {
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.margin-value {
-  font-weight: 600;
-  font-size: 14px;
-}
-
 .dynamic-field-value {
   color: var(--text-color-secondary);
   font-size: 13px;
@@ -605,7 +518,6 @@ const handleSupplierSave = async (data: any) => {
   min-width: auto;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .accordion-header {
     flex-direction: column;

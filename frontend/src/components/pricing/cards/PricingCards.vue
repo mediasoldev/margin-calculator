@@ -37,236 +37,229 @@
           </template>
 
           <div class="card-content">
-            <!-- Quantity -->
-            <div v-if="isColumnVisible('quantity')" class="field-row">
-              <div class="field-label">{{ getColumnTitle('quantity') }}</div>
-              <div class="field-value">
-                <a-input-number
-                  v-model:value="product.quantity"
-                  :min="0"
-                  size="small"
-                  @change="context.calculateProductValues(product)"
-                />
-              </div>
-            </div>
-
-            <!-- Sale Price -->
-            <div v-if="isColumnVisible('salePrice')" class="field-row">
-              <div class="field-label">{{ getColumnTitle('salePrice') }}</div>
-              <div class="field-value field-with-currency">
-                <a-input-number
-                  v-model:value="product.salePrice"
-                  :min="0"
-                  :step="0.01"
-                  :precision="2"
-                  size="small"
-                  @change="context.calculateProductValues(product)"
-                />
-                <a-select
-                  v-model:value="product.saleCurrency"
-                  size="small"
-                  @change="context.calculateProductValues(product)"
-                >
-                  <a-select-option value="PLN">PLN</a-select-option>
-                  <a-select-option value="USD">USD</a-select-option>
-                  <a-select-option value="EUR">EUR</a-select-option>
-                </a-select>
-              </div>
-            </div>
-
-            <!-- Purchase Price -->
-            <div v-if="isColumnVisible('purchasePrice')" class="field-row">
-              <div class="field-label">{{ getColumnTitle('purchasePrice') }}</div>
-              <div class="field-value field-with-currency">
-                <a-input-number
-                  v-model:value="product.purchasePrice"
-                  :min="0"
-                  :step="0.01"
-                  :precision="2"
-                  size="small"
-                  @change="context.calculateProductValues(product)"
-                />
-                <a-select
-                  v-model:value="product.purchaseCurrency"
-                  size="small"
-                  @change="context.calculateProductValues(product)"
-                >
-                  <a-select-option value="PLN">PLN</a-select-option>
-                  <a-select-option value="USD">USD</a-select-option>
-                  <a-select-option value="EUR">EUR</a-select-option>
-                </a-select>
-              </div>
-            </div>
-
-            <!-- Total Margin -->
-            <div v-if="isColumnVisible('totalMargin')" class="field-row">
-              <div class="field-label">{{ getColumnTitle('totalMargin') }}</div>
-              <div class="field-value">
-                <a-input-number
-                  v-model:value="product._totalMarginInput"
-                  :step="0.01"
-                  :precision="2"
-                  size="small"
-                  @change="context.recalculateFromTotalMargin(product)"
-                >
-                  <template #addonAfter>
-                    <span :style="{ color: context.getMarginColor(product._totalMarginInput || 0) }">
-                      PLN
-                    </span>
-                  </template>
-                </a-input-number>
-              </div>
-            </div>
-
-            <!-- Supplier -->
-            <div v-if="isColumnVisible('supplier')" class="field-row">
-              <div class="field-label">{{ getColumnTitle('supplier') }}</div>
-              <div class="field-value">
-                <a-select
-                  v-model:value="product.supplierId"
-                  size="small"
-                  :placeholder="$t('pricing.selectSupplier')"
-                  show-search
-                  :filter-option="filterSupplierOption"
-                  @change="(value: any) => onSupplierChange(product, value)"
-                >
-                  <template #dropdownRender="{ menuNode }">
-                    <v-nodes :vnodes="menuNode" />
-                    <a-divider style="margin: 4px 0" />
-                    <div
-                      style="padding: 4px 8px; cursor: pointer"
-                      @mousedown="(e: any) => e.preventDefault()"
-                      @click="openAddSupplierModal(product)"
-                    >
-                      <PlusOutlined /> {{ $t('pricing.addSupplier') }}
-                    </div>
-                  </template>
-                  
-                  <a-select-option
-                    v-for="supplier in getProductSuppliers(product.productId)"
-                    :key="supplier.company_id"
-                    :value="supplier.company_id"
-                    :label="`${supplier.price} ${supplier.currency} - ${supplier.company_name}`"
-                  >
-                    <div class="supplier-option">
-                      <span class="supplier-price">{{ supplier.price }} {{ supplier.currency }}</span>
-                      <span class="supplier-name">{{ supplier.company_name }}</span>
-                      <a-button
-                        type="link"
-                        size="small"
-                        @click.stop="openEditSupplierModal(product, supplier)"
-                        class="edit-supplier-btn"
-                      >
-                        <EditOutlined />
-                      </a-button>
-                    </div>
-                  </a-select-option>
-                </a-select>
-              </div>
-            </div>
-
-            <!-- Transport Cost -->
-            <div v-if="isColumnVisible('transportCost')" class="field-row">
-              <div class="field-label">{{ getColumnTitle('transportCost') }}</div>
-              <div class="field-value field-with-currency">
-                <a-input-number
-                  v-model:value="product.transportCost"
-                  :min="0"
-                  :step="0.01"
-                  :precision="2"
-                  size="small"
-                  @change="context.calculateProductValues(product)"
-                />
-                <a-select
-                  v-model:value="product.transportCurrency"
-                  size="small"
-                  @change="context.calculateProductValues(product)"
-                >
-                  <a-select-option value="PLN">PLN</a-select-option>
-                  <a-select-option value="USD">USD</a-select-option>
-                  <a-select-option value="EUR">EUR</a-select-option>
-                </a-select>
-              </div>
-            </div>
-
-            <!-- Packaging Cost -->
-            <div v-if="isColumnVisible('packagingCost')" class="field-row">
-              <div class="field-label">{{ getColumnTitle('packagingCost') }}</div>
-              <div class="field-value field-with-currency">
-                <a-input-number
-                  v-model:value="product.packagingCost"
-                  :min="0"
-                  :step="0.01"
-                  :precision="2"
-                  size="small"
-                  @change="context.calculateProductValues(product)"
-                />
-                <a-select
-                  v-model:value="product.packagingCurrency"
-                  size="small"
-                  @change="context.calculateProductValues(product)"
-                >
-                  <a-select-option value="PLN">PLN</a-select-option>
-                  <a-select-option value="USD">USD</a-select-option>
-                  <a-select-option value="EUR">EUR</a-select-option>
-                </a-select>
-              </div>
-            </div>
-
-            <!-- Margin Percent -->
-            <div v-if="isColumnVisible('marginPercent')" class="field-row">
-              <div class="field-label">{{ getColumnTitle('marginPercent') }}</div>
-              <div class="field-value">
-                <a-input-number
-                  v-model:value="product._marginPercentInput"
-                  :min="0"
-                  :max="100"
-                  :step="0.1"
-                  :precision="2"
-                  suffix="%"
-                  size="small"
-                  @change="context.recalculateFromMarginPercent(product)"
-                />
-              </div>
-            </div>
-
-            <!-- Margin Per Unit -->
-            <div v-if="isColumnVisible('marginPerUnit')" class="field-row">
-              <div class="field-label">{{ getColumnTitle('marginPerUnit') }}</div>
-              <div class="field-value">
-                <a-input-number
-                  v-model:value="product._marginPerUnitInput"
-                  :step="0.01"
-                  :precision="2"
-                  size="small"
-                  @change="context.recalculateFromMarginPerUnit(product)"
-                >
-                  <template #addonAfter>
-                    <span :style="{ color: context.getMarginColor(product._marginPerUnitInput || 0) }">
-                      PLN
-                    </span>
-                  </template>
-                </a-input-number>
-              </div>
-            </div>
-
-            <!-- Dynamic fields -->
-            <template v-for="col in dynamicColumns" :key="col.key">
-              <div v-if="isColumnVisible(col.key)" class="field-row">
-                <div class="field-label">{{ col.title }}</div>
-                <div class="field-value">
-                  <span class="dynamic-field-value">
-                    {{ formatDynamicValue(product[col.key]) }}
-                  </span>
+            <template v-for="col in sortedVisibleColumns" :key="col.key">
+              <template v-if="col.key !== 'product' && col.key !== 'action'">
+                
+                <div v-if="col.key === 'quantity'" class="field-row">
+                  <div class="field-label">{{ col.title }}</div>
+                  <div class="field-value">
+                    <a-input-number
+                      v-model:value="product.quantity"
+                      :min="0"
+                      size="small"
+                      @change="context.calculateProductValues(product)"
+                    />
+                  </div>
                 </div>
-              </div>
+
+                <div v-else-if="col.key === 'salePrice'" class="field-row">
+                  <div class="field-label">{{ col.title }}</div>
+                  <div class="field-value field-with-currency">
+                    <a-input-number
+                      v-model:value="product.salePrice"
+                      :min="0"
+                      :step="0.01"
+                      :precision="2"
+                      size="small"
+                      @change="context.calculateProductValues(product)"
+                    />
+                    <a-select
+                      v-model:value="product.saleCurrency"
+                      size="small"
+                      @change="context.calculateProductValues(product)"
+                    >
+                      <a-select-option value="PLN">PLN</a-select-option>
+                      <a-select-option value="USD">USD</a-select-option>
+                      <a-select-option value="EUR">EUR</a-select-option>
+                    </a-select>
+                  </div>
+                </div>
+
+                <div v-else-if="col.key === 'purchasePrice'" class="field-row">
+                  <div class="field-label">{{ col.title }}</div>
+                  <div class="field-value field-with-currency">
+                    <a-input-number
+                      v-model:value="product.purchasePrice"
+                      :min="0"
+                      :step="0.01"
+                      :precision="2"
+                      size="small"
+                      @change="context.calculateProductValues(product)"
+                    />
+                    <a-select
+                      v-model:value="product.purchaseCurrency"
+                      size="small"
+                      @change="context.calculateProductValues(product)"
+                    >
+                      <a-select-option value="PLN">PLN</a-select-option>
+                      <a-select-option value="USD">USD</a-select-option>
+                      <a-select-option value="EUR">EUR</a-select-option>
+                    </a-select>
+                  </div>
+                </div>
+
+                <div v-else-if="col.key === 'totalMargin'" class="field-row">
+                  <div class="field-label">{{ col.title }}</div>
+                  <div class="field-value">
+                    <a-input-number
+                      v-model:value="product._totalMarginInput"
+                      :step="0.01"
+                      :precision="2"
+                      size="small"
+                      @change="context.recalculateFromTotalMargin(product)"
+                    >
+                      <template #addonAfter>
+                        <span :style="{ color: context.getMarginColor(product._totalMarginInput || 0) }">
+                          PLN
+                        </span>
+                      </template>
+                    </a-input-number>
+                  </div>
+                </div>
+
+                <div v-else-if="col.key === 'supplier'" class="field-row">
+                  <div class="field-label">{{ col.title }}</div>
+                  <div class="field-value">
+                    <a-select
+                      v-model:value="product.supplierId"
+                      size="small"
+                      :placeholder="$t('pricing.selectSupplier')"
+                      show-search
+                      :filter-option="filterSupplierOption"
+                      @change="(value: any) => onSupplierChange(product, value)"
+                    >
+                      <template #dropdownRender="{ menuNode }">
+                        <v-nodes :vnodes="menuNode" />
+                        <a-divider style="margin: 4px 0" />
+                        <div
+                          style="padding: 4px 8px; cursor: pointer"
+                          @mousedown="(e: any) => e.preventDefault()"
+                          @click="openAddSupplierModal(product)"
+                        >
+                          <PlusOutlined /> {{ $t('pricing.addSupplier') }}
+                        </div>
+                      </template>
+                      
+                      <a-select-option
+                        v-for="supplier in getProductSuppliers(product.productId)"
+                        :key="supplier.company_id"
+                        :value="supplier.company_id"
+                        :label="`${supplier.price} ${supplier.currency} - ${supplier.company_name}`"
+                      >
+                        <div class="supplier-option">
+                          <span class="supplier-price">{{ supplier.price }} {{ supplier.currency }}</span>
+                          <span class="supplier-name">{{ supplier.company_name }}</span>
+                          <a-button
+                            type="link"
+                            size="small"
+                            @click.stop="openEditSupplierModal(product, supplier)"
+                            class="edit-supplier-btn"
+                          >
+                            <EditOutlined />
+                          </a-button>
+                        </div>
+                      </a-select-option>
+                    </a-select>
+                  </div>
+                </div>
+
+                <div v-else-if="col.key === 'transportCost'" class="field-row">
+                  <div class="field-label">{{ col.title }}</div>
+                  <div class="field-value field-with-currency">
+                    <a-input-number
+                      v-model:value="product.transportCost"
+                      :min="0"
+                      :step="0.01"
+                      :precision="2"
+                      size="small"
+                      @change="context.calculateProductValues(product)"
+                    />
+                    <a-select
+                      v-model:value="product.transportCurrency"
+                      size="small"
+                      @change="context.calculateProductValues(product)"
+                    >
+                      <a-select-option value="PLN">PLN</a-select-option>
+                      <a-select-option value="USD">USD</a-select-option>
+                      <a-select-option value="EUR">EUR</a-select-option>
+                    </a-select>
+                  </div>
+                </div>
+
+                <div v-else-if="col.key === 'packagingCost'" class="field-row">
+                  <div class="field-label">{{ col.title }}</div>
+                  <div class="field-value field-with-currency">
+                    <a-input-number
+                      v-model:value="product.packagingCost"
+                      :min="0"
+                      :step="0.01"
+                      :precision="2"
+                      size="small"
+                      @change="context.calculateProductValues(product)"
+                    />
+                    <a-select
+                      v-model:value="product.packagingCurrency"
+                      size="small"
+                      @change="context.calculateProductValues(product)"
+                    >
+                      <a-select-option value="PLN">PLN</a-select-option>
+                      <a-select-option value="USD">USD</a-select-option>
+                      <a-select-option value="EUR">EUR</a-select-option>
+                    </a-select>
+                  </div>
+                </div>
+
+                <div v-else-if="col.key === 'marginPercent'" class="field-row">
+                  <div class="field-label">{{ col.title }}</div>
+                  <div class="field-value">
+                    <a-input-number
+                      v-model:value="product._marginPercentInput"
+                      :min="0"
+                      :max="100"
+                      :step="0.1"
+                      :precision="2"
+                      suffix="%"
+                      size="small"
+                      @change="context.recalculateFromMarginPercent(product)"
+                    />
+                  </div>
+                </div>
+
+                <div v-else-if="col.key === 'marginPerUnit'" class="field-row">
+                  <div class="field-label">{{ col.title }}</div>
+                  <div class="field-value">
+                    <a-input-number
+                      v-model:value="product._marginPerUnitInput"
+                      :step="0.01"
+                      :precision="2"
+                      size="small"
+                      @change="context.recalculateFromMarginPerUnit(product)"
+                    >
+                      <template #addonAfter>
+                        <span :style="{ color: context.getMarginColor(product._marginPerUnitInput || 0) }">
+                          PLN
+                        </span>
+                      </template>
+                    </a-input-number>
+                  </div>
+                </div>
+
+                <div v-else class="field-row">
+                  <div class="field-label">{{ col.title }}</div>
+                  <div class="field-value">
+                    <span class="dynamic-field-value">
+                      {{ formatDynamicValue(product[col.key]) }}
+                    </span>
+                  </div>
+                </div>
+
+              </template>
             </template>
           </div>
         </a-card>
       </a-col>
     </a-row>
 
-    <!-- Edit Product Name Modal -->
     <a-modal
       v-model:open="editModalVisible"
       :title="$t('pricing.edit')"
@@ -280,7 +273,6 @@
       </a-form>
     </a-modal>
 
-    <!-- Add/Edit Supplier Modal -->
     <AddSupplierModal
       v-model:open="supplierModalVisible"
       :product-id="currentProductId"
@@ -311,9 +303,9 @@ const VNodes = (props: { vnodes: any }) => props.vnodes
 
 const visibleProducts = computed(() => context.products.value)
 
-const dynamicColumns = computed(() => {
-  const cols = toRaw(context.allColumns?.value || context.allColumns || [])
-  return cols.filter((col: any) => col.isDynamic)
+const sortedVisibleColumns = computed(() => {
+  const cols = toRaw(context.visibleColumns?.value || context.visibleColumns || [])
+  return [...cols].sort((a: any, b: any) => a.order - b.order)
 })
 
 const getProductSuppliers = (productId: string): any[] => {
@@ -325,21 +317,11 @@ const filterSupplierOption = (input: string, option: any) => {
   return label.toLowerCase().includes(input.toLowerCase())
 }
 
-const isColumnVisible = (key: string): boolean => {
-  const cols = toRaw(context.visibleColumns?.value || context.visibleColumns || [])
-  return cols.some((col: any) => col.key === key)
-}
-
-const getColumnTitle = (key: string): string => {
-  const cols = toRaw(context.allColumns?.value || context.allColumns || [])
-  const column = cols.find((col: any) => col.key === key)
-  return column?.title || key
-}
-
 const formatDynamicValue = (value: any): string => {
-  if (value === null || value === undefined) return '-'
+  if (value === null || value === undefined || value === '') return '-'
   if (typeof value === 'boolean') return value ? 'Yes' : 'No'
   if (Array.isArray(value)) return value.join(', ')
+  if (typeof value === 'object') return JSON.stringify(value)
   return String(value)
 }
 
