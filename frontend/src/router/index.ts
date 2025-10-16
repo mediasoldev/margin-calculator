@@ -2,6 +2,7 @@
 
 import { createRouter, createWebHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
+import { licenseGuard } from './licenseGuard'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -46,6 +47,9 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 });
+
+// ✅ Check license before each route
+router.beforeEach(licenseGuard)
 
 // Auto-resize Bitrix24 frame при зміні роуту
 router.afterEach(() => {

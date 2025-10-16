@@ -17,6 +17,7 @@
           </div> -->
 
           <a-menu
+            v-if="isLicenseValid"
             v-model:selectedKeys="selectedKeys"
             :theme="isDarkMode ? 'dark' : 'light'"
             mode="horizontal"
@@ -95,7 +96,7 @@
       :class="{ 'light-header': !isDarkMode }"
     >
       <div class="mobile-header-content">
-        <MenuOutlined @click="drawerVisible = true" class="menu-trigger" />
+        <MenuOutlined v-if="isLicenseValid" @click="drawerVisible = true" class="menu-trigger" />
         <span class="mobile-title">{{ $t("app.name") }}</span>
         <div class="mobile-controls">
           <a-dropdown placement="bottomRight" :trigger="['click']">
@@ -124,6 +125,7 @@
 
     <!-- Mobile Drawer Menu -->
     <a-drawer
+      v-if="isLicenseValid"
       v-model:open="drawerVisible"
       placement="left"
       :width="280"
@@ -146,6 +148,7 @@
       </div>
 
       <a-menu
+        v-if="isLicenseValid"
         v-model:selectedKeys="selectedKeys"
         mode="inline"
         class="drawer-menu"
@@ -216,6 +219,11 @@ import {
 } from "@ant-design/icons-vue";
 import FooterComponent from "@/components/common/FooterComponent.vue";
 import DataCollectionForm from "@/components/common/DataCollectionForm.vue";
+
+// ✅ Check if license is valid
+const isLicenseValid = computed(() => {
+  return window.APP_DATA?.license?.is_valid ?? true
+})
 
 // Composables
 const router = useRouter();

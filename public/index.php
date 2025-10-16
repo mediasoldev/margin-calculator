@@ -94,64 +94,12 @@ $licenseData = [
     'created_at' => $portal['created_at'] ?? null,
 ];
 
-// ✅ Check if license is NOT valid and NOT in activation mode
+// Log license status
 if (!$licenseStatus['is_valid']) {
-    if (isset($_GET['action']) && $_GET['action'] === 'activate_license') {
-        // Allow access to license activation page
-        $logger->info('Accessing license activation page', [
-            'domain' => $params['DOMAIN'],
-            'license_status' => $licenseStatus
-        ]);
-    } else {
-        // Block access - show license expired page
-        $logger->warning('Access blocked - license invalid', [
-            'domain' => $params['DOMAIN'],
-            'license_status' => $licenseStatus
-        ]);
-        
-        // TODO: Create proper license expired page template
-        echo '<!DOCTYPE html>
-        <html>
-        <head>
-            <title>License Required</title>
-            <style>
-                body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-                .error-box { 
-                    max-width: 600px; 
-                    margin: 0 auto; 
-                    padding: 30px; 
-                    border: 2px solid #ff4d4f; 
-                    border-radius: 8px;
-                    background: #fff2f0;
-                }
-                h1 { color: #ff4d4f; }
-                .message { margin: 20px 0; font-size: 16px; }
-                .btn { 
-                    display: inline-block;
-                    padding: 10px 20px;
-                    background: #1890ff;
-                    color: white;
-                    text-decoration: none;
-                    border-radius: 4px;
-                    margin-top: 20px;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="error-box">
-                <h1>⚠️ License Required</h1>
-                <div class="message">
-                    <p><strong>' . htmlspecialchars($licenseStatus['message']) . '</strong></p>
-                    <p>Domain: ' . htmlspecialchars($params['DOMAIN']) . '</p>
-                </div>
-                <a href="?action=activate_license&' . http_build_query($_REQUEST) . '" class="btn">
-                    Activate License
-                </a>
-            </div>
-        </body>
-        </html>';
-        exit;
-    }
+    $logger->warning('License invalid - user will be redirected to license page', [
+        'domain' => $params['DOMAIN'],
+        'license_status' => $licenseStatus
+    ]);
 }
 
 // Update tokens if new ones provided
