@@ -158,14 +158,40 @@
                   v-model:value="product.supplierId"
                   style="width: 100%"
                   :placeholder="$t('pricing.selectSupplier')"
+                  show-search
+                  :filter-option="filterSupplierOption"
                   @change="(value: any) => onSupplierChange(product, value)"
                 >
+                  <template #dropdownRender="{ menuNode }">
+                    <v-nodes :vnodes="menuNode" />
+                    <a-divider style="margin: 4px 0" />
+                    <div
+                      style="padding: 4px 8px; cursor: pointer"
+                      @mousedown="(e: any) => e.preventDefault()"
+                      @click="openAddSupplierModal(product)"
+                    >
+                      <PlusOutlined /> {{ $t('pricing.addSupplier') }}
+                    </div>
+                  </template>
+                  
                   <a-select-option
-                    v-for="supplier in context.suppliers.value"
-                    :key="supplier.id"
-                    :value="supplier.id"
+                    v-for="supplier in getProductSuppliers(product.productId)"
+                    :key="supplier.company_id"
+                    :value="supplier.company_id"
+                    :label="`${supplier.price} ${supplier.currency} - ${supplier.company_name}`"
                   >
-                    {{ supplier.name }}
+                    <div class="supplier-option">
+                      <span class="supplier-price">{{ supplier.price }} {{ supplier.currency }}</span>
+                      <span class="supplier-name">{{ supplier.company_name }}</span>
+                      <a-button
+                        type="link"
+                        size="small"
+                        @click.stop="openEditSupplierModal(product, supplier)"
+                        class="edit-supplier-btn"
+                      >
+                        <EditOutlined />
+                      </a-button>
+                    </div>
                   </a-select-option>
                 </a-select>
               </a-form-item>
@@ -281,7 +307,7 @@
               >
                 <a-form-item :label="col.title">
                   <span class="dynamic-field-value">
-                    {{ product[col.key] || '-' }}
+                    {{ formatDynamicValue(product[col.key]) }}
                   </span>
                 </a-form-item>
               </a-col>
@@ -304,13 +330,23 @@
         </a-form-item>
       </a-form>
     </a-modal>
+
+    <!-- Add/Edit Supplier Modal -->
+    <AddSupplierModal
+      v-model:open="supplierModalVisible"
+      :product-id="currentProductId"
+      :edit-data="editingSupplier"
+      @save="handleSupplierSave"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { inject, computed, ref, toRaw } from 'vue'
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import { message } from 'ant-design-vue'
 import type { Product } from '@/types/pricing.types'
+import AddSupplierModal from '@/components/pricing/AddSupplierModal.vue'
 
 // Inject context from parent
 const context = inject('pricingContext') as any
@@ -320,6 +356,13 @@ const activeKeys = ref<string[]>([])
 const editModalVisible = ref(false)
 const editingProduct = ref<Product | null>(null)
 const editingName = ref('')
+const supplierModalVisible = ref(false)
+const currentProductId = ref<string>('')
+const currentProduct = ref<Product | null>(null)
+const editingSupplier = ref<any>(null)
+
+// Helper component for vnodes rendering
+const VNodes = (props: { vnodes: any }) => props.vnodes
 
 // Computed
 const visibleProducts = computed(() => context.products.value)
@@ -328,6 +371,17 @@ const dynamicColumns = computed(() => {
   const cols = toRaw(context.allColumns?.value || context.allColumns || [])
   return cols.filter((col: any) => col.isDynamic)
 })
+
+// Get suppliers for product
+const getProductSuppliers = (productId: string): any[] => {
+  return context.getSuppliersForProduct(productId) || []
+}
+
+// Filter supplier options for search
+const filterSupplierOption = (input: string, option: any) => {
+  const label = option.label || ''
+  return label.toLowerCase().includes(input.toLowerCase())
+}
 
 // Helper methods
 const isColumnVisible = (key: string): boolean => {
@@ -345,6 +399,14 @@ const getMarginTagColor = (margin: number): string => {
   if (margin > 0) return 'green'
   if (margin < 0) return 'red'
   return 'default'
+}
+
+// Format dynamic field values
+const formatDynamicValue = (value: any): string => {
+  if (value === null || value === undefined) return '-'
+  if (typeof value === 'boolean') return value ? 'Yes' : 'No'
+  if (Array.isArray(value)) return value.join(', ')
+  return String(value)
 }
 
 // Handlers
@@ -373,9 +435,70 @@ const deleteProduct = (product: Product) => {
   }
 }
 
-const onSupplierChange = (product: Product, supplierId: string) => {
-  console.log('Supplier changed:', supplierId)
-  // TODO: Fetch supplier price from storage
+// Supplier change
+const onSupplierChange = async (product: Product, supplierId: string) => {
+  console.log('[PricingAccordion] Supplier changed:', supplierId)
+  
+  const suppliers = getProductSuppliers(product.productId)
+  const supplier = suppliers.find(s => s.company_id === supplierId)
+  
+  if (supplier) {
+    product.purchasePrice = supplier.price
+    product.purchaseCurrency = supplier.currency
+    product.supplierId = supplier.company_id
+    product.supplierName = supplier.company_name
+    
+    context.calculateProductValues(product)
+    message.success(`Supplier selected: ${supplier.company_name}`)
+  }
+}
+
+// Open Add Supplier Modal
+const openAddSupplierModal = (product: Product) => {
+  currentProductId.value = product.productId
+  currentProduct.value = product
+  editingSupplier.value = null
+  supplierModalVisible.value = true
+}
+
+// Open Edit Supplier Modal
+const openEditSupplierModal = (product: Product, supplier: any) => {
+  currentProductId.value = product.productId
+  currentProduct.value = product
+  editingSupplier.value = {
+    companyId: supplier.company_id,
+    companyName: supplier.company_name,
+    price: supplier.price,
+    currency: supplier.currency
+  }
+  supplierModalVisible.value = true
+}
+
+// Handle Supplier Save
+const handleSupplierSave = async (data: any) => {
+  try {
+    if (editingSupplier.value) {
+      await context.updateSupplierPrice(
+        currentProductId.value,
+        data.companyId,
+        data.price,
+        data.currency
+      )
+      message.success('Supplier updated successfully')
+    } else {
+      await context.addSupplierForProduct(
+        currentProductId.value,
+        data.companyId,
+        data.companyName,
+        data.price,
+        data.currency
+      )
+      message.success('Supplier added successfully')
+    }
+  } catch (error) {
+    message.error('Failed to save supplier')
+    console.error('[PricingAccordion] Error saving supplier:', error)
+  }
 }
 </script>
 
@@ -459,6 +582,27 @@ const onSupplierChange = (product: Product, supplierId: string) => {
 .dynamic-field-value {
   color: var(--text-color-secondary);
   font-size: 13px;
+}
+
+.supplier-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.supplier-price {
+  font-weight: 600;
+  color: var(--primary-color);
+  min-width: 80px;
+}
+
+.supplier-name {
+  flex: 1;
+}
+
+.edit-supplier-btn {
+  padding: 0 4px;
+  min-width: auto;
 }
 
 /* Responsive */

@@ -152,7 +152,7 @@ export default {
     currencyInfo: "Currency Information",
     currencyRates: "Exchange Rates",
     
-    // Column names
+    // Column names (main fields)
     product: "Product",
     productName: "Product Name",
     quantity: "Quantity",
@@ -180,7 +180,8 @@ export default {
     addProduct: "Add Product",
     edit: "Edit",
     selectSupplier: "Select Supplier",
-    
+    loadFromBitrix: "Load from Bitrix",
+
     // Column settings modal
     columnSettings: "Column Settings",
     columnSettingsInfo: "Drag to reorder columns. Required columns cannot be hidden but can be reordered.",
@@ -189,6 +190,8 @@ export default {
     availableColumns: "Available Columns",
     alwaysVisible: "Always Visible",
     required: "Required",
+    readOnly: "Read-only",
+    editableField: "Editable",
     optional: "Optional",
     productField: "Product Field",
     resetToDefaults: "Reset to Defaults",
@@ -199,17 +202,35 @@ export default {
     status: "Status",
     showAll: "Show All",
     hideOptional: "Hide Optional",
-    
+
     // Summary
     totalAmount: "Total Amount",
     productMargin: "Product Margin",
     
     // Messages
     productsLoaded: "Products loaded successfully",
+    loadedFromBitrix: "Products loaded from Bitrix24 successfully",
     loadError: "Error loading products",
     priceLoadError: "Error loading supplier price",
     saveSuccess: "Calculation saved successfully",
     saveError: "Error saving calculation",
+    
+    // Comparison status messages
+    savedMatchesDeal: "✓ Saved calculation matches current deal",
+    savedDiffersFromDeal: "⚠ Saved calculation differs from current deal",
+    notCalculatedYet: "ℹ Calculation not saved yet",
+    
+    // Supplier modal
+    addSupplier: "Add Supplier",
+    editSupplier: "Edit Supplier",
+    company: "Company",
+    selectCompany: "Select Company",
+    currency: "Currency",
+    selectCurrency: "Select Currency",
+    enterPrice: "Enter Price",
+    pleaseSelectCompany: "Please select a company",
+    pleaseEnterValidPrice: "Please enter a valid price",
+    pleaseSelectCurrency: "Please select a currency",
     
     // Placeholder
     cardsViewComingSoon: "Cards view - Coming soon",
@@ -219,5 +240,33 @@ export default {
     unnamed: "Unnamed Product",
     packaging: "Packaging",
     marginCalculation: "Margin Calculation",
+    
+    // Dynamic ProductRow fields (from Bitrix24 API)
+    ID: "ID",
+    OWNER_ID: "Owner ID",
+    OWNER_TYPE: "Owner Type",
+    PRODUCT_ID: "Product ID",
+    PRICE: "Price",
+    PRICE_EXCLUSIVE: "Discounted price without tax",
+    PRICE_NETTO: "Price Netto",
+    PRICE_BRUTTO: "Price Brutto",
+    DISCOUNT_TYPE_ID: "Discount Type",
+    DISCOUNT_RATE: "Discount Value",
+    DISCOUNT_SUM: "Discount Amount",
+    TAX_RATE: "Tax",
+    TAX_INCLUDED: "Tax Included",
+    CUSTOMIZED: "Modified On",
+    MEASURE_CODE: "Unit of Measurement Code",
+    MEASURE_NAME: "Unit of Measurement",
+    SORT: "Sort",
+    TYPE: "Type",
+    ORIGINAL_PRODUCT_NAME: "Original Product Name",
+    PRODUCT_DESCRIPTION: "Product Description",
+    PRICE_ACCOUNT: "Price Account",
+    XML_ID: "XML ID",
+    STORE_ID: "Store",
+    RESERVE_ID: "Reserve ID",
+    RESERVE_QUANTITY: "Reserve Quantity",
+    DATE_RESERVE_END: "Reserve End Date",
   },
 };

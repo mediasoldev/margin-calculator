@@ -129,8 +129,9 @@
 
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
-import { DEFAULT_COLUMNS, DYNAMIC_FIELDS_MOCK } from '@/config/defaultColumns.config'
+import { DEFAULT_COLUMNS } from '@/config/defaultColumns.config'
 import { useI18n } from 'vue-i18n'
+import type { ColumnConfig } from '@/types/pricing.types'
 import draggable from 'vuedraggable'
 import { 
   HolderOutlined, 
@@ -141,16 +142,7 @@ import {
 
 const { t } = useI18n()
 
-// Types
-interface ColumnConfig {
-  key: string
-  title: string
-  required: boolean
-  locked: boolean
-  visible: boolean
-  order: number
-  isDynamic?: boolean  // For Bitrix24 product fields
-}
+
 
 // Props
 interface Props {
@@ -201,12 +193,9 @@ const getDefaultColumns = (): ColumnConfig[] => {
     title: t(`pricing.${col.key}`)
   }))
   
-  const dynamicFields = DYNAMIC_FIELDS_MOCK.map(col => ({
-    ...col,
-    title: col.key // або title з API
-  }))
+
   
-  return [...staticColumns, ...dynamicFields]
+  return [...staticColumns]
 }
 
 // Handlers
@@ -247,7 +236,7 @@ const showAllColumns = () => {
 
 const hideOptionalColumns = () => {
   allColumnsList.value.forEach(col => {
-    if (!col.locked && !col.isDynamic) {
+    if (!col.locked && !col.editable) {
       col.visible = false
     }
   })

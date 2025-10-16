@@ -2,7 +2,7 @@
 
 <template>
   <div class="pricing-calculator">
-    <!-- Currency Exchange Rates Bar - Compact -->
+    <!-- Currency Exchange Rates Bar -->
     <a-card class="currency-card compact">
       <div class="currency-rates-inline">
         <span class="rates-label">{{ $t("pricing.currencyInfo") }}:</span>
@@ -45,7 +45,7 @@
       </div>
     </a-card>
 
-    <!-- Toolbar - Compact -->
+    <!-- Toolbar -->
     <a-card class="toolbar-card compact">
       <div class="toolbar-inline">
         <a-space size="small">
@@ -62,9 +62,13 @@
             </a-radio-button>
           </a-radio-group>
         </a-space>
+
         <a-space size="small">
           <a-button size="small" @click="openColumnSettings">
             <SettingOutlined /> {{ $t("pricing.columns") }}
+          </a-button>
+          <a-button size="small" @click="handleLoadFromBitrix" :loading="loading">
+            <SyncOutlined /> {{ $t("pricing.loadFromBitrix") }}
           </a-button>
           <a-button size="small" @click="handleRefresh" :loading="loading">
             <ReloadOutlined /> {{ $t("pricing.refresh") }}
@@ -75,6 +79,34 @@
 
     <!-- View Mode Content -->
     <a-card class="content-card">
+      <!-- Comparison Status Alert -->
+      <div v-if="columnsReady" class="comparison-status-inline">
+        <a-alert
+          v-if="comparisonStatus === 'matches'"
+          :message="$t('pricing.savedMatchesDeal')"
+          type="success"
+          show-icon
+          closable
+          banner
+        />
+        <a-alert
+          v-else-if="comparisonStatus === 'differs'"
+          :message="$t('pricing.savedDiffersFromDeal')"
+          type="warning"
+          show-icon
+          closable
+          banner
+        />
+        <a-alert
+          v-else-if="comparisonStatus === 'not_saved'"
+          :message="$t('pricing.notCalculatedYet')"
+          type="info"
+          show-icon
+          closable
+          banner
+        />
+      </div>
+
       <div v-if="!columnsReady" style="padding: 40px; text-align: center;">
         <a-spin size="large" />
       </div>
@@ -138,6 +170,7 @@
 <script setup lang="ts">
 import { ref, provide, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
+import { usePricingData } from '@/composables/usePricingData'
 import { message } from "ant-design-vue";
 import {
   TableOutlined,
@@ -145,6 +178,7 @@ import {
   MenuUnfoldOutlined,
   SettingOutlined,
   ReloadOutlined,
+  SyncOutlined,
 } from "@ant-design/icons-vue";
 
 // Components
@@ -154,17 +188,14 @@ import PricingAccordion from "@/components/pricing/accordion/PricingAccordion.vu
 import ColumnSettingsModal from "@/components/pricing/ColumnSettingsModal.vue";
 
 // Types & Composables
-import type { Product, Supplier, ExchangeRates, ViewMode } from "@/types/pricing.types";
+import type { ExchangeRates, ViewMode } from "@/types/pricing.types";
 import { usePricingCalculations } from "@/composables/usePricingCalculations";
 import { useCurrencyConversion } from "@/composables/useCurrencyConversion";
 import { useColumnManagement } from "@/composables/useColumnManagement";
 
 const { t } = useI18n();
 
-// ============================================================================
-// STATE
-// ============================================================================
-
+// State
 const loading = ref(false);
 const saving = ref(false);
 const viewMode = ref<ViewMode>("table");
@@ -178,38 +209,27 @@ const exchangeRates = ref<ExchangeRates>({
   eurToUsd: 1.08,
 });
 
-// Products
-const products = ref<Product[]>([
-  {
-    id: "1",
-    name: "Pink Paradise Slippers",
-    quantity: 2,
-    salePrice: 400,
-    saleCurrency: "PLN",
-    purchasePrice: 200,
-    purchaseCurrency: "PLN",
-    transportCost: 0,
-    transportCurrency: "PLN",
-    packagingCost: 0,
-    packagingCurrency: "PLN",
-    PRODUCT_ID: "12345",
-    MEASURE_NAME: "pcs",
-    DISCOUNT_RATE: "0",
-    TAX_RATE: "23",
-  },
-]);
+// Data loading
+const {
+  products,
+  suppliers,
+  loading: dataLoading,
+  error: dataError,
+  productFields,
+  dealCurrency,
+  comparisonStatus,
+  supplierPricesMap,
+  initialize,
+  loadDealData,
+  saveCalculation: saveData,
+  resetToOriginal,
+  hasUnsavedChanges,
+  addSupplierForProduct,
+  updateSupplierPrice,
+  getSuppliersForProduct
+} = usePricingData()
 
-// Suppliers
-const suppliers = ref<Supplier[]>([
-  { id: "1", name: "Supplier A" },
-  { id: "2", name: "Supplier B" },
-  { id: "3", name: "Supplier C" },
-]);
-
-// ============================================================================
-// COMPOSABLES
-// ============================================================================
-
+// Calculations
 const {
   calculateProductValues,
   recalculateFromMarginPercent,
@@ -219,22 +239,20 @@ const {
   totals: calculatedTotals,
 } = usePricingCalculations(products, exchangeRates);
 
+// Currency
 const { formatCurrency, getMarginColor } = useCurrencyConversion(exchangeRates);
 
+// ✅ SIMPLIFIED: Column management without dynamic loading
 const {
   allColumns,
   visibleColumns,
-  loadColumnsConfig,
+  initializeColumns,
   saveColumnsConfig,
-  isDynamicColumn,
+  isReadOnlyColumn,
 } = useColumnManagement();
 
-// ============================================================================
-// PROVIDE CONTEXT TO CHILD COMPONENTS
-// ============================================================================
-
+// Provide context to child components
 provide("pricingContext", {
-  // State (as refs - передаємо сам ref)
   products,
   exchangeRates,
   totals: calculatedTotals,
@@ -243,30 +261,23 @@ provide("pricingContext", {
   loading,
   saving,
   columnsReady,
-  
-  // Columns (передаємо ref напряму)
   allColumns,
   visibleColumns,
-  
-  // Methods - Calculations
+  supplierPricesMap,
   calculateProductValues,
   recalculateFromMarginPercent,
   recalculateFromTotalMargin,
   recalculateFromMarginPerUnit,
   recalculateAll,
-  
-  // Methods - Currency
   formatCurrency,
   getMarginColor,
-  
-  // Methods - Columns
-  isDynamicColumn,
+  isReadOnlyColumn,
+  addSupplierForProduct,
+  updateSupplierPrice,
+  getSuppliersForProduct
 });
 
-// ============================================================================
-// HANDLERS
-// ============================================================================
-
+// Handlers
 const handleRatesChange = () => {
   recalculateAll();
 };
@@ -284,11 +295,23 @@ const handleColumnsSave = (columns: any[]) => {
   }
 };
 
+const handleLoadFromBitrix = async () => {
+  loading.value = true;
+  try {
+    await resetToOriginal()
+    recalculateAll();
+    message.success(t("pricing.loadedFromBitrix"));
+  } catch (error) {
+    message.error(t("pricing.loadError"));
+  } finally {
+    loading.value = false;
+  }
+};
+
 const handleRefresh = async () => {
   loading.value = true;
   try {
-    // TODO: Fetch products from Bitrix24
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await initialize()
     recalculateAll();
     message.success(t("pricing.productsLoaded"));
   } catch (error) {
@@ -299,27 +322,43 @@ const handleRefresh = async () => {
 };
 
 const handleSave = async () => {
-  saving.value = true;
+  saving.value = true
   try {
-    // TODO: Save to Bitrix24
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    message.success(t("pricing.saveSuccess"));
+    await saveData(exchangeRates.value, calculatedTotals.value)
+    message.success(t('pricing.saveSuccess'))
   } catch (error) {
-    message.error(t("pricing.saveError"));
+    message.error(t('pricing.saveError'))
   } finally {
-    saving.value = false;
+    saving.value = false
   }
-};
+}
 
-// ============================================================================
-// LIFECYCLE
-// ============================================================================
+// ✅ SIMPLIFIED: Lifecycle without dynamic column loading
+onMounted(async () => {
+  try {
+    console.log('[PricingCalculator] Initializing...')
+    
+    // Step 1: Initialize columns (all predefined)
+    initializeColumns()
+    columnsReady.value = true
+    
+    // Step 2: Load deal data
+    await initialize()
+    
+    // Step 3: Calculate
+    recalculateAll()
+    
+    console.log('[PricingCalculator] Initialization complete:', {
+      products: products.value.length,
+      allColumns: allColumns.value.length,
+      visibleColumns: visibleColumns.value.length
+    })
+  } catch (err) {
+    console.error('[PricingCalculator] Initialization error:', err)
+    message.error(t('pricing.loadError'))
+  }
+})
 
-onMounted(() => {
-  loadColumnsConfig();
-  columnsReady.value = true;
-  recalculateAll();
-});
 </script>
 
 <style scoped>
@@ -327,7 +366,6 @@ onMounted(() => {
   padding: 12px;
 }
 
-/* Compact cards */
 .currency-card.compact,
 .toolbar-card.compact,
 .content-card,
@@ -340,7 +378,6 @@ onMounted(() => {
   padding: 12px 16px;
 }
 
-/* Currency rates inline */
 .currency-rates-inline {
   display: flex;
   align-items: center;
@@ -366,7 +403,6 @@ onMounted(() => {
   min-width: 70px;
 }
 
-/* Toolbar inline */
 .toolbar-inline {
   display: flex;
   justify-content: space-between;
@@ -380,7 +416,15 @@ onMounted(() => {
   color: var(--text-color);
 }
 
-/* Summary */
+.comparison-status-inline {
+  margin-bottom: 16px;
+}
+
+.comparison-status-inline :deep(.ant-alert) {
+  padding: 8px 15px;
+  font-size: 13px;
+}
+
 .summary-card :deep(.ant-card-body) {
   padding: 16px;
 }
@@ -406,7 +450,6 @@ onMounted(() => {
   color: rgba(255, 255, 255, 0.65);
 }
 
-/* Sticky currency bar */
 .currency-card.compact {
   position: sticky;
   top: 0;
@@ -418,7 +461,6 @@ onMounted(() => {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .pricing-calculator {
     padding: 8px;

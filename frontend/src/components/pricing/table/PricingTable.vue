@@ -115,23 +115,51 @@
           </a-input-number>
         </template>
 
-        <!-- Supplier column -->
+        <!-- Supplier column with custom select -->
         <template v-else-if="column.key === 'supplier'">
-          <a-select
-            v-model:value="record.supplierId"
-            style="width: 100%"
-            size="small"
-            :placeholder="$t('pricing.selectSupplier')"
-            @change="(value: any) => onSupplierChange(record, value)"
-          >
-            <a-select-option
-              v-for="supplier in context.suppliers.value"
-              :key="supplier.id"
-              :value="supplier.id"
+          <div class="supplier-select-wrapper">
+            <a-select
+              v-model:value="record.supplierId"
+              style="width: 100%"
+              size="small"
+              :placeholder="$t('pricing.selectSupplier')"
+              show-search
+              :filter-option="filterSupplierOption"
+              @change="(value: any) => onSupplierChange(record, value)"
             >
-              {{ supplier.name }}
-            </a-select-option>
-          </a-select>
+              <template #dropdownRender="{ menuNode }">
+                <v-nodes :vnodes="menuNode" />
+                <a-divider style="margin: 4px 0" />
+                <div
+                  style="padding: 4px 8px; cursor: pointer"
+                  @mousedown="(e: any) => e.preventDefault()"
+                  @click="openAddSupplierModal(record)"
+                >
+                  <PlusOutlined /> {{ $t('pricing.addSupplier') }}
+                </div>
+              </template>
+              
+              <a-select-option
+                v-for="supplier in getProductSuppliers(record.productId)"
+                :key="supplier.company_id"
+                :value="supplier.company_id"
+                :label="`${supplier.price} ${supplier.currency} - ${supplier.company_name}`"
+              >
+                <div class="supplier-option">
+                  <span class="supplier-price">{{ supplier.price }} {{ supplier.currency }}</span>
+                  <span class="supplier-name">{{ supplier.company_name }}</span>
+                  <a-button
+                    type="link"
+                    size="small"
+                    @click.stop="openEditSupplierModal(record, supplier)"
+                    class="edit-supplier-btn"
+                  >
+                    <EditOutlined />
+                  </a-button>
+                </div>
+              </a-select-option>
+            </a-select>
+          </div>
         </template>
 
         <!-- Transport Cost column -->
@@ -224,21 +252,31 @@
           </a-button>
         </template>
 
-        <!-- Dynamic product fields (read-only) -->
-        <template v-else-if="context.isDynamicColumn(column.key)">
+        <!-- ✅ FIX: Dynamic columns (read-only) - render all other fields -->
+        <template v-else>
           <span class="dynamic-field-value">
-            {{ record[column.key] || '-' }}
+            {{ formatDynamicValue(record[column.key]) }}
           </span>
         </template>
       </template>
     </a-table>
+
+    <!-- Add/Edit Supplier Modal -->
+    <AddSupplierModal
+      v-model:open="supplierModalVisible"
+      :product-id="currentProductId"
+      :edit-data="editingSupplier"
+      @save="handleSupplierSave"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, inject, computed, nextTick, toRaw } from 'vue'
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons-vue'
+import { ref, inject, computed, nextTick, watch } from 'vue'
+import { EditOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons-vue'
+import { message } from 'ant-design-vue'
 import type { Product } from '@/types/pricing.types'
+import AddSupplierModal from '@/components/pricing/AddSupplierModal.vue'
 
 // Inject context from parent
 const context = inject('pricingContext') as any
@@ -246,11 +284,29 @@ const context = inject('pricingContext') as any
 // Local state
 const editingProductId = ref<string | null>(null)
 const productNameInput = ref<any>(null)
+const supplierModalVisible = ref(false)
+const currentProductId = ref<string>('')
+const currentProduct = ref<Product | null>(null)
+const editingSupplier = ref<any>(null)
 
-// Computed table columns
+// Helper component for vnodes rendering
+const VNodes = (props: { vnodes: any }) => props.vnodes
+
+// ✅ FIX: Watch for column changes and force re-render
 const tableColumns = computed(() => {
-  const cols = toRaw(context.visibleColumns?.value || context.visibleColumns || [])
-  return cols.map((col: any) => ({
+  // Force reactivity by accessing both sources
+  const allCols = context.allColumns?.value || context.allColumns || []
+  const visibleCols = context.visibleColumns?.value || context.visibleColumns || []
+  
+  console.log('[PricingTable] Recomputing columns:', {
+    allCount: allCols.length,
+    visibleCount: visibleCols.length
+  })
+  
+  // Sort by order to ensure correct column sequence
+  const sortedVisible = [...visibleCols].sort((a: any, b: any) => a.order - b.order)
+  
+  return sortedVisible.map((col: any) => ({
     title: col.title,
     key: col.key,
     dataIndex: col.key,
@@ -258,6 +314,26 @@ const tableColumns = computed(() => {
     ...(col.width && { width: col.width }),
   }))
 })
+
+// Watch for column configuration changes
+watch(
+  () => context.allColumns?.value || context.allColumns,
+  (newColumns) => {
+    console.log('[PricingTable] Columns configuration changed:', newColumns?.length)
+  },
+  { deep: true }
+)
+
+// Get suppliers for product
+const getProductSuppliers = (productId: string): any[] => {
+  return context.getSuppliersForProduct(productId) || []
+}
+
+// Filter supplier options for search
+const filterSupplierOption = (input: string, option: any) => {
+  const label = option.label || ''
+  return label.toLowerCase().includes(input.toLowerCase())
+}
 
 // Product name editing
 const startEditingProduct = (product: Product) => {
@@ -272,9 +348,69 @@ const stopEditingProduct = () => {
 }
 
 // Supplier change
-const onSupplierChange = (product: Product, supplierId: string) => {
-  console.log('Supplier changed:', supplierId)
-  // TODO: Fetch supplier price from storage
+const onSupplierChange = async (product: Product, supplierId: string) => {
+  console.log('[PricingTable] Supplier changed:', supplierId)
+  
+  const suppliers = getProductSuppliers(product.productId)
+  const supplier = suppliers.find(s => s.company_id === supplierId)
+  
+  if (supplier) {
+    product.purchasePrice = supplier.price
+    product.purchaseCurrency = supplier.currency
+    product.supplierId = supplier.company_id
+    product.supplierName = supplier.company_name
+    
+    context.calculateProductValues(product)
+    message.success(`Supplier selected: ${supplier.company_name}`)
+  }
+}
+
+// Open Add Supplier Modal
+const openAddSupplierModal = (product: Product) => {
+  currentProductId.value = product.productId
+  currentProduct.value = product
+  editingSupplier.value = null
+  supplierModalVisible.value = true
+}
+
+// Open Edit Supplier Modal
+const openEditSupplierModal = (product: Product, supplier: any) => {
+  currentProductId.value = product.productId
+  currentProduct.value = product
+  editingSupplier.value = {
+    companyId: supplier.company_id,
+    companyName: supplier.company_name,
+    price: supplier.price,
+    currency: supplier.currency
+  }
+  supplierModalVisible.value = true
+}
+
+// Handle Supplier Save
+const handleSupplierSave = async (data: any) => {
+  try {
+    if (editingSupplier.value) {
+      await context.updateSupplierPrice(
+        currentProductId.value,
+        data.companyId,
+        data.price,
+        data.currency
+      )
+      message.success('Supplier updated successfully')
+    } else {
+      await context.addSupplierForProduct(
+        currentProductId.value,
+        data.companyId,
+        data.companyName,
+        data.price,
+        data.currency
+      )
+      message.success('Supplier added successfully')
+    }
+  } catch (error) {
+    message.error('Failed to save supplier')
+    console.error('[PricingTable] Error saving supplier:', error)
+  }
 }
 
 // Delete product
@@ -283,6 +419,15 @@ const deleteProduct = (product: Product) => {
   if (index > -1) {
     context.products.value.splice(index, 1)
   }
+}
+
+// ✅ FIX: Format dynamic field values with better handling
+const formatDynamicValue = (value: any): string => {
+  if (value === null || value === undefined || value === '') return '-'
+  if (typeof value === 'boolean') return value ? 'Yes' : 'No'
+  if (Array.isArray(value)) return value.join(', ')
+  if (typeof value === 'object') return JSON.stringify(value)
+  return String(value)
 }
 </script>
 
@@ -319,7 +464,6 @@ const deleteProduct = (product: Product) => {
   border-right: 1px solid var(--ant-border-color);
 }
 
-/* Product cell */
 .product-cell {
   display: flex;
   align-items: center;
@@ -340,20 +484,43 @@ const deleteProduct = (product: Product) => {
   min-width: auto;
 }
 
-/* Price input groups */
 .price-input-group {
   display: flex;
   gap: 4px;
   align-items: center;
 }
 
-/* Dynamic fields */
+.supplier-select-wrapper {
+  width: 100%;
+}
+
+.supplier-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.supplier-price {
+  font-weight: 600;
+  color: var(--primary-color);
+  min-width: 80px;
+}
+
+.supplier-name {
+  flex: 1;
+}
+
+.edit-supplier-btn {
+  padding: 0 4px;
+  min-width: auto;
+}
+
 .dynamic-field-value {
   color: var(--text-color-secondary);
   font-size: 12px;
+  word-break: break-word;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
   .price-input-group {
     flex-direction: column;
