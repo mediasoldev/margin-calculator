@@ -45,7 +45,7 @@ export default {
   },
 
   home: {
-    title: "Calculateur de marge pour Bitrix24",
+    title: "Calculate in Deal",
     description:
       "Évaluez rapidement la rentabilité des produits en tenant compte du prix d'achat, du transport, de l'emballage et des taux de change",
 

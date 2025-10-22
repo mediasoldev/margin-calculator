@@ -29,7 +29,6 @@ export class Bitrix24Service {
     return new Promise((resolve) => {
       if (window.BX24) {
         window.BX24.init(() => {
-          console.log('[BX24] Initialized successfully')
           resolve()
         })
       } else {
@@ -48,7 +47,6 @@ export class Bitrix24Service {
     if (window.BX24) {
       try {
         const info = window.BX24.placement.info()
-        console.log('[BX24] Placement info:', info)
         return info
       } catch (error) {
         console.error('[BX24] Error getting placement info:', error)
@@ -80,7 +78,6 @@ export class Bitrix24Service {
         return
       }
 
-      console.log(`[BX24] Calling ${method}`, params)
 
       window.BX24.callMethod(method, params || {}, (result: any) => {
         if (result.error()) {
@@ -89,7 +86,6 @@ export class Bitrix24Service {
           reject(error)
         } else {
           const data = result.data()
-          console.log(`[BX24] Success ${method}:`, data)
           resolve(data)
         }
       })
@@ -111,11 +107,7 @@ export class Bitrix24Service {
         return
       }
 
-      console.log('[BX24] Calling batch:', Object.keys(commands))
-
       window.BX24.callBatch(commands, (result: any) => {
-        console.log('[BX24] Batch result:', result)
-
         // Extract data from each command result
         const data: Record<string, any> = {}
         let hasErrors = false
@@ -175,7 +167,7 @@ export class Bitrix24Service {
    * Show success notification (if available)
    */
   public showSuccess(message: string): void {
-    console.log('[BX24] Success:', message)
+    // 
   }
 }
 

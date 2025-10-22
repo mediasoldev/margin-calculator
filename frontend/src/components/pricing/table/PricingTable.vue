@@ -297,11 +297,7 @@ const tableColumns = computed(() => {
   // Force reactivity by accessing both sources
   const allCols = context.allColumns?.value || context.allColumns || []
   const visibleCols = context.visibleColumns?.value || context.visibleColumns || []
-  
-  console.log('[PricingTable] Recomputing columns:', {
-    allCount: allCols.length,
-    visibleCount: visibleCols.length
-  })
+
   
   // Sort by order to ensure correct column sequence
   const sortedVisible = [...visibleCols].sort((a: any, b: any) => a.order - b.order)
@@ -319,7 +315,7 @@ const tableColumns = computed(() => {
 watch(
   () => context.allColumns?.value || context.allColumns,
   (newColumns) => {
-    console.log('[PricingTable] Columns configuration changed:', newColumns?.length)
+    // 
   },
   { deep: true }
 )
@@ -349,7 +345,6 @@ const stopEditingProduct = () => {
 
 // Supplier change
 const onSupplierChange = async (product: Product, supplierId: string) => {
-  console.log('[PricingTable] Supplier changed:', supplierId)
   
   const suppliers = getProductSuppliers(product.productId)
   const supplier = suppliers.find(s => s.company_id === supplierId)

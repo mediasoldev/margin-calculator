@@ -369,7 +369,6 @@ const deleteProduct = (product: Product) => {
 }
 
 const onSupplierChange = async (product: Product, supplierId: string) => {
-  console.log('[PricingAccordion] Supplier changed:', supplierId)
   
   const suppliers = getProductSuppliers(product.productId)
   const supplier = suppliers.find(s => s.company_id === supplierId)

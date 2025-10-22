@@ -40,7 +40,6 @@ import type {
   PostMessageToIframe
 } from '@/types/dataCollection.types'
 
-console.log({DATA_COLLECTION_CONFIG})
 // Composables
 const { license, fetchLicense } = useLicense()
 const bx24 = useBX24()
@@ -170,7 +169,6 @@ const checkAndShowForm = async (): Promise<void> => {
   if (!DATA_COLLECTION_CONFIG.enabled) {
     return
   }
-console.log({license})
 
 
   // Check if license is trial

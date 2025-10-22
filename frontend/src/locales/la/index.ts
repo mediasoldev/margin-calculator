@@ -45,7 +45,7 @@ export default {
   },
 
   home: {
-    title: "Calculadora de Margen para Bitrix24",
+    title: "Calculate in Deal",
     description:
       "Evalúa rápidamente la rentabilidad de los productos considerando precio de compra, transporte, embalaje y tasas de cambio",
 

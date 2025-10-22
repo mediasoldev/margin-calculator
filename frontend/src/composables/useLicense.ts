@@ -112,14 +112,6 @@ export function useLicense() {
         throw new Error('License data not available in APP_DATA')
       }
 
-      console.log('[useLicense] Loading from APP_DATA:', {
-        domain: licenseData.licensed_to,
-        isTrial: licenseData.is_trial,
-        isValid: licenseData.is_valid,
-        expiresAt: licenseData.expires_at,
-        daysRemaining: licenseData.days_remaining
-      })
-
       // ✅ Map APP_DATA.license to License object
       const mappedLicense: License = {
         licenseKey: licenseData.license_key || null,
@@ -134,12 +126,6 @@ export function useLicense() {
       }
 
       license.value = mappedLicense
-
-      console.log('[useLicense] License loaded successfully:', {
-        status: licenseStatus.value,
-        daysLeft: daysLeft.value.days,
-        isValid: isLicenseValid.value
-      })
 
       return {
         success: true,

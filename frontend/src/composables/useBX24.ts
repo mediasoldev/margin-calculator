@@ -40,7 +40,6 @@ export function useBX24() {
           }
         });
       } else {
-        console.log("Mock call:", method, params);
         resolve({ mock: true });
       }
     });

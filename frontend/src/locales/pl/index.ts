@@ -45,7 +45,7 @@ export default {
   },
 
   home: {
-    title: "Kalkulator marży dla Bitrix24",
+    title: "Calculate in Deal",
     description:
       "Szybko oceniaj rentowność produktów uwzględniając cenę zakupu, transport, opakowanie i kursy walut",
 

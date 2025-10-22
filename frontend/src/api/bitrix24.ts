@@ -102,7 +102,6 @@ export const saveSupplierPrice = async (price: SupplierPrice): Promise<boolean> 
   // TODO: Implement actual Bitrix24 API call
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Saving supplier price:', price)
       resolve(true)
     }, 300)
   })
@@ -117,8 +116,7 @@ export const saveDealToBitrix = async (data: {
   // TODO: Implement actual Bitrix24 API call
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      console.log('Saving to Bitrix24 deal:', data)
-      
+     
       // Mock validation
       if (data.products.length === 0) {
         reject(new Error('No products to save'))
@@ -175,7 +173,6 @@ export const loadDealProducts = async (dealId: string): Promise<BitrixProduct[]>
   // TODO: Implement actual Bitrix24 API call
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Loading products for deal:', dealId)
       resolve([])
     }, 500)
   })
@@ -189,7 +186,6 @@ export const updateDealFields = async (
   // TODO: Implement actual Bitrix24 API call
   return new Promise((resolve) => {
     setTimeout(() => {
-      console.log('Updating deal fields:', dealId, fields)
       resolve(true)
     }, 500)
   })

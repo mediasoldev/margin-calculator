@@ -28,13 +28,11 @@ export function useColumnManagement() {
    * Load from localStorage or use defaults
    */
   const initializeColumns = () => {
-    console.log('[ColumnManagement] Initializing columns...')
 
     // Try to load saved configuration
     const savedConfig = loadColumnsConfig()
     
     if (savedConfig && savedConfig.length > 0) {
-      console.log('[ColumnManagement] Using saved configuration:', savedConfig.length)
       
       // Apply translations to saved config
       allColumns.value = savedConfig.map(col => ({
@@ -42,7 +40,6 @@ export function useColumnManagement() {
         title: t(`pricing.${col.key}`)
       }))
     } else {
-      console.log('[ColumnManagement] Using default configuration')
       
       // Create from defaults with translations
       allColumns.value = DEFAULT_COLUMNS.map(col => ({
@@ -51,12 +48,6 @@ export function useColumnManagement() {
       }))
     }
 
-    console.log('[ColumnManagement] Initialized columns:', {
-      total: allColumns.value.length,
-      visible: visibleColumns.value.length,
-      editable: allColumns.value.filter(c => c.editable).length,
-      readOnly: allColumns.value.filter(c => !c.editable).length
-    })
   }
 
   /**
@@ -67,7 +58,6 @@ export function useColumnManagement() {
       const saved = localStorage.getItem(STORAGE_KEYS.COLUMNS_CONFIG)
       if (saved) {
         const parsed = JSON.parse(saved)
-        console.log('[ColumnManagement] Loaded saved config:', parsed.length)
         return parsed
       }
     } catch (error) {
@@ -95,7 +85,6 @@ export function useColumnManagement() {
         title: t(`pricing.${col.key}`) || col.title
       }))
       
-      console.log('[ColumnManagement] Saved configuration:', columns.length)
     } catch (error) {
       console.error('[ColumnManagement] Error saving config:', error)
     }
@@ -110,7 +99,6 @@ export function useColumnManagement() {
       ...col,
       title: t(`pricing.${col.key}`)
     }))
-    console.log('[ColumnManagement] Reset to defaults')
   }
 
   /**

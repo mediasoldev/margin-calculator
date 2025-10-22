@@ -174,12 +174,6 @@ const checkLicense = async () => {
     if (!result.success && result.error) {
       console.error('[LicensePage] License check failed:', result.error)
       message.error(t('license.checkError'))
-    } else {
-      console.log('[LicensePage] License loaded:', {
-        status: licenseStatusText.value,
-        daysLeft: daysLeft.value.days,
-        isTrial: license.value?.isTrial
-      })
     }
   } catch (error) {
     console.error('[LicensePage] Error checking license:', error)
@@ -189,7 +183,6 @@ const checkLicense = async () => {
 
 // Lifecycle
 onMounted(async () => {
-  console.log('[LicensePage] Component mounted, loading license...')
   await checkLicense()
 })
 </script>

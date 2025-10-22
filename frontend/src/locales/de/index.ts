@@ -45,7 +45,7 @@ export default {
   },
 
   home: {
-    title: "Margenrechner für Bitrix24",
+    title: "Calculate in Deal",
     description:
       "Bewerten Sie schnell die Rentabilität von Produkten unter Berücksichtigung von Einkaufspreis, Transport, Verpackung und Wechselkursen",
 

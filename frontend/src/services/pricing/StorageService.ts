@@ -64,7 +64,6 @@ export class StorageService {
           ENTITY: this.CALCULATIONS_ENTITY,
           ID: item.ID
         })
-        console.log(`[Storage] Deleted duplicate calculation record ID: ${item.ID}`)
       } catch (error) {
         console.error(`[Storage] Error deleting duplicate calculation ID ${item.ID}:`, error)
       }
@@ -88,7 +87,6 @@ export class StorageService {
           ENTITY: this.SUPPLIERS_ENTITY,
           ID: item.ID
         })
-        console.log(`[Storage] Deleted duplicate supplier record ID: ${item.ID}`)
       } catch (error) {
         console.error(`[Storage] Error deleting duplicate supplier ID ${item.ID}:`, error)
       }
@@ -133,7 +131,6 @@ export class StorageService {
         ID: existing.ID,
         DETAIL_TEXT: detailText
       })
-      console.log(`[Storage] Updated calculation for deal_${dealId}, ID: ${existing.ID}`)
       return existing.ID
     } else {
       const response = await bx24Service.call<string>('entity.item.add', {
@@ -141,7 +138,6 @@ export class StorageService {
         NAME: `deal_${dealId}`,
         DETAIL_TEXT: detailText
       })
-      console.log(`[Storage] Created new calculation for deal_${dealId}, ID: ${response}`)
       return response
     }
   }
@@ -200,7 +196,6 @@ export class StorageService {
         ID: existing.ID,
         DETAIL_TEXT: detailText
       })
-      console.log(`[Storage] Updated suppliers for product_${productId}, ID: ${existing.ID}`)
       return existing.ID
     } else {
       const response = await bx24Service.call<string>('entity.item.add', {
@@ -208,7 +203,6 @@ export class StorageService {
         NAME: `product_${productId}`,
         DETAIL_TEXT: detailText
       })
-      console.log(`[Storage] Created new suppliers for product_${productId}, ID: ${response}`)
       return response
     }
   }

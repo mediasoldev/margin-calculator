@@ -336,7 +336,6 @@ const handleSave = async () => {
 // ✅ SIMPLIFIED: Lifecycle without dynamic column loading
 onMounted(async () => {
   try {
-    console.log('[PricingCalculator] Initializing...')
     
     // Step 1: Initialize columns (all predefined)
     initializeColumns()
@@ -348,11 +347,6 @@ onMounted(async () => {
     // Step 3: Calculate
     recalculateAll()
     
-    console.log('[PricingCalculator] Initialization complete:', {
-      products: products.value.length,
-      allColumns: allColumns.value.length,
-      visibleColumns: visibleColumns.value.length
-    })
   } catch (err) {
     console.error('[PricingCalculator] Initialization error:', err)
     message.error(t('pricing.loadError'))

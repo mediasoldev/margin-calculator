@@ -45,7 +45,7 @@ export default {
   },
 
   home: {
-    title: "Calcolatore margine per Bitrix24",
+    title: "Calculate in Deal",
     description:
       "Valuta rapidamente la redditività dei prodotti tenendo conto del prezzo di acquisto, trasporto, imballaggio e tassi di cambio",
 

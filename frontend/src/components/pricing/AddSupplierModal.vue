@@ -124,7 +124,6 @@ const selectCompany = () => {
     entityType: ['company'],
     multiple: false
   }, (result: any) => {
-    console.log('[AddSupplier] BX24.selectCRM result:', result)
     
     if (result && result.company && result.company[0]) {
       const company = result.company[0]

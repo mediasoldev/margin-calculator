@@ -45,7 +45,7 @@ export default {
   },
 
   home: {
-    title: "Margin Calculator for Bitrix24",
+    title: "Calculate in Deal",
     description:
       "Quickly assess product profitability with purchase price, transportation, packaging and currency exchange rates",
 
@@ -56,7 +56,7 @@ export default {
     whereToFind: {
       title: "Where to Find the Widget",
       step1: "Open any deal in Bitrix24 CRM",
-      step2: "Look for 'Margin Calculator' tab or widget in the deal card",
+      step2: "Look for 'Calculate in Deal' tab or widget in the deal card",
       step3: "Click to open and start calculating margins",
     },
 
@@ -74,9 +74,9 @@ export default {
   },
 
   about: {
-    title: "About Margin Calculator",
+    title: "About Calculate in Deal",
     description:
-      "Margin Calculator is a support application for Bitrix24 that allows you to quickly assess product profitability (margin) taking into account purchase price, transportation, packaging and currency exchange rates. IMPORTANT: the application does not change the deal amount, but enters product pricing information into additional fields.",
+      "Calculate in Deal is a support application for Bitrix24 that allows you to quickly assess product profitability (margin) taking into account purchase price, transportation, packaging and currency exchange rates. IMPORTANT: the application does not change the deal amount, but enters product pricing information into additional fields.",
 
     faq: {
       item1: {

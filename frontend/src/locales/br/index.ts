@@ -45,7 +45,7 @@ export default {
   },
 
   home: {
-    title: "Calculadora de Margem para Bitrix24",
+    title: "Calculate in Deal",
     description:
       "Avalie rapidamente a lucratividade dos produtos considerando preço de compra, transporte, embalagem e taxas de câmbio",
 
