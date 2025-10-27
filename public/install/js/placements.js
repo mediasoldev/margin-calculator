@@ -14,7 +14,7 @@ const PlacementsManager = {
         dealDetail: {
             placement: 'CRM_DEAL_DETAIL_TAB',
             handler: '/pricing-calculator',
-            title: 'Margin Calculator',
+            title: 'Calculate in Deal',
             description: 'Calculate product margins and profitability'
         }
         
@@ -24,7 +24,7 @@ const PlacementsManager = {
         dealList: {
             placement: 'CRM_DEAL_LIST_MENU',
             handler: '/pricing-calculator-list',
-            title: 'Margin Calculator',
+            title: 'Calculate in Deal',
             description: 'Bulk margin calculations'
         },
         
@@ -32,7 +32,7 @@ const PlacementsManager = {
         contactDetail: {
             placement: 'CRM_CONTACT_DETAIL_TAB',
             handler: '/pricing-calculator-contact',
-            title: 'Margin Calculator',
+            title: 'Calculate in Deal',
             description: 'Contact integration'
         },
         
@@ -40,7 +40,7 @@ const PlacementsManager = {
         companyDetail: {
             placement: 'CRM_COMPANY_DETAIL_TAB',
             handler: '/pricing-calculator-company',
-            title: 'Margin Calculator',
+            title: 'Calculate in Deal',
             description: 'Company integration'
         },
         
@@ -48,7 +48,7 @@ const PlacementsManager = {
         leadDetail: {
             placement: 'CRM_LEAD_DETAIL_TAB',
             handler: '/pricing-calculator-lead',
-            title: 'Margin Calculator',
+            title: 'Calculate in Deal',
             description: 'Lead integration'
         }
         
@@ -73,10 +73,6 @@ const PlacementsManager = {
         
         const baseUrl = protocol + '//' + host + basePath;
         
-        console.log('[PLACEMENTS] Base URL detected:', baseUrl);
-        console.log('[PLACEMENTS] Current pathname:', pathname);
-        console.log('[PLACEMENTS] Extracted base path:', basePath);
-        
         return baseUrl;
     },
     
@@ -84,8 +80,6 @@ const PlacementsManager = {
      * Get existing placements
      */
     getExistingPlacements: function(callback) {
-        console.log('[PLACEMENTS] Getting existing placements...');
-        
         BX24.callMethod('placement.get', {}, function(result) {
             if (result.error()) {
                 console.error('[PLACEMENTS] Error getting placements:', result.error());
@@ -94,7 +88,6 @@ const PlacementsManager = {
             }
             
             const placements = result.data() || [];
-            console.log('[PLACEMENTS] Found placements:', placements.length);
             callback(placements);
         });
     },
@@ -105,7 +98,6 @@ const PlacementsManager = {
     removeAllPlacements: function(callback) {
         this.getExistingPlacements(function(placements) {
             if (!placements || placements.length === 0) {
-                console.log('[PLACEMENTS] No placements to remove');
                 callback(true);
                 return;
             }
@@ -124,10 +116,8 @@ const PlacementsManager = {
             });
             
             if (commandCount > 0) {
-                console.log('[PLACEMENTS] Removing existing placements:', commandCount);
-                
+               
                 BX24.callBatch(commands, function(result) {
-                    console.log('[PLACEMENTS] Existing placements removed');
                     callback(true);
                 });
             } else {
@@ -141,8 +131,6 @@ const PlacementsManager = {
      */
     registerPlacements: function(callback) {
         const baseUrl = this.getBaseUrl();
-        console.log('[PLACEMENTS] Registering placements with base URL:', baseUrl);
-        
         const commands = {};
         let commandCount = 0;
         
@@ -150,8 +138,6 @@ const PlacementsManager = {
         for (let key in this.placements) {
             const config = this.placements[key];
             const fullHandlerUrl = baseUrl + config.handler;
-            
-            console.log('[PLACEMENTS] Placement handler URL:', fullHandlerUrl);
             
             commands['placement_' + commandCount] = [
                 'placement.bind',
@@ -166,12 +152,10 @@ const PlacementsManager = {
         }
         
         if (commandCount === 0) {
-            console.log('[PLACEMENTS] No placements to register');
             callback(true);
             return;
         }
         
-        console.log('[PLACEMENTS] Registering placements count:', commandCount);
         
         BX24.callBatch(commands, function(result) {
             if (!result || typeof result !== 'object') {
@@ -197,7 +181,6 @@ const PlacementsManager = {
                 // Continue anyway
             }
             
-            console.log('[PLACEMENTS] Placements registered successfully');
             callback(true);
         });
     },

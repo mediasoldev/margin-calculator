@@ -50,7 +50,11 @@
       <div class="toolbar-inline">
         <a-space size="small">
           <span class="toolbar-label">{{ $t("pricing.viewMode") }}:</span>
-          <a-radio-group v-model:value="viewMode" button-style="solid" size="small">
+          <a-radio-group
+            v-model:value="viewMode"
+            button-style="solid"
+            size="small"
+          >
             <a-radio-button value="table">
               <TableOutlined /> {{ $t("pricing.tableView") }}
             </a-radio-button>
@@ -67,7 +71,11 @@
           <a-button size="small" @click="openColumnSettings">
             <SettingOutlined /> {{ $t("pricing.columns") }}
           </a-button>
-          <a-button size="small" @click="handleLoadFromBitrix" :loading="loading">
+          <a-button
+            size="small"
+            @click="handleLoadFromBitrix"
+            :loading="loading"
+          >
             <SyncOutlined /> {{ $t("pricing.loadFromBitrix") }}
           </a-button>
           <a-button size="small" @click="handleRefresh" :loading="loading">
@@ -107,10 +115,10 @@
         />
       </div>
 
-      <div v-if="!columnsReady" style="padding: 40px; text-align: center;">
+      <div v-if="!columnsReady" style="padding: 40px; text-align: center">
         <a-spin size="large" />
       </div>
-      
+
       <template v-else>
         <!-- Table View -->
         <PricingTable v-if="viewMode === 'table'" />
@@ -137,8 +145,8 @@
         <a-col :xs="24" :sm="8">
           <div class="summary-item">
             <span class="summary-label">{{ $t("pricing.totalMargin") }}:</span>
-            <span 
-              class="summary-value" 
+            <span
+              class="summary-value"
               :style="{ color: getMarginColor(calculatedTotals.margin) }"
             >
               {{ formatCurrency(calculatedTotals.margin, "PLN") }}
@@ -170,7 +178,7 @@
 <script setup lang="ts">
 import { ref, provide, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import { usePricingData } from '@/composables/usePricingData'
+import { usePricingData } from "@/composables/usePricingData";
 import { message } from "ant-design-vue";
 import {
   TableOutlined,
@@ -200,7 +208,7 @@ const loading = ref(false);
 const saving = ref(false);
 const viewMode = ref<ViewMode>("table");
 const columnSettingsVisible = ref(false);
-const columnsReady = ref(false)
+const columnsReady = ref(false);
 
 // Exchange rates
 const exchangeRates = ref<ExchangeRates>({
@@ -226,8 +234,8 @@ const {
   hasUnsavedChanges,
   addSupplierForProduct,
   updateSupplierPrice,
-  getSuppliersForProduct
-} = usePricingData()
+  getSuppliersForProduct,
+} = usePricingData();
 
 // Calculations
 const {
@@ -274,12 +282,69 @@ provide("pricingContext", {
   isReadOnlyColumn,
   addSupplierForProduct,
   updateSupplierPrice,
-  getSuppliersForProduct
+  getSuppliersForProduct,
 });
 
 // Handlers
-const handleRatesChange = () => {
+const handleRatesChange = async () => {
   recalculateAll();
+
+  // Зберігаємо в Бітрікс24
+  try {
+    await saveExchangeRatesToBitrix();
+  } catch (error) {
+    console.error("Failed to save exchange rates:", error);
+  }
+};
+
+// Функція для збереження exchangeRates в Бітрікс24
+const saveExchangeRatesToBitrix = async () => {
+  if (!window.BX24) {
+    console.warn("BX24 not available");
+    return;
+  }
+
+  try {
+    const ratesData = JSON.stringify(exchangeRates.value);
+
+    await new Promise<void>((resolve, reject) => {
+      window.BX24.appOption.set("exchangeRates", ratesData, (result: any) => {
+        if (result) {
+          resolve();
+        } else {
+          reject(new Error("Failed to save exchange rates"));
+        }
+      });
+    });
+  } catch (error) {
+    console.error("[Bitrix] Error saving exchange rates:", error);
+    throw error;
+  }
+};
+
+// Функція для завантаження exchangeRates з Бітрікс24
+const loadExchangeRatesFromBitrix = async () => {
+  if (!window.BX24) {
+    console.warn("BX24 not available");
+    return;
+  }
+
+  try {
+    const result = await new Promise<any>((resolve) => {
+      resolve(window.BX24.appOption.get("exchangeRates"));
+    });
+
+    if (result && typeof result === "string") {
+      const savedRates = JSON.parse(result);
+      exchangeRates.value = {
+        usdToPln: savedRates.usdToPln || 4.0,
+        eurToPln: savedRates.eurToPln || 4.3,
+        eurToUsd: savedRates.eurToUsd || 1.08,
+      };
+    }
+  } catch (error) {
+    console.error("[Bitrix] Error loading exchange rates:", error);
+  }
 };
 
 const openColumnSettings = () => {
@@ -298,7 +363,7 @@ const handleColumnsSave = (columns: any[]) => {
 const handleLoadFromBitrix = async () => {
   loading.value = true;
   try {
-    await resetToOriginal()
+    await resetToOriginal();
     recalculateAll();
     message.success(t("pricing.loadedFromBitrix"));
   } catch (error) {
@@ -311,7 +376,7 @@ const handleLoadFromBitrix = async () => {
 const handleRefresh = async () => {
   loading.value = true;
   try {
-    await initialize()
+    await initialize();
     recalculateAll();
     message.success(t("pricing.productsLoaded"));
   } catch (error) {
@@ -322,37 +387,37 @@ const handleRefresh = async () => {
 };
 
 const handleSave = async () => {
-  saving.value = true
+  saving.value = true;
   try {
-    await saveData(exchangeRates.value, calculatedTotals.value)
-    message.success(t('pricing.saveSuccess'))
+    await saveData(exchangeRates.value, calculatedTotals.value);
+    message.success(t("pricing.saveSuccess"));
   } catch (error) {
-    message.error(t('pricing.saveError'))
+    message.error(t("pricing.saveError"));
   } finally {
-    saving.value = false
+    saving.value = false;
   }
-}
+};
 
 // ✅ SIMPLIFIED: Lifecycle without dynamic column loading
 onMounted(async () => {
   try {
-    
-    // Step 1: Initialize columns (all predefined)
-    initializeColumns()
-    columnsReady.value = true
-    
-    // Step 2: Load deal data
-    await initialize()
-    
-    // Step 3: Calculate
-    recalculateAll()
-    
-  } catch (err) {
-    console.error('[PricingCalculator] Initialization error:', err)
-    message.error(t('pricing.loadError'))
-  }
-})
+    // Step 0: Load exchange rates from Bitrix24
+    await loadExchangeRatesFromBitrix();
 
+    // Step 1: Initialize columns (all predefined)
+    initializeColumns();
+    columnsReady.value = true;
+
+    // Step 2: Load deal data
+    await initialize();
+
+    // Step 3: Calculate
+    recalculateAll();
+  } catch (err) {
+    console.error("[PricingCalculator] Initialization error:", err);
+    message.error(t("pricing.loadError"));
+  }
+});
 </script>
 
 <style scoped>
@@ -440,7 +505,7 @@ onMounted(async () => {
   color: var(--primary-color);
 }
 
-[data-theme='dark'] .summary-label {
+[data-theme="dark"] .summary-label {
   color: rgba(255, 255, 255, 0.65);
 }
 
@@ -451,7 +516,7 @@ onMounted(async () => {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-[data-theme='dark'] .currency-card.compact {
+[data-theme="dark"] .currency-card.compact {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -471,7 +536,7 @@ onMounted(async () => {
     text-align: center;
     margin-bottom: 8px;
   }
-  
+
   .summary-value {
     font-size: 16px;
   }

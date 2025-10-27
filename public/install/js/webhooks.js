@@ -20,7 +20,6 @@ const WebhooksManager = {
      * Get all registered events
      */
     getAllEvents: function(callback) {
-        console.log('[WEBHOOKS] Getting all registered events...');
         
         BX24.callMethod('event.get', {}, function(result) {
             if (result.error()) {
@@ -30,7 +29,6 @@ const WebhooksManager = {
             }
             
             const events = result.data() || [];
-            console.log('[WEBHOOKS] Found events:', events.length);
             callback(events);
         });
     },
@@ -41,7 +39,6 @@ const WebhooksManager = {
     removeAllHandlers: function(callback) {
         this.getAllEvents(function(events) {
             if (!events || events.length === 0) {
-                console.log('[WEBHOOKS] No events to remove');
                 callback(true);
                 return;
             }
@@ -69,14 +66,11 @@ const WebhooksManager = {
             });
             
             if (commandCount > 0) {
-                console.log('[WEBHOOKS] Removing old handlers:', commandCount);
                 
                 BX24.callBatch(commands, function(result) {
-                    console.log('[WEBHOOKS] Old handlers removed successfully');
                     callback(true);
                 });
             } else {
-                console.log('[WEBHOOKS] No handlers to remove');
                 callback(true);
             }
         });
@@ -87,7 +81,6 @@ const WebhooksManager = {
      */
     registerHandlers: function(callback) {
         const webhookUrl = this.getWebhookUrl();
-        console.log('[WEBHOOKS] Registering webhooks at URL:', webhookUrl);
         
         const commands = {
             install: [
@@ -140,7 +133,6 @@ const WebhooksManager = {
                 // Continue anyway
             }
             
-            console.log('[WEBHOOKS] Event handlers registered successfully');
             callback(true);
         });
     },
@@ -173,7 +165,6 @@ const WebhooksManager = {
             }
         };
         
-        console.log('[WEBHOOKS] Sending installation data to webhook');
         
         fetch(webhookUrl, {
             method: 'POST',
@@ -193,7 +184,6 @@ const WebhooksManager = {
                 throw new Error(data.message || 'Installation error');
             }
             
-            console.log('[WEBHOOKS] Installation webhook completed:', data);
             callback(true);
         })
         .catch(error => {

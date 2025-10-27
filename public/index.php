@@ -162,18 +162,11 @@ $logger->info('Application accessed', [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Bitrix24 App - Margin Calculator</title>
+    <title>Bitrix24 App - Calculate in Deal</title>
     
     <!-- Pass data to JavaScript -->
     <script>
         window.APP_DATA = <?php echo json_encode($appData, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
-        console.log('[PHP] APP_DATA initialized:', {
-            domain: window.APP_DATA.domain,
-            hasSessionToken: !!window.APP_DATA.session_token,
-            licenseValid: window.APP_DATA.license?.is_valid,
-            isTrial: window.APP_DATA.license?.is_trial,
-            daysRemaining: window.APP_DATA.license?.days_remaining
-        });
     </script>
     
     <!-- Bitrix24 JS SDK -->

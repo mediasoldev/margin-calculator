@@ -622,7 +622,6 @@ Ready for testing...
         // Initialize BX24 if available
         if (typeof BX24 !== 'undefined') {
             BX24.init(function() {
-                console.log('BX24 initialized');
                 APP_DATA = {
                     ...APP_DATA,
                     domain: BX24.getDomain(),

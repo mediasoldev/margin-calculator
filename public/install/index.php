@@ -61,12 +61,6 @@ error_log('[INSTALL] Параметри: ' . json_encode($installParams, JSON_UN
     <script>
         // Передаємо параметри установки в JavaScript
         window.INSTALL_PARAMS = <?php echo json_encode($installParams, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE); ?>;
-        
-        // Додаткова інформація для дебагу
-        console.log('=== ПАРАМЕТРИ УСТАНОВКИ ===');
-        console.log('Domain:', window.INSTALL_PARAMS.DOMAIN);
-        console.log('Language:', window.INSTALL_PARAMS.LANG);
-        console.log('Member ID:', window.INSTALL_PARAMS.MEMBER_ID);
     </script>
 </head>
 <body>

@@ -37,23 +37,19 @@ const StorageManager = {
      * Check if storage exists
      */
     checkStorageExists: function(entityName, callback) {
-        console.log('[STORAGE] Checking if storage exists:', entityName);
         
         BX24.callMethod('entity.get', {
             ENTITY: entityName
         }, function(result) {
-            console.log('[STORAGE] entity.get', {result});
 
             if (result.error()) {
                 // Error may mean storage doesn't exist
-                console.log('[STORAGE] Storage does not exist:', entityName);
                 callback(false);
                 return;
             }
             
             const data = result.data();
             if (data && data.ENTITY) {
-                console.log('[STORAGE] Storage exists:', entityName);
                 callback(true);
             } else {
                 callback(false);
@@ -65,14 +61,12 @@ const StorageManager = {
      * Create single storage
      */
     createStorage: function(config, callback) {
-        console.log('[STORAGE] Creating storage:', config.entity);
         
         BX24.callMethod('entity.add', {
             ENTITY: config.entity,
             NAME: config.name,
             ACCESS: config.access
         }, function(result) {
-            console.log('[STORAGE] entity.add', {result});
 
             if (result.error()) {
                 const error = result.error();
@@ -89,7 +83,6 @@ const StorageManager = {
                 return;
             }
             
-            console.log('[STORAGE] Storage created successfully:', config.entity);
             callback(true);
         });
     },
@@ -104,7 +97,6 @@ const StorageManager = {
         let hasErrors = false;
         let errorMessages = [];
         
-        console.log('[STORAGE] Creating storages (if not exist):', storageKeys.length);
         
         // Process each storage
         const processNext = () => {
@@ -113,7 +105,6 @@ const StorageManager = {
                 if (hasErrors) {
                     console.warn('[STORAGE] Some storages had errors:', errorMessages);
                 }
-                console.log('[STORAGE] Storage creation completed');
                 callback(true);
                 return;
             }
@@ -125,7 +116,6 @@ const StorageManager = {
             // Check if storage exists
             this.checkStorageExists(config.entity, (exists) => {
                 if (exists) {
-                    console.log('[STORAGE] Storage already exists, skipping:', config.entity);
                     processNext();
                 } else {
                     // Create storage

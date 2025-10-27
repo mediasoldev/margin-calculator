@@ -63,7 +63,6 @@
         if (statusElement) {
             statusElement.textContent = message;
         }
-        console.log('Статус:', message);
     }
     
     /**
@@ -115,14 +114,10 @@
      * Крок 1: Ініціалізація BX24
      */
     function step1_InitializeBX24() {
-        console.log('=== КРОК 1: Ініціалізація BX24 ===');
         updateProgress(0, 'active');
         updateStatus('Підключення до Bitrix24...');
         
         BX24.init(function() {
-            console.log('BX24 ініціалізовано');
-            console.log('Domain:', BX24.getDomain());
-            console.log('Auth:', BX24.getAuth());
             
             updateProgress(0, 'completed');
             
@@ -135,7 +130,6 @@
      * Крок 2: Налаштування вебхуків
      */
     function step2_SetupWebhooks() {
-        console.log('=== КРОК 2: Налаштування вебхуків ===');
         updateProgress(1, 'active');
         updateStatus('Налаштування вебхуків...');
         
@@ -166,7 +160,6 @@
      * Крок 3: Налаштування розміщень
      */
     function step3_SetupPlacements() {
-        console.log('=== КРОК 3: Налаштування розміщень ===');
         updateProgress(2, 'active');
         updateStatus('Реєстрація розміщень...');
         
@@ -196,7 +189,6 @@
      * Крок 4: Налаштування сховищ
      */
     function step4_SetupStorages() {
-        console.log('=== КРОК 4: Налаштування сховищ ===');
         updateProgress(3, 'active');
         updateStatus('Створення сховищ даних...');
         
@@ -226,7 +218,6 @@
      * Крок 5: Завершення установки
      */
     function step5_Finish() {
-        console.log('=== КРОК 5: Завершення установки ===');
         updateProgress(4, 'active');
         updateStatus('Завершення установки...');
         
@@ -237,7 +228,6 @@
             
             // Завершуємо установку в Bitrix24
             setTimeout(function() {
-                console.log('Виклик BX24.installFinish()');
                 BX24.installFinish();
             }, 1500);
         }, 500);
@@ -247,10 +237,6 @@
      * Запуск процесу установки
      */
     function startInstallation() {
-        console.log('====================================');
-        console.log('ПОЧАТОК УСТАНОВКИ ДОДАТКУ');
-        console.log('====================================');
-        console.log('Параметри установки:', params);
         
         // Валідація параметрів
         if (!params.DOMAIN || !params.APP_SID) {
