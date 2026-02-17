@@ -47,7 +47,7 @@
         </div>
 
         <!-- Controls -->
-        <div class="header-right">
+        <!-- <div class="header-right">
           <a-dropdown placement="bottomRight" :trigger="['click']">
             <a-button
               type="text"
@@ -85,7 +85,8 @@
             <template #checkedChildren>🌙</template>
             <template #unCheckedChildren>☀️</template>
           </a-switch>
-        </div>
+        </div> -->
+
       </div>
     </a-layout-header>
 

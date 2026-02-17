@@ -42,6 +42,25 @@ export default {
     saveSuccess: "Ustawienia zapisane pomyślnie",
     saveError: "Nie udało się zapisać ustawień",
     resetSuccess: "Przywrócono ustawienia domyślne",
+
+
+    "------------------------": "------------------------",
+    "bitrixIntegration": "Integracja Bitrix24",
+    "appTheme": "Motyw aplikacji",
+    "storageStatus": "Status magazynów danych",
+    "productSuppliersStorage": "Magazyn dostawców produktów",
+    "calculationsStorage": "Magazyn kalkulacji marży",
+    "created": "Utworzony",
+    "notCreated": "Nie utworzony",
+    "fieldMapping": "Mapowanie pól",
+    "totalMarginField": "Pole dla marży całkowitej",
+    "selectField": "Wybierz pole",
+    "totalMarginFieldHint": "Wybierz pole w umowie, do którego będzie zapisywana wartość marży całkowitej",
+    "clearMapping": "Wyczyść mapowanie",
+    "currentMapping": "Aktualne mapowanie",
+    "notConfigured": "Nie skonfigurowane",
+    "checkStorageError": "Błąd podczas sprawdzania magazynów",
+    "loadFieldsError": "Błąd podczas ładowania pól"
   },
 
   home: {
