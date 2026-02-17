@@ -7,8 +7,8 @@
 
 export const DATA_COLLECTION_CONFIG = {
   // Enable/disable data collection form globally
-  // enabled: true, // Set to false to completely disable the form
-  enabled: false,
+  enabled: true, // Set to false to completely disable the form
+  // enabled: false,
 
   // Application information
   application: {

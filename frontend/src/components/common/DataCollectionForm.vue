@@ -165,6 +165,8 @@ const getIframeSize = async (): Promise<void> => {
 }
 
 const checkAndShowForm = async (): Promise<void> => {
+// console.log("checkAndShowForm: ", {license, license2:license.value, DATA_COLLECTION_CONFIG})
+
   // Check if form is enabled in config
   if (!DATA_COLLECTION_CONFIG.enabled) {
     return
