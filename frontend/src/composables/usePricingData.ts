@@ -60,8 +60,6 @@ export function usePricingData() {
       dealCurrency.value = data.deal?.CURRENCY_ID || 'PLN'
       productFields.value = data.productFields || {}
       comparisonStatus.value = data.comparisonStatus
-      supplierPricesMap.value = data.supplierPrices || {}
-
       
       savedCalculation.value = data.calculation
 
@@ -78,6 +76,17 @@ export function usePricingData() {
           dealCurrency.value,
           savedProductsMap
         )
+      }
+
+      // FIX: Load supplier prices for actual products (after determining which products to show)
+      const productIds = products.value.map(p => p.productId)
+      console.log('[PricingData] Loading supplier prices for products:', productIds)
+      if (productIds.length > 0) {
+        const freshSupplierPrices = await pricingDataService.getSupplierPricesForProducts(productIds)
+        console.log('[PricingData] Loaded supplier prices:', freshSupplierPrices)
+        supplierPricesMap.value = freshSupplierPrices
+      } else {
+        supplierPricesMap.value = {}
       }
     } catch (err) {
       error.value = err as Error
@@ -126,6 +135,16 @@ export function usePricingData() {
     try {
       const freshProducts = await pricingDataService.resetToOriginal(dealId.value)
       products.value = freshProducts
+      
+      const productIds = products.value.map(p => p.productId)
+      console.log('[PricingData] resetToOriginal - loading suppliers for:', productIds)
+      if (productIds.length > 0) {
+        const freshSupplierPrices = await pricingDataService.getSupplierPricesForProducts(productIds)
+        console.log('[PricingData] resetToOriginal - loaded suppliers:', freshSupplierPrices)
+        supplierPricesMap.value = freshSupplierPrices
+      } else {
+        supplierPricesMap.value = {}
+      }
     } catch (err) {
       error.value = err as Error
       throw err
@@ -145,12 +164,21 @@ export function usePricingData() {
     currency: string
   ): Promise<void> => {
     try {
+      // FIX - Check if supplier already exists for better error handling
+      const existingSuppliers = await pricingDataService.getSuppliersForProduct(productId)
+      const exists = existingSuppliers.some((s: any) => s.company_id === companyId)
+      
+      if (exists) {
+        console.log(`[PricingData] Supplier ${companyId} already exists for product ${productId}, updating...`)
+      }
+      
       await pricingDataService.addSupplierForProduct(productId, companyId, companyName, price, currency)
       
       // Reload suppliers for this product
       const suppliers = await pricingDataService.getSuppliersForProduct(productId)
       supplierPricesMap.value[productId] = suppliers
     } catch (err) {
+      console.error('[PricingData] Error adding supplier:', err)
       error.value = err as Error
       throw err
     }
@@ -196,7 +224,9 @@ export function usePricingData() {
    * Get suppliers for product
    */
   const getSuppliersForProduct = (productId: string): any[] => {
-    return supplierPricesMap.value[productId] || []
+    const suppliers = supplierPricesMap.value[productId] || []
+    console.log(`[PricingData] getSuppliersForProduct(${productId}):`, suppliers)
+    return suppliers
   }
 
   /**

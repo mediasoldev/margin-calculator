@@ -250,7 +250,7 @@ const {
 // Currency
 const { formatCurrency, getMarginColor } = useCurrencyConversion(exchangeRates);
 
-// ✅ SIMPLIFIED: Column management without dynamic loading
+// âœ… SIMPLIFIED: Column management without dynamic loading
 const {
   allColumns,
   visibleColumns,
@@ -289,7 +289,7 @@ provide("pricingContext", {
 const handleRatesChange = async () => {
   recalculateAll();
 
-  // Зберігаємо в Бітрікс24
+  // Ð—Ð±ÐµÑ€Ñ–Ð³Ð°Ñ”Ð¼Ð¾ Ð² Ð‘Ñ–Ñ‚Ñ€Ñ–ÐºÑ24
   try {
     await saveExchangeRatesToBitrix();
   } catch (error) {
@@ -297,7 +297,7 @@ const handleRatesChange = async () => {
   }
 };
 
-// Функція для збереження exchangeRates в Бітрікс24
+// Ð¤ÑƒÐ½ÐºÑ†Ñ–Ñ Ð´Ð»Ñ Ð·Ð±ÐµÑ€ÐµÐ¶ÐµÐ½Ð½Ñ exchangeRates Ð² Ð‘Ñ–Ñ‚Ñ€Ñ–ÐºÑ24
 const saveExchangeRatesToBitrix = async () => {
   if (!window.BX24) {
     console.warn("BX24 not available");
@@ -322,7 +322,7 @@ const saveExchangeRatesToBitrix = async () => {
   }
 };
 
-// Функція для завантаження exchangeRates з Бітрікс24
+// Ð¤ÑƒÐ½ÐºÑ†Ñ–Ñ Ð´Ð»Ñ Ð·Ð°Ð²Ð°Ð½Ñ‚Ð°Ð¶ÐµÐ½Ð½Ñ exchangeRates Ð· Ð‘Ñ–Ñ‚Ñ€Ñ–ÐºÑ24
 const loadExchangeRatesFromBitrix = async () => {
   if (!window.BX24) {
     console.warn("BX24 not available");
@@ -398,7 +398,7 @@ const handleSave = async () => {
   }
 };
 
-// ✅ SIMPLIFIED: Lifecycle without dynamic column loading
+// âœ… SIMPLIFIED: Lifecycle without dynamic column loading
 onMounted(async () => {
   try {
     // Step 0: Load exchange rates from Bitrix24

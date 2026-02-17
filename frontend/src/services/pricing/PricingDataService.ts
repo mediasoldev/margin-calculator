@@ -50,14 +50,6 @@ export class PricingDataService {
       calculation = storageService.getLatestItemWithData(calculationRaw)
     }
     
-    // Batch 2: Supplier prices for found products (if any)
-    const productIds = productRows.map((p: ProductRow) => p.PRODUCT_ID.toString())
-    let supplierPrices: Record<string, any[]> = {}
-    
-    if (productIds.length > 0) {
-      supplierPrices = await storageService.getMultipleSupplierPrices(productIds)
-    }
-    
     // Compare saved calculation with current deal products
     const comparisonStatus = this.compareCalculationWithDeal(calculation, productRows)
     
@@ -65,7 +57,6 @@ export class PricingDataService {
       deal,
       products: productRows,
       calculation,
-      supplierPrices,
       productFields,
       comparisonStatus
     }
@@ -140,6 +131,64 @@ export class PricingDataService {
     }
     
     await storageService.saveCalculation(dealId, data)
+    
+    // Update deal fields if configured
+    await this.updateDealFieldsIfConfigured(dealId, totals)
+  }
+
+  /**
+   * Update deal fields based on app settings
+   * Check BX24.appOption for field mappings and update deal
+   */
+  private async updateDealFieldsIfConfigured(dealId: string, totals: any): Promise<void> {
+    if (!window.BX24) return
+    
+    try {
+      // Get field mapping from app options
+      const totalMarginField = await this.getAppOption('deal_field_total_margin')
+      
+      // Build update object based on configured fields
+      const updateFields: Record<string, any> = {}
+      
+      if (totalMarginField && totals.margin !== undefined) {
+        updateFields[totalMarginField] = totals.margin
+      }
+      
+      // ADD MORE FIELDS HERE IF NEEDED:
+      // Example:
+      // const totalAmountField = await this.getAppOption('deal_field_total_amount')
+      // if (totalAmountField && totals.amount !== undefined) {
+      //   updateFields[totalAmountField] = totals.amount
+      // }
+      
+      // Update deal if any fields configured
+      if (Object.keys(updateFields).length > 0) {
+        await bx24Service.call('crm.deal.update', {
+          id: dealId,
+          fields: updateFields
+        })
+        console.log('[PricingData] Deal fields updated:', updateFields)
+      }
+    } catch (error) {
+      console.error('[PricingData] Error updating deal fields:', error)
+    }
+  }
+
+  /**
+   * Get app option value
+   */
+  private async getAppOption(key: string): Promise<string | null> {
+    if (!window.BX24?.appOption) {
+      return null
+    }
+    
+    try {
+      const value: any = window.BX24.appOption.get(key)
+      return value ? String(value) : null
+    } catch (error) {
+      console.error(`[PricingData] Error getting app option ${key}:`, error)
+      return null
+    }
   }
 
   /**
@@ -227,7 +276,17 @@ export class PricingDataService {
   }
 
   /**
-   * ✅ FIX: Map Bitrix24 ProductRow to our Product type
+   * Get supplier prices for multiple products
+   */
+  public async getSupplierPricesForProducts(productIds: string[]): Promise<Record<string, any[]>> {
+    if (!productIds || productIds.length === 0) {
+      return {}
+    }
+    return await storageService.getMultipleSupplierPrices(productIds)
+  }
+
+  /**
+   * âœ… FIX: Map Bitrix24 ProductRow to our Product type
    * Preserve ALL ProductRow fields as dynamic fields
    */
   public mapProductRowsToProducts(
@@ -238,7 +297,7 @@ export class PricingDataService {
     return rows.map(row => {
       const savedProduct = savedProducts[row.ID]
       
-      // ✅ Create base product with core fields
+      // âœ… Create base product with core fields
       const product: Product = {
         // Core fields
         id: row.ID,
@@ -271,7 +330,7 @@ export class PricingDataService {
         _marginAmount: savedProduct?._marginAmount || 0,
       }
       
-      // ✅ FIX: Copy ALL ProductRow fields as dynamic fields
+      // âœ… FIX: Copy ALL ProductRow fields as dynamic fields
       // This ensures all Bitrix24 fields are available for display
       for (const key in row) {
         if (row.hasOwnProperty(key)) {
